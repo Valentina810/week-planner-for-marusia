@@ -30,7 +30,7 @@ public class MainController {
         try {
             jsonObject = new JSONObject(jsonString);
             phrase = jsonObject.getJSONObject("request").getString("original_utterance");
-            version = jsonObject.getJSONObject("version").getString("version");
+            version = jsonObject.getString("version");
             sessionId = jsonObject.getJSONObject("session").getString("session_id");
             userId = jsonObject.getJSONObject("session").getString("user_id");
             messageId = jsonObject.getJSONObject("session").getInt("message_id");
