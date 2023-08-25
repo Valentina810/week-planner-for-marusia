@@ -1,8 +1,9 @@
-package com.github.valentinakole.dayplannerformarusia.service;
+package com.github.valentinakole.weekplannerformarusia.service;
 
-import com.github.valentinakole.dayplannerformarusia.model.MarusiaResponse;
-import com.github.valentinakole.dayplannerformarusia.model.Response;
-import com.github.valentinakole.dayplannerformarusia.model.Session;
+import com.github.valentinakole.weekplannerformarusia.model.MarusiaResponse;
+import com.github.valentinakole.weekplannerformarusia.model.PersistentStorage;
+import com.github.valentinakole.weekplannerformarusia.model.Response;
+import com.github.valentinakole.weekplannerformarusia.model.Session;
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
@@ -52,6 +53,7 @@ public class WeekPlannerServiceImpl implements WeekPlannerService {
                             .session_id(jsonObject.getJSONObject("session").getString("session_id"))
                             .message_id(jsonObject.getJSONObject("session").getInt("message_id")).build())
                     .version(jsonObject.getString("version"))
+                    .user_state_update(PersistentStorage.builder().privet("Это уже в хранилище").build())
                     .build();
         } catch (JSONException e) {
             log.info("Возникла ошибка в процессе распарсивания запроса {}", e.getMessage());

@@ -1,4 +1,4 @@
-package com.github.valentinakole.dayplannerformarusia.service;
+package com.github.valentinakole.weekplannerformarusia.service;
 
 import org.springframework.http.ResponseEntity;
 

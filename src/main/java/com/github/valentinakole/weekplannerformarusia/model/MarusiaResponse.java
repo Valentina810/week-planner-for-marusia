@@ -1,4 +1,4 @@
-package com.github.valentinakole.dayplannerformarusia.model;
+package com.github.valentinakole.weekplannerformarusia.model;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -11,4 +11,5 @@ public class MarusiaResponse {
     private Response response;
     private Session session;
     private String version;
+    private PersistentStorage user_state_update;
 }
