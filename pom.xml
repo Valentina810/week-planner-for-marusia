@@ -16,9 +16,9 @@
 	<properties>
 		<java.version>11</java.version>
 		<io.swagger.core.v3.version>2.2.8</io.swagger.core.v3.version>
-		<org.springdoc.version>1.6.14</org.springdoc.version>
-		<com.google.code.gson.version>2.8.9</com.google.code.gson.version>
-		<org.json.version>20201115</org.json.version>
+		<org.springdoc.version>1.6.15</org.springdoc.version>
+		<com.google.code.gson.version>2.10.1</com.google.code.gson.version>
+		<org.json.version>20230227</org.json.version>
 	</properties>
 	<dependencies>
 		<dependency>

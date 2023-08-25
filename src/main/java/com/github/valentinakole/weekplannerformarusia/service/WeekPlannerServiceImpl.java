@@ -1,5 +1,6 @@
 package com.github.valentinakole.weekplannerformarusia.service;
 
+import com.github.valentinakole.weekplannerformarusia.model.DayWeek;
 import com.github.valentinakole.weekplannerformarusia.model.MarusiaResponse;
 import com.github.valentinakole.weekplannerformarusia.model.PersistentStorage;
 import com.github.valentinakole.weekplannerformarusia.model.Response;
@@ -42,6 +43,18 @@ public class WeekPlannerServiceImpl implements WeekPlannerService {
             String escapedPhrase = new JSONObject(jsonString)
                     .getJSONObject("request").getString("original_utterance")
                     .replace("\"", "").replace("\\\"", "");
+
+//            JSONArray jsonArray = jsonObject.getJSONObject("state").getJSONObject("user").getJSONArray("data");
+            DayWeek[] dayWeeks = new DayWeek[7];
+            for (int i = 0; i < 7; i++) {
+//                JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+//                dayWeeks[i] = DayWeek.builder().date(jsonObject1.getString("date"))
+//                        .timeTable(jsonArray.getJSONObject(i).getString("timeTable")).build();
+                dayWeeks[i] = DayWeek.builder().date("12.03.2012")
+                        .timeTable("12:00 Обед 16:00 Полдник").build();
+            }
+
+            dayWeeks[0].setTimeTable(dayWeeks[0].getTimeTable() + escapedPhrase);
             marusiaResponse = MarusiaResponse.builder()
                     .response(Response.builder()
                             .text(escapedPhrase)
@@ -53,7 +66,7 @@ public class WeekPlannerServiceImpl implements WeekPlannerService {
                             .session_id(jsonObject.getJSONObject("session").getString("session_id"))
                             .message_id(jsonObject.getJSONObject("session").getInt("message_id")).build())
                     .version(jsonObject.getString("version"))
-                    .user_state_update(PersistentStorage.builder().privet("Это уже в хранилище").build())
+                    .user_state_update(PersistentStorage.builder().data(dayWeeks).build())
                     .build();
         } catch (JSONException e) {
             log.info("Возникла ошибка в процессе распарсивания запроса {}", e.getMessage());
