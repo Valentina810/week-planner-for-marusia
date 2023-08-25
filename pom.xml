@@ -9,9 +9,9 @@
 		<relativePath/>
 	</parent>
 	<groupId>com.github.valentinakole</groupId>
-	<artifactId>day-planner-for-marusia</artifactId>
+	<artifactId>week-planner-for-marusia</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>day-planner-for-marusia</name>
+	<name>week-planner-for-marusia</name>
 	<description>day-planner-for-marusia</description>
 	<properties>
 		<java.version>11</java.version>

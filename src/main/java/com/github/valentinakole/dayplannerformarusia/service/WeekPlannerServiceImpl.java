@@ -16,7 +16,7 @@ import java.text.SimpleDateFormat;
 
 @Slf4j
 @Service
-public class VoiceAssistantServiceImpl implements VoiceAssistantService {
+public class WeekPlannerServiceImpl implements WeekPlannerService {
     @Override
     public ResponseEntity getResponse(Object object) {
         String body = new Gson().toJson(getResponseObject(object));

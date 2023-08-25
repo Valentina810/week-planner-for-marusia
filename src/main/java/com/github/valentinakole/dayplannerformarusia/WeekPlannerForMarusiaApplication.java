@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class DayPlannerForMarusiaApplication {
+public class WeekPlannerForMarusiaApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(DayPlannerForMarusiaApplication.class, args);
+		SpringApplication.run(WeekPlannerForMarusiaApplication.class, args);
 	}
 
 }
