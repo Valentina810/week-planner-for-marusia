@@ -1,6 +1,6 @@
-package com.github.valentinakole.weekplannerformarusia.controller;
+package com.github.valentina810.weekplannerformarusia.controller;
 
-import com.github.valentinakole.weekplannerformarusia.service.WeekPlannerService;
+import com.github.valentina810.weekplannerformarusia.service.WeekPlannerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,10 +1,10 @@
-package com.github.valentinakole.weekplannerformarusia.service;
+package com.github.valentina810.weekplannerformarusia.service;
 
-import com.github.valentinakole.weekplannerformarusia.model.DayWeek;
-import com.github.valentinakole.weekplannerformarusia.model.MarusiaResponse;
-import com.github.valentinakole.weekplannerformarusia.model.PersistentStorage;
-import com.github.valentinakole.weekplannerformarusia.model.Response;
-import com.github.valentinakole.weekplannerformarusia.model.Session;
+import com.github.valentina810.weekplannerformarusia.model.DayWeek;
+import com.github.valentina810.weekplannerformarusia.model.MarusiaResponse;
+import com.github.valentina810.weekplannerformarusia.model.PersistentStorage;
+import com.github.valentina810.weekplannerformarusia.model.Response;
+import com.github.valentina810.weekplannerformarusia.model.Session;
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
@@ -42,29 +42,20 @@ public class WeekPlannerServiceImpl implements WeekPlannerService {
             String jsonString = new Gson().toJson(object);
             JSONObject jsonObject = new JSONObject(jsonString);
             String escapedPhrase = new JSONObject(jsonString)
-                    .getJSONObject("request").getString("original_utterance")
-                    .replace("\"", "").replace("\\\"", "");
+                    .getJSONObject("request")
+                    .getString("original_utterance")
+                    .replaceAll("[^а-яА-Я0-9\\s]", "");
             String responsePhrase;
-
-            switch (escapedPhrase) {
-                case "Расскажи план на неделю":
-                    responsePhrase = "Сейчас расскажу все ваши планы на неделю";
-                    break;
-                case "Добавь событие":
-                    responsePhrase = "На какой день добавить событие?";
-                    break;
-                case "Расскажи план на сегодня":
-                    responsePhrase = "Сегодня нас ждет много интересного";
-                    break;
-                case "Расскажи план на завтра":
-                    responsePhrase = "Завтра будет план точно";
-                    break;
-                case "Справка":
-                    responsePhrase = "Доступные команды: Добавить событие , Расскажи план на сегодня , Расскажи план на завтра , Расскажи план на неделю";
-                    break;
-                default:
-                    responsePhrase = "Выбрана незвестная команда";
-            }
+            log.info("Получена команда {}", escapedPhrase);
+            responsePhrase = switch (escapedPhrase) {
+                case "Расскажи план на неделю" -> "Сейчас расскажу все ваши планы на неделю";
+                case "Добавь событие" -> "На какой день добавить событие?";
+                case "Расскажи план на сегодня" -> "Сегодня нас ждет много интересного";
+                case "Расскажи план на завтра" -> "Завтра будет план точно";
+                case "Справка" ->
+                        "Доступные команды: Добавить событие, Расскажи план на сегодня, Расскажи план на завтра, Расскажи план на неделю";
+                default -> "Выбрана незвестная команда";
+            };
 
             DayWeek[] dayWeeks = getDayWeeks(jsonObject);
             marusiaResponse = MarusiaResponse.builder()
@@ -95,6 +86,7 @@ public class WeekPlannerServiceImpl implements WeekPlannerService {
                 dayWeeks[i] = DayWeek.builder().date(jsonObject1.getString("date"))
                         .timeTable(jsonArray.getJSONObject(i).getString("timeTable")).build();
             }
+            log.info("Из запроса получены данные планировщика");
         } catch (JSONException e) {
             log.info("Не удалось получить из запроса данные планировщика, ошибка {}", e.getMessage());
             log.info("Выполняем заполнение планировщика данными");
