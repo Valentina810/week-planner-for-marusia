@@ -24,8 +24,7 @@ public class WeekPlannerServiceImpl implements WeekPlannerService {
     public ResponseEntity getResponse(Object object) {
         String body = new Gson().toJson(getResponseObject(object));
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Access-Control-Allow-Origin", "https://skill-debugger.marusia.mail.ru");
-        headers.add("Content-Type", "application/json");
+        headers.set("Content-Type", "application/json");
         log.info("Сформирован ответ {}", body);
         return new ResponseEntity<>(body, headers, HttpStatus.OK);
     }
