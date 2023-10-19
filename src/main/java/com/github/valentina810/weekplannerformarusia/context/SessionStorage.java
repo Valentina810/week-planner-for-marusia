@@ -1,5 +1,8 @@
 package com.github.valentina810.weekplannerformarusia.context;
 
+
+import lombok.Builder;
+
 /**
  * Хранилище, которое хранит данные в контексте сессии
  * поле session_state
@@ -10,5 +13,8 @@ package com.github.valentina810.weekplannerformarusia.context;
  * - выход происходит по таймауту, когда пользователь не отвечает некоторое время (1 минуту).
  * https://dev.vk.com/ru/marusia/session-state
  */
+@Builder
 public class SessionStorage {
+    //содержит название предыдущей активности
+    private Object session_state;
 }

@@ -4,6 +4,7 @@ import com.github.valentina810.weekplannerformarusia.model.DayWeek;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
@@ -25,9 +26,10 @@ import java.text.SimpleDateFormat;
 @Setter
 @Component
 @AllArgsConstructor
+@NoArgsConstructor
 public class PersistentStorage {
 
-    private DayWeek[] data;
+    private Object user_state_update;
 
     public DayWeek[] getDayWeeks(JSONObject jsonObject) {
         DayWeek[] dayWeeks = new DayWeek[7];

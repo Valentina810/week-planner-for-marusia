@@ -1,44 +1,53 @@
 package com.github.valentina810.weekplannerformarusia.model;
 
+import com.github.valentina810.weekplannerformarusia.action.BaseAction;
 import com.github.valentina810.weekplannerformarusia.context.PersistentStorage;
 import com.github.valentina810.weekplannerformarusia.context.SessionStorage;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import com.google.gson.Gson;
+import lombok.extern.slf4j.Slf4j;
+import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.stereotype.Component;
 
-@Builder
-@Getter
-@Setter
+@Slf4j
+@Component
 public class MarusiaResponse {
-    private Response response;
-    private Session session;
-    private String version;
-    private SessionStorage session_state;
-    private PersistentStorage user_state_update;
+    /**
+     * Получение из входного запроса данных,
+     * необходимых для формирования ответа
+     *
+     * @param object -  тело входного запроса
+     * @return - сущность активность, которая содержит необходимые свойства
+     * для формирования ответа
+     */
+    public BaseAction getAction(Object object) {
+        try {
+            String jsonString = new Gson().toJson(object);
+            JSONObject jsonObject = new JSONObject(jsonString);
+            String escapedPhrase = getPhrase(jsonString);
+            return BaseAction.builder()
+                    .sessionStorage(SessionStorage.builder()
+                            .session_state(jsonObject.getJSONObject("state").getJSONObject("session")).build())
+                    .persistentStorage(PersistentStorage.builder().
+                            user_state_update(jsonObject.getJSONObject("state").getJSONObject("user")).build())
+                    .message(escapedPhrase)
+                    .build();
+        } catch (JSONException e) {
+            log.info("Возникла ошибка в процессе распарсивания запроса {}", e.getMessage());
+            return null;
+        }
+    }
 
     /**
-     * Заготовка для формирования ответа + положить user_state_update и session_state
-     *
-     * @param responsePhrase
-     * @param jsonObject
-     * @param dayWeeks
-     * @return - ответ для Маруси
+     * Получить из объекта фразу, которую сказал пользователь
+     * @param jsonString - объект
+     * @return - фраза
      */
-    public static MarusiaResponse getMarusiaResponse(String responsePhrase, JSONObject jsonObject, DayWeek[] dayWeeks) {
-        MarusiaResponse marusiaResponse;
-        marusiaResponse = MarusiaResponse.builder()
-                .response(Response.builder()
-                        .text(responsePhrase)
-                        .tts(responsePhrase)
-                        .end_session(false).build())
-                .session(Session.builder()
-                        .user_id(jsonObject.getJSONObject("session").getString("user_id"))
-                        .session_id(jsonObject.getJSONObject("session").getString("session_id"))
-                        .message_id(jsonObject.getJSONObject("session").getInt("message_id")).build())
-                .version(jsonObject.getString("version"))
-                .user_state_update(PersistentStorage.builder().data(dayWeeks).build())
-                .build();
-        return marusiaResponse;
+    private static String getPhrase(String jsonString) {
+        return new JSONObject(jsonString)
+                .getJSONObject("request")
+                .getString("original_utterance")
+                .replaceAll("[^а-яА-Я0-9\\s]", "")
+                .toLowerCase();
     }
 }
