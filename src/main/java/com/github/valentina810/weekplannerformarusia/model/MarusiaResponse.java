@@ -21,25 +21,34 @@ public class MarusiaResponse {
      * для формирования ответа
      */
     public BaseAction getAction(Object object) {
+        String json = new Gson().toJson(object);
+        JSONObject jsonObject = new Gson().fromJson(json, JSONObject.class);
+        String escapedPhrase = getPhrase(json);
+        BaseAction baseAction =
+                BaseAction.builder()
+                        .sessionStorage(SessionStorage.builder().build())
+                        .persistentStorage(PersistentStorage.builder().build())
+                        .message(escapedPhrase)
+                        .isEndSession(false)
+                        .prevAction(SessionStorage.builder().build().getPrevAction())
+                        .build();
         try {
-            String jsonString = new Gson().toJson(object);
-            JSONObject jsonObject = new JSONObject(jsonString);
-            String escapedPhrase = getPhrase(jsonString);
-            return BaseAction.builder()
-                    .sessionStorage(SessionStorage.builder()
-                            .session_state(jsonObject.getJSONObject("state").getJSONObject("session")).build())
-                    .persistentStorage(PersistentStorage.builder().
-                            user_state_update(jsonObject.getJSONObject("state").getJSONObject("user")).build())
-                    .message(escapedPhrase)
-                    .build();
+            baseAction.setSessionStorage(SessionStorage.builder()
+                    .session_state(jsonObject.getJSONObject("state")
+                            .getJSONObject("session")).build());
+            baseAction.setPersistentStorage(PersistentStorage.builder().
+                    user_state_update(jsonObject.getJSONObject("state")
+                            .getJSONObject("user")).build());
+            baseAction.setPrevAction(baseAction.getSessionStorage().getPrevAction());
         } catch (JSONException e) {
             log.info("Возникла ошибка в процессе распарсивания запроса {}", e.getMessage());
-            return null;
         }
+        return baseAction;
     }
 
     /**
      * Получить из объекта фразу, которую сказал пользователь
+     *
      * @param jsonString - объект
      * @return - фраза
      */

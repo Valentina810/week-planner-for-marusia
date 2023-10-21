@@ -1,18 +1,20 @@
 package com.github.valentina810.weekplannerformarusia.context;
 
-import com.github.valentina810.weekplannerformarusia.model.DayWeek;
+import com.google.gson.Gson;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.IntStream;
 
 /**
  * Хранилище, которое хранит данные в УЗ пользователя
@@ -29,27 +31,39 @@ import java.text.SimpleDateFormat;
 @NoArgsConstructor
 public class PersistentStorage {
 
-    private Object user_state_update;
+    private Object user_state_update;//#todo тут могут храниться и другие данные, лучше сделать так, чтобы их не затирать
 
-    public DayWeek[] getDayWeeks(JSONObject jsonObject) {
-        DayWeek[] dayWeeks = new DayWeek[7];
+    /**
+     * Получить из хранилища массив с данными, если он есть
+     * если массива с данными нет, то записать пустой
+     */
+    public void getWeekEvents() {
+        JSONObject jsonObject;
         try {
-            JSONArray jsonArray = jsonObject.getJSONObject("state").getJSONObject("user").getJSONArray("data");
-            for (int i = 0; i < 7; i++) {
-                JSONObject jsonObject1 = jsonArray.getJSONObject(i);
-                dayWeeks[i] = DayWeek.builder().date(jsonObject1.getString("date"))
-                        .timeTable(jsonArray.getJSONObject(i).getString("timeTable")).build();
+            jsonObject = new Gson().fromJson(new Gson().toJson(user_state_update), JSONObject.class);
+            if (jsonObject != null) {
+                //читаем данные
+            } else {
+                user_state_update = generateEmptyWeeklyStorage();
             }
-            log.info("Из запроса получены данные планировщика");
-        } catch (JSONException e) {
-            log.info("Не удалось получить из запроса данные планировщика, ошибка {}", e.getMessage());
-            log.info("Выполняем заполнение планировщика данными");
-            for (int i = 0; i < 7; i++) {
-                dayWeeks[i] = DayWeek.builder().date(new SimpleDateFormat("dd-MM-yyyy")
-                                .format(System.currentTimeMillis() + i * 86400000))
-                        .timeTable("").build();
-            }
+        } catch (JSONException | NullPointerException e) {
+            user_state_update = generateEmptyWeeklyStorage();
         }
-        return dayWeeks;
+    }
+
+    /**
+     * Заполнение хранилища пустой структурой с данными
+     *
+     * @return - объект-хранилище
+     */
+    private WeekStorage generateEmptyWeeklyStorage() {
+        int dayInMilliseconds = 86400000;
+        return WeekStorage.builder().week(Week.builder().days(List.of(IntStream.range(0, 7).mapToObj(i -> {
+            return Day.builder().date(new SimpleDateFormat("dd-MM-yyyy").format(System.currentTimeMillis() + i * dayInMilliseconds)).events(new ArrayList<>()).build();
+        }).toArray(Day[]::new))).build()).build();
+    }
+
+    public WeekStorage getWeekStorage() {
+        return new Gson().fromJson(new Gson().toJson(user_state_update), WeekStorage.class);
     }
 }
