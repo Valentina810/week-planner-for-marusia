@@ -4,6 +4,7 @@ import com.github.valentina810.weekplannerformarusia.action.BaseAction;
 import com.github.valentina810.weekplannerformarusia.context.PersistentStorage;
 import com.github.valentina810.weekplannerformarusia.context.SessionStorage;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,7 +23,7 @@ public class MarusiaResponse {
      */
     public BaseAction getAction(Object object) {
         String json = new Gson().toJson(object);
-        JSONObject jsonObject = new Gson().fromJson(json, JSONObject.class);
+        JsonElement jsonElement = new Gson().fromJson(json, JsonElement.class);
         String escapedPhrase = getPhrase(json);
         BaseAction baseAction =
                 BaseAction.builder()
@@ -34,11 +35,11 @@ public class MarusiaResponse {
                         .build();
         try {
             baseAction.setSessionStorage(SessionStorage.builder()
-                    .session_state(jsonObject.getJSONObject("state")
-                            .getJSONObject("session")).build());
+                    .session_state(jsonElement.getAsJsonObject().getAsJsonObject("state")
+                            .getAsJsonObject("session")).build());
             baseAction.setPersistentStorage(PersistentStorage.builder().
-                    user_state_update(jsonObject.getJSONObject("state")
-                            .getJSONObject("user")).build());
+                    user_state_update(jsonElement.getAsJsonObject().getAsJsonObject("state")
+                            .getAsJsonObject("user")).build());
             baseAction.setPrevAction(baseAction.getSessionStorage().getPrevAction());
         } catch (JSONException e) {
             log.info("Возникла ошибка в процессе распарсивания запроса {}", e.getMessage());

@@ -1,6 +1,7 @@
 package com.github.valentina810.weekplannerformarusia.context;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,7 +9,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
@@ -38,16 +38,24 @@ public class PersistentStorage {
      * если массива с данными нет, то записать пустой
      */
     public void getWeekEvents() {
-        JSONObject jsonObject;
         try {
-            jsonObject = new Gson().fromJson(new Gson().toJson(user_state_update), JSONObject.class);
-            if (jsonObject != null) {
-                //читаем данные
+            JsonElement jsonElement = new Gson()
+                    .fromJson(new Gson().toJson(user_state_update), JsonElement.class);
+            Week week = new Gson()
+                    .fromJson(new Gson()
+                            .toJson(jsonElement.getAsJsonObject()
+                                    .getAsJsonObject("week")), Week.class);
+            if (week != null) {
+                user_state_update = week;
+                log.info("Получили данные о событиях на неделю из ответа");
             } else {
                 user_state_update = generateEmptyWeeklyStorage();
+                log.info("Данные о событиях отсутствуют, записали пустую структуру");
             }
         } catch (JSONException | NullPointerException e) {
+            log.info("В процессе получения данных о событиях из ответа возникла ошибка {}", e.getMessage());
             user_state_update = generateEmptyWeeklyStorage();
+            log.info("Данные о событиях отсутствуют, записали пустую структуру");
         }
     }
 
@@ -58,9 +66,13 @@ public class PersistentStorage {
      */
     private WeekStorage generateEmptyWeeklyStorage() {
         int dayInMilliseconds = 86400000;
-        return WeekStorage.builder().week(Week.builder().days(List.of(IntStream.range(0, 7).mapToObj(i -> {
-            return Day.builder().date(new SimpleDateFormat("dd-MM-yyyy").format(System.currentTimeMillis() + i * dayInMilliseconds)).events(new ArrayList<>()).build();
-        }).toArray(Day[]::new))).build()).build();
+        return WeekStorage.builder().week(Week.builder()
+                .days(List.of(IntStream.range(0, 7)
+                        .mapToObj(i -> {
+                            return Day.builder()
+                                    .date(new SimpleDateFormat("dd-MM-yyyy").format(System.currentTimeMillis() + i * dayInMilliseconds))
+                                    .events(new ArrayList<>()).build();
+                        }).toArray(Day[]::new))).build()).build();
     }
 
     public WeekStorage getWeekStorage() {

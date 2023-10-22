@@ -88,8 +88,7 @@ public class MarusiaRequest {
      * Получить из ответа обязательные для передачи атрибуты
      */
     private RequiredAttributes getRequestAttributes(final Object object) {
-        String jsonString = new Gson().toJson(object);
-        JSONObject jsonObject = new JSONObject(jsonString);
+        JSONObject jsonObject = new JSONObject(new Gson().toJson(object));
         return RequiredAttributes.builder()
                 .userId(jsonObject.getJSONObject("session").getString("user_id"))
                 .sessionId(jsonObject.getJSONObject("session").getString("session_id"))

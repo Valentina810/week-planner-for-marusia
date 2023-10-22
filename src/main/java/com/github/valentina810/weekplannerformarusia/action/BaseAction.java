@@ -39,11 +39,20 @@ public class BaseAction {
      * @return - ответная фраза
      */
     private String getWeekEventsData() {
-        List<Day> collect = persistentStorage.getWeekStorage().getWeek().getDays().stream().filter(e -> !e.getEvents().isEmpty()).collect(Collectors.toList());
-        if (collect.isEmpty()) {
+        List<Day> collect;
+        try {
+            collect = persistentStorage.getWeekStorage().getWeek().getDays().stream().filter(e -> !e.getEvents().isEmpty()).collect(Collectors.toList());
+            if (collect.isEmpty()) {
+                return "У вас пока нет событий";
+            } else {
+                return "Ваши события " + collect.stream()
+                        .map(day -> day.getDate() + " " + day.getEvents().stream()
+                                .map(event -> event.getName() + " " + event.getTime())
+                                .collect(Collectors.joining(" ")))
+                        .collect(Collectors.joining(" "));
+            }
+        } catch (NullPointerException e) {
             return "У вас пока нет событий";
-        } else {
-            return "Ваши события " + collect.stream().map(day -> day.getDate() + " " + day.getEvents().stream().map(event -> event.getName() + " " + event.getTime()).collect(Collectors.joining(" "))).collect(Collectors.joining(" "));
         }
     }
 }
