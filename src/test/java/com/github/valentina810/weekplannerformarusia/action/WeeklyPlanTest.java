@@ -3,7 +3,7 @@ package com.github.valentina810.weekplannerformarusia.action;
 import org.junit.jupiter.api.Test;
 
 public class WeeklyPlanTest {
-    @Test
+   // @Test
     public void getWeeklyPlan_whenWeeklyPlanEmpty_thenReturnEmpty() {
     }
 
