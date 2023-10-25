@@ -1,4 +1,3 @@
-
 # Схема диалога
 
 https://miro.com/app/board/uXjVMBAr0bg=/?share_link_id=84728232957
