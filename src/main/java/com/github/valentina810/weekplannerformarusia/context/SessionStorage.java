@@ -3,6 +3,7 @@ package com.github.valentina810.weekplannerformarusia.context;
 
 import com.github.valentina810.weekplannerformarusia.action.PrevAction;
 import com.github.valentina810.weekplannerformarusia.action.TypeAction;
+import com.google.gson.Gson;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -19,11 +20,11 @@ import org.json.JSONObject;
  * - выход происходит по таймауту, когда пользователь не отвечает некоторое время (1 минуту).
  * https://dev.vk.com/ru/marusia/session-state
  */
+@Getter
 @Builder
 @Slf4j
 public class SessionStorage {
     //содержит название предыдущей активности
-    @Getter
     private Object session_state;
 
     /**
@@ -37,7 +38,7 @@ public class SessionStorage {
                 .valueAction("")
                 .build();
         try {
-            JSONObject prevAction = new JSONObject(session_state).getJSONObject("prevAction");
+            JSONObject prevAction = new JSONObject(new Gson().toJson(session_state)).getJSONObject("prevAction");
             action.setTypeAction(TypeAction.valueOf(prevAction.getString("typeAction")));
             action.setValueAction(prevAction.getString("valueAction"));
         } catch (JSONException | NullPointerException e) {
