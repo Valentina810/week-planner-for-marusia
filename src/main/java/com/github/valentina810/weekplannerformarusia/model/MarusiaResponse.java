@@ -33,17 +33,13 @@ public class MarusiaResponse {
                         .isEndSession(false)
                         .prevAction(SessionStorage.builder().build().getPrevAction())
                         .build();
-        try {
-            baseAction.setSessionStorage(SessionStorage.builder()
-                    .session_state(jsonElement.getAsJsonObject().getAsJsonObject("state")
-                            .getAsJsonObject("session")).build());
-            baseAction.setPersistentStorage(PersistentStorage.builder().
-                    user_state_update(jsonElement.getAsJsonObject().getAsJsonObject("state")
-                            .getAsJsonObject("user")).build());
-            baseAction.setPrevAction(baseAction.getSessionStorage().getPrevAction());
-        } catch (JSONException e) {
-            log.info("Возникла ошибка в процессе распарсивания запроса {}", e.getMessage());
-        }
+        baseAction.setSessionStorage(SessionStorage.builder()
+                .session_state(jsonElement.getAsJsonObject().getAsJsonObject("state")
+                        .getAsJsonObject("session")).build());
+        baseAction.setPersistentStorage(PersistentStorage.builder().
+                user_state_update(jsonElement.getAsJsonObject().getAsJsonObject("state")
+                        .getAsJsonObject("user")).build());
+        baseAction.setPrevAction(baseAction.getSessionStorage().getPrevAction());
         return baseAction;
     }
 
@@ -54,10 +50,15 @@ public class MarusiaResponse {
      * @return - фраза
      */
     private static String getPhrase(String jsonString) {
-        return new JSONObject(jsonString)
-                .getJSONObject("request")
-                .getString("original_utterance")
-                .replaceAll("[^а-яА-Я0-9\\s]", "")
-                .toLowerCase();
+        try {
+            return new JSONObject(jsonString)
+                    .getJSONObject("request")
+                    .getString("original_utterance")
+                    .replaceAll("[^а-яА-Я0-9\\s]", "")
+                    .toLowerCase();
+        } catch (JSONException e) {
+            log.info("Возникла ошибка {} при получении фразы из запроса", e.getMessage());
+            return "";
+        }
     }
 }

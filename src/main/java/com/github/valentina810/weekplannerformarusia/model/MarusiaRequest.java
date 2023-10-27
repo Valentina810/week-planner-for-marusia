@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
@@ -88,11 +89,16 @@ public class MarusiaRequest {
      * Получить из ответа обязательные для передачи атрибуты
      */
     private RequiredAttributes getRequestAttributes(final Object object) {
-        JSONObject jsonObject = new JSONObject(new Gson().toJson(object));
-        return RequiredAttributes.builder()
-                .userId(jsonObject.getJSONObject("session").getString("user_id"))
-                .sessionId(jsonObject.getJSONObject("session").getString("session_id"))
-                .messageId(jsonObject.getJSONObject("session").getInt("message_id"))
-                .version(jsonObject.getString("version")).build();
+        try {
+            JSONObject jsonObject = new JSONObject(new Gson().toJson(object));
+            return RequiredAttributes.builder()
+                    .userId(jsonObject.getJSONObject("session").getString("user_id"))
+                    .sessionId(jsonObject.getJSONObject("session").getString("session_id"))
+                    .messageId(jsonObject.getJSONObject("session").getInt("message_id"))
+                    .version(jsonObject.getString("version")).build();
+        } catch (JSONException e) {
+            log.info("Возникла ошибка {} при получении обязательных атрибутов из запроса", e.getMessage());
+            return null;
+        }
     }
 }

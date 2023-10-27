@@ -47,7 +47,7 @@ public class BaseAction {
             } else {
                 return "Ваши события " + collect.stream()
                         .map(day -> day.getDate() + " " + day.getEvents().stream()
-                                .map(event -> event.getName() + " " + event.getTime())
+                                .map(event -> event.getTime() + " " + event.getName())
                                 .collect(Collectors.joining(" ")))
                         .collect(Collectors.joining(" "));
             }
