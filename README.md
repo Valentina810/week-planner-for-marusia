@@ -8,7 +8,7 @@ https://miro.com/app/board/uXjVMBAr0bg=/?share_link_id=84728232957
 - [X] Добавить обработку WeeklyPlan
 - [X] Добавить юнит-тесты на WeeklyPlan
 - [ ] В Enum добавить все экшены, каждому экшену сопоставить токены (слова во фразе)
-- [ ] Добавить обработку PlanToday
+- [X] Добавить обработку PlanToday
 - [ ] Добавить юнит-тесты на PlanToday
 - [ ] Добавить обработку PlanForTomorrow
 - [ ] Добавить юнит-тесты на PlanForTomorrow
