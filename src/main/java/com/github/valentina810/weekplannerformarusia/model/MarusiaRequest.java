@@ -1,7 +1,6 @@
 package com.github.valentina810.weekplannerformarusia.model;
 
-import com.github.valentina810.weekplannerformarusia.action.BaseAction;
-import com.github.valentina810.weekplannerformarusia.action.TypeAction;
+import com.github.valentina810.weekplannerformarusia.action.Action;
 import com.google.gson.Gson;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,54 +33,34 @@ public class MarusiaRequest {
      * @return - ответ для Маруси
      */
     public MarusiaRequest getRequest(Object object) {
-        BaseAction baseAction = new MarusiaResponse().getAction(object);
-        String message = baseAction.getMessage();
-        requiredAttributes = getRequestAttributes(object);
-        log.info("Получена команда {}", message);
-        if (baseAction.getSessionStorage().getPrevAction().getTypeAction()
-                .equals(TypeAction.NONE)) {
-            switch (message) {
-                case "план на неделю":
-                    return formRequest(baseAction.replyWeeklyPlan(), requiredAttributes);
-                case "план на сегодня":
-                    break;
-                case "план на завтра":
-                    break;
-                case "добавь событие":
-                    break;
-                case "справка":
-                    break;
-                case "выход":
-                    break;
-                default:
-            }
-        } else {
-            //формируем запрос с учетом переданных ранее активностей
-        }
-        return new MarusiaRequest();
+        return formRequest(new MarusiaResponse()
+                        .getAction(object)
+                        .reply(),
+                getRequestAttributes(object));
     }
 
     /**
      * Сформировать ответ
      *
-     * @param baseAction         - ответ на фразу
+     * @param action             - ответ на фразу
      * @param requiredAttributes - обязательные атрибуты для формирования запроса,
      *                           полученные из ответа
      * @return - сформированный запрос
      */
-    private MarusiaRequest formRequest(final BaseAction baseAction, final RequiredAttributes requiredAttributes) {
+    private MarusiaRequest formRequest(final Action action,
+                                       final RequiredAttributes requiredAttributes) {
         return MarusiaRequest.builder()
                 .response(Response.builder()
-                        .text(baseAction.getMessage())
-                        .tts(baseAction.getMessage())
-                        .end_session(baseAction.getIsEndSession()).build())
+                        .text(action.getMessage())
+                        .tts(action.getMessage())
+                        .end_session(action.getIsEndSession()).build())
                 .session(Session.builder()
                         .user_id(requiredAttributes.getUserId())
                         .session_id(requiredAttributes.getSessionId())
                         .message_id(requiredAttributes.getMessageId()).build())
                 .version(requiredAttributes.getVersion())
-                .user_state_update(baseAction.getPersistentStorage().getUser_state_update())
-                .session_state(baseAction.getSessionStorage().getSession_state())
+                .user_state_update(action.getPersistentStorage().getUser_state_update())
+                .session_state(action.getSessionStorage().getSession_state())
                 .build();
     }
 
