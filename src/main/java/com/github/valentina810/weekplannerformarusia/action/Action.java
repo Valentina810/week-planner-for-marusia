@@ -10,6 +10,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,6 +27,7 @@ import static com.github.valentina810.weekplannerformarusia.action.TypeAction.WE
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Component
 public class Action {
     @Setter
     private SessionStorage sessionStorage;

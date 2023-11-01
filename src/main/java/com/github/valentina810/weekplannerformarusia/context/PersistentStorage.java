@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ import java.util.stream.IntStream;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Component
 public class PersistentStorage {
 
     private Object user_state_update;//#todo тут могут храниться и другие данные, лучше сделать так, чтобы их не затирать
