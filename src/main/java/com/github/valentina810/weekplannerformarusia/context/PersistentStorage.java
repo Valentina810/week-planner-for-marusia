@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -25,7 +24,6 @@ import java.util.stream.IntStream;
 @Builder
 @Getter
 @Setter
-@Component
 @AllArgsConstructor
 @NoArgsConstructor
 public class PersistentStorage {

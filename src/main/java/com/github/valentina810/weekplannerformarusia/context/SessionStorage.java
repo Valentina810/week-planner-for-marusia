@@ -4,11 +4,14 @@ package com.github.valentina810.weekplannerformarusia.context;
 import com.github.valentina810.weekplannerformarusia.action.PrevAction;
 import com.github.valentina810.weekplannerformarusia.action.TypeAction;
 import com.google.gson.Gson;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.stereotype.Component;
 
 /**
  * Хранилище, которое хранит данные в контексте сессии
@@ -23,6 +26,9 @@ import org.json.JSONObject;
 @Getter
 @Builder
 @Slf4j
+@Component
+@AllArgsConstructor
+@NoArgsConstructor
 public class SessionStorage {
     //содержит название предыдущей активности
     private Object session_state;

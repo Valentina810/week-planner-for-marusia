@@ -1,6 +1,6 @@
 package com.github.valentina810.weekplannerformarusia.model;
 
-import com.github.valentina810.weekplannerformarusia.action.BaseAction;
+import com.github.valentina810.weekplannerformarusia.action.Action;
 import com.github.valentina810.weekplannerformarusia.context.PersistentStorage;
 import com.github.valentina810.weekplannerformarusia.context.SessionStorage;
 import com.google.gson.Gson;
@@ -21,26 +21,26 @@ public class MarusiaResponse {
      * @return - сущность активность, которая содержит необходимые свойства
      * для формирования ответа
      */
-    public BaseAction getAction(Object object) {
+    public Action getAction(Object object) {
         String json = new Gson().toJson(object);
         JsonElement jsonElement = new Gson().fromJson(json, JsonElement.class);
         String escapedPhrase = getPhrase(json);
-        BaseAction baseAction =
-                BaseAction.builder()
+        Action action =
+                Action.builder()
                         .sessionStorage(SessionStorage.builder().build())
                         .persistentStorage(PersistentStorage.builder().build())
                         .message(escapedPhrase)
                         .isEndSession(false)
                         .prevAction(SessionStorage.builder().build().getPrevAction())
                         .build();
-        baseAction.setSessionStorage(SessionStorage.builder()
+        action.setSessionStorage(SessionStorage.builder()
                 .session_state(jsonElement.getAsJsonObject().getAsJsonObject("state")
                         .getAsJsonObject("session")).build());
-        baseAction.setPersistentStorage(PersistentStorage.builder().
+        action.setPersistentStorage(PersistentStorage.builder().
                 user_state_update(jsonElement.getAsJsonObject().getAsJsonObject("state")
                         .getAsJsonObject("user")).build());
-        baseAction.setPrevAction(baseAction.getSessionStorage().getPrevAction());
-        return baseAction;
+        action.setPrevAction(action.getSessionStorage().getPrevAction());
+        return action;
     }
 
     /**

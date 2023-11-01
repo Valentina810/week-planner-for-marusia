@@ -8,65 +8,70 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
-public class WeeklyPlanTest {
+public class WeeklyPlanHandlerTest {
     private final PersistentStorage persistentStorage = PersistentStorage.builder().build();
 
     @Test
     public void getWeeklyPlan_whenWeeklyPlanEmpty_thenReturnEmpty() {
         persistentStorage.getWeekEvents();
-        BaseAction baseAction = BaseAction.builder()
+        Action action = Action.builder()
                 .persistentStorage(persistentStorage)
+                .message("план на неделю")
                 .build();
 
-        assertEquals("У вас пока нет событий",
-                baseAction.replyWeeklyPlan().getMessage());
+        assertEquals("У вас пока нет событий на этой неделе",
+                action.reply().getMessage());
     }
 
     @Test
     public void getWeeklyPlan_whenWeeklyPlanContainsOneEvent_thenReturnOneEvent() {
         persistentStorage.setUser_state_update(new Gson().fromJson(FileReader
                 .loadJsonFromFile("action/weeklyplan/WeeklyPlanContainsOneEvent.json"), Object.class));
-        BaseAction baseAction = BaseAction.builder()
+        Action action = Action.builder()
                 .persistentStorage(persistentStorage)
+                .message("план на неделю")
                 .build();
 
-        assertEquals("Ваши события 26-10-2023 12:00 Лекция",
-                baseAction.replyWeeklyPlan().getMessage());
+        assertEquals("Ваши события 31-10-2023 12:00 Лекция",
+                action.reply().getMessage());
     }
 
     @Test
     public void getWeeklyPlan_whenWeeklyPlanContainsTwoEventsOnOneDay_thenReturnAllEvent() {
         persistentStorage.setUser_state_update(new Gson().fromJson(FileReader
                 .loadJsonFromFile("action/weeklyplan/WeeklyPlanContainsTwoEventsOnOneDay.json"), Object.class));
-        BaseAction baseAction = BaseAction.builder()
+        Action action = Action.builder()
                 .persistentStorage(persistentStorage)
+                .message("план на неделю")
                 .build();
 
-        assertEquals("Ваши события 26-10-2023 12:00 Лекция 16:00 Свидание",
-                baseAction.replyWeeklyPlan().getMessage());
+        assertEquals("Ваши события 31-10-2023 12:00 Лекция 16:00 Свидание",
+                action.reply().getMessage());
     }
 
     @Test
     public void getWeeklyPlan_whenWeeklyPlanContainsTwoEventsOnDifferentDay_thenReturnAllEvent() {
         persistentStorage.setUser_state_update(new Gson().fromJson(FileReader
                 .loadJsonFromFile("action/weeklyplan/WeeklyPlanContainsTwoEventsOnDifferentDay.json"), Object.class));
-        BaseAction baseAction = BaseAction.builder()
+        Action action = Action.builder()
                 .persistentStorage(persistentStorage)
+                .message("план на неделю")
                 .build();
 
-        assertEquals("Ваши события 26-10-2023 12:00 Лекция 29-10-2023 18:00 Ужин в ресторане",
-                baseAction.replyWeeklyPlan().getMessage());
+        assertEquals("Ваши события 31-10-2023 12:00 Лекция 03-11-2023 18:00 Ужин в ресторане",
+                action.reply().getMessage());
     }
 
     @Test
     public void getWeeklyPlan_whenWeeklyPlanContainsTwoEventsTwoDays_thenReturnAllEvent() {
         persistentStorage.setUser_state_update(new Gson().fromJson(FileReader
                 .loadJsonFromFile("action/weeklyplan/WeeklyPlanContainsTwoEventsTwoDays.json"), Object.class));
-        BaseAction baseAction = BaseAction.builder()
+        Action action = Action.builder()
                 .persistentStorage(persistentStorage)
+                .message("план на неделю")
                 .build();
 
-        assertEquals("Ваши события 26-10-2023 12:00 Лекция 16:00 Свидание 30-10-2023 10:00 Велотренировка 20:00 Поход за покупками",
-                baseAction.replyWeeklyPlan().getMessage());
+        assertEquals("Ваши события 31-10-2023 12:00 Лекция 16:00 Свидание 04-11-2023 10:00 Велотренировка 20:00 Поход за покупками",
+                action.reply().getMessage());
     }
 }
