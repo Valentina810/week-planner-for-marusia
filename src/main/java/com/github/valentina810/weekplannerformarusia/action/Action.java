@@ -1,18 +1,20 @@
 package com.github.valentina810.weekplannerformarusia.action;
 
 import com.github.valentina810.weekplannerformarusia.action.handler.BaseHandlerResponsePhrase;
-import com.github.valentina810.weekplannerformarusia.action.handler.PlanTodayHandler;
-import com.github.valentina810.weekplannerformarusia.action.handler.WeeklyPlanHandler;
+import com.github.valentina810.weekplannerformarusia.action.handler.Handlers;
 import com.github.valentina810.weekplannerformarusia.context.PersistentStorage;
 import com.github.valentina810.weekplannerformarusia.context.SessionStorage;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.stereotype.Component;
+import lombok.extern.slf4j.Slf4j;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import static com.github.valentina810.weekplannerformarusia.action.TypeAction.ADD_EVENT;
@@ -25,9 +27,9 @@ import static com.github.valentina810.weekplannerformarusia.action.TypeAction.WE
 
 @Builder
 @Getter
+@Slf4j
 @NoArgsConstructor
 @AllArgsConstructor
-@Component
 public class Action {
     @Setter
     private SessionStorage sessionStorage;
@@ -39,8 +41,56 @@ public class Action {
     private Boolean isEndSession;
     private Map<TypeAction, BaseHandlerResponsePhrase> handlers;
 
+    /**
+     * Получение из входного запроса данных,
+     * необходимых для формирования ответа
+     *
+     * @param object -  тело входного запроса
+     * для формирования ответа
+     */
+    public void createAction(Object object) {
+        String json = new Gson().toJson(object);
+        JsonElement jsonElement = new Gson().fromJson(json, JsonElement.class);
+        String escapedPhrase = getPhrase(json);
+        sessionStorage = SessionStorage.builder().build();
+        persistentStorage = PersistentStorage.builder().build();
+        message = escapedPhrase;
+        isEndSession = false;
+        prevAction = SessionStorage.builder().build().getPrevAction();
+        sessionStorage = SessionStorage.builder()
+                .session_state(jsonElement.getAsJsonObject().getAsJsonObject("state")
+                        .getAsJsonObject("session")).build();
+        persistentStorage = PersistentStorage.builder().
+                user_state_update(jsonElement.getAsJsonObject().getAsJsonObject("state")
+                        .getAsJsonObject("user")).build();
+        prevAction = sessionStorage.getPrevAction();
+    }
+
+    /**
+     * Получить из объекта фразу, которую сказал пользователь
+     *
+     * @param jsonString - объект
+     * @return - фраза
+     */
+    private String getPhrase(String jsonString) {
+        try {
+            return new JSONObject(jsonString)
+                    .getJSONObject("request")
+                    .getString("original_utterance")
+                    .replaceAll("[^а-яА-Я0-9\\s]", "")
+                    .toLowerCase();
+        } catch (JSONException e) {
+            log.info("Возникла ошибка {} при получении фразы из запроса", e.getMessage());
+            return "";
+        }
+    }
+
+    /**
+     * На основе данных формируем ответ для пользователя
+     * @return
+     */
     public Action reply() {
-        fillHandlers();
+        handlers = new Handlers().getBaseHandlers();
         BaseHandlerResponsePhrase baseHandlerResponsePhrase = handlers.get(getAction(message));
         if (baseHandlerResponsePhrase != null) {
             message = baseHandlerResponsePhrase.find(this);
@@ -68,16 +118,5 @@ public class Action {
             case "выход" -> EXIT;
             default -> NONE;
         };
-    }
-
-    /**
-     * Заполнить мапу обработчиков
-     */
-    private void fillHandlers() {
-        if (handlers == null || handlers.isEmpty()) {
-            handlers = new HashMap<>();
-            handlers.put(WEEKLY_PLAN, new WeeklyPlanHandler());
-            handlers.put(TODAY_PLAN, new PlanTodayHandler());
-        }
     }
 }

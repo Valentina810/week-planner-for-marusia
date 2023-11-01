@@ -3,7 +3,6 @@ package com.github.valentina810.weekplannerformarusia.action.handler;
 import com.github.valentina810.weekplannerformarusia.action.Action;
 import com.github.valentina810.weekplannerformarusia.action.TypeAction;
 import com.github.valentina810.weekplannerformarusia.context.Day;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -12,7 +11,6 @@ import java.util.stream.Collectors;
 
 import static com.github.valentina810.weekplannerformarusia.action.TypeAction.TODAY_PLAN;
 
-@Component
 public class PlanTodayHandler implements BaseHandlerResponsePhrase {
 
     @Override

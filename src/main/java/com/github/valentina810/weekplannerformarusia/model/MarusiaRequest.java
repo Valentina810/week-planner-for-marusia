@@ -33,10 +33,9 @@ public class MarusiaRequest {
      * @return - ответ для Маруси
      */
     public MarusiaRequest getRequest(Object object) {
-        return formRequest(new MarusiaResponse()
-                        .getAction(object)
-                        .reply(),
-                getRequestAttributes(object));
+        Action action = Action.builder().build();
+        action.createAction(object);
+        return formRequest(action.reply(), getRequestAttributes(object));
     }
 
     /**

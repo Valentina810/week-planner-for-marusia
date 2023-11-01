@@ -3,14 +3,12 @@ package com.github.valentina810.weekplannerformarusia.action.handler;
 import com.github.valentina810.weekplannerformarusia.action.Action;
 import com.github.valentina810.weekplannerformarusia.action.TypeAction;
 import com.github.valentina810.weekplannerformarusia.context.Day;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.github.valentina810.weekplannerformarusia.action.TypeAction.WEEKLY_PLAN;
 
-@Component
 public class WeeklyPlanHandler implements BaseHandlerResponsePhrase {
 
     @Override
