@@ -1,4 +1,4 @@
-package com.github.valentina810.weekplannerformarusia.context;
+package com.github.valentina810.weekplannerformarusia.storage.persistent;
 
 import lombok.Builder;
 import lombok.Getter;

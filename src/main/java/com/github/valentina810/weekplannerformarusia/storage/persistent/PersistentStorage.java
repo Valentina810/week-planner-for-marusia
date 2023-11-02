@@ -1,13 +1,11 @@
-package com.github.valentina810.weekplannerformarusia.context;
+package com.github.valentina810.weekplannerformarusia.storage.persistent;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -16,28 +14,28 @@ import java.util.stream.IntStream;
 
 /**
  * Хранилище, которое хранит данные в УЗ пользователя
- * поле user_state_update
+ * поле user_state_update - передаем, получаем из state.user
  * лимит размера json-объекта user_state_update — 5 Кбайт
  * https://dev.vk.com/ru/marusia/session-state
  */
 @Slf4j
-@Builder
 @Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@RequiredArgsConstructor
+@Component
 public class PersistentStorage {
 
-    private Object user_state_update;//#todo тут могут храниться и другие данные, лучше сделать так, чтобы их не затирать
+    //#todo тут могут храниться и другие данные, лучше сделать так, чтобы их не затирать
+    private Object user_state_update;
+    private WeekStorage weekStorage;
 
     /**
      * Получить из хранилища массив с данными, если он есть
      * если массива с данными нет, то записать пустой
      */
-    public void getWeekEvents() {
+    public void getWeekEvents(final Object object) {
         try {
             JsonElement jsonElement = new Gson()
-                    .fromJson(new Gson().toJson(user_state_update), JsonElement.class);
+                    .fromJson(new Gson().toJson(object), JsonElement.class);
             WeekStorage weekStorage = new Gson()
                     .fromJson(new Gson()
                                     .toJson(jsonElement.getAsJsonObject().getAsJsonObject("weekstorage")),
@@ -72,7 +70,7 @@ public class PersistentStorage {
                         }).toArray(Day[]::new))).build()).build();
     }
 
-    public WeekStorage getWeekStorage() {
-        return new Gson().fromJson(new Gson().toJson(user_state_update), WeekStorage.class);
+    public void getWeekStorage(final Object object) {
+        weekStorage = new Gson().fromJson(new Gson().toJson(object), WeekStorage.class);
     }
 }
