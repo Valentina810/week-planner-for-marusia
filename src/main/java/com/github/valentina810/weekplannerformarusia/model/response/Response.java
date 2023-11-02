@@ -1,4 +1,4 @@
-package com.github.valentina810.weekplannerformarusia.model;
+package com.github.valentina810.weekplannerformarusia.model.response;
 
 import lombok.Builder;
 import lombok.Getter;

@@ -1,13 +1,13 @@
 package com.github.valentina810.weekplannerformarusia.action.handler;
 
-import com.github.valentina810.weekplannerformarusia.action.Action;
 import com.github.valentina810.weekplannerformarusia.action.TypeAction;
+import com.github.valentina810.weekplannerformarusia.model.request.UserRequest;
 
 
-public class PlanForTomorrowHandler implements BaseHandlerResponsePhrase {
+public class PlanForTomorrowHandler implements BaseHandler {
 
     @Override
-    public String find(Action action) {
+    public String find(UserRequest userRequest) {
         return null;
     }
 
