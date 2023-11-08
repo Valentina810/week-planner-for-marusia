@@ -19,14 +19,20 @@ import java.util.stream.IntStream;
  * https://dev.vk.com/ru/marusia/session-state
  */
 @Slf4j
-@Getter
 @RequiredArgsConstructor
 @Component
 public class PersistentStorage {
 
     //#todo тут могут храниться и другие данные, лучше сделать так, чтобы их не затирать
+    @Getter
     private Object user_state_update;
-    private WeekStorage weekStorage;
+
+    /**
+     * Возвращает user_state_update в виде объекта WeekStorage
+     */
+    public WeekStorage getWeekStorage() {
+        return new Gson().fromJson(new Gson().toJson(user_state_update), WeekStorage.class);
+    }
 
     /**
      * Получить из хранилища массив с данными, если он есть
@@ -36,12 +42,11 @@ public class PersistentStorage {
         try {
             JsonElement jsonElement = new Gson()
                     .fromJson(new Gson().toJson(object), JsonElement.class);
-            WeekStorage weekStorage = new Gson()
-                    .fromJson(new Gson()
-                                    .toJson(jsonElement.getAsJsonObject().getAsJsonObject("weekstorage")),
-                            WeekStorage.class);
-            if (weekStorage != null) {
-                user_state_update = weekStorage;
+            Week week = new Gson()
+                    .fromJson(new Gson().toJson(jsonElement.getAsJsonObject()
+                            .getAsJsonObject("week")), Week.class);
+            if (week != null) {
+                user_state_update = WeekStorage.builder().week(week).build();
                 log.info("Получили данные о событиях на неделю из ответа");
             } else {
                 user_state_update = generateEmptyWeeklyStorage();
@@ -68,9 +73,5 @@ public class PersistentStorage {
                                     .date(new SimpleDateFormat("dd-MM-yyyy").format(System.currentTimeMillis() + (long) i * dayInMilliseconds))
                                     .events(new ArrayList<>()).build();
                         }).toArray(Day[]::new))).build()).build();
-    }
-
-    public void getWeekStorage(final Object object) {
-        weekStorage = new Gson().fromJson(new Gson().toJson(object), WeekStorage.class);
     }
 }
