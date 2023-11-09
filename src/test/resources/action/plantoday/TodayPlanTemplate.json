@@ -9,14 +9,14 @@
     "_city_ru": "Москва"
   },
   "request": {
-    "command": "план на неделю",
-    "original_utterance": "план на неделю",
+    "command": "план на сегодня",
+    "original_utterance": "план на сегодня",
     "type": "SimpleUtterance",
     "nlu": {
       "tokens": [
         "план",
         "на",
-        "неделю"
+        "сегодня"
       ],
       "entities": []
     }
@@ -43,24 +43,17 @@
         "days": [
           {
             "date": "31-10-2023",
-            "events": [
-              {
-                "time": "12:00",
-                "name": "Лекция"
-              },
-              {
-                "time": "16:00",
-                "name": "Свидание"
-              }
-            ]
+            "events": []
           },
           {
             "date": "01-11-2023",
             "events": []
           },
           {
-            "date": "02-11-2023",
-            "events": []
+            "date": "todayDate",
+            "events": [
+              todayEvents
+            ]
           },
           {
             "date": "03-11-2023",

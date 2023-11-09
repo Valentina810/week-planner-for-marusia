@@ -1,34 +1,77 @@
 {
-  "week": {
-    "days": [
-      {
-        "date": "31-10-2023",
-        "events": []
-      },
-      {
-        "date": "01-11-2023",
-        "events": []
-      },
-      {
-        "date": "{todayDate}",
-        "events": [{todayEvents}]
-      },
-      {
-        "date": "03-11-2023",
-        "events": []
-      },
-      {
-        "date": "04-11-2023",
-        "events": []
-      },
-      {
-        "date": "05-11-2023",
-        "events": []
-      },
-      {
-        "date": "06-11-2023",
-        "events": []
+  "meta": {
+    "client_id": "MailRu-VC/1.0",
+    "locale": "ru_RU",
+    "timezone": "Europe/Moscow",
+    "interfaces": {
+      "screen": {}
+    },
+    "_city_ru": "Москва"
+  },
+  "request": {
+    "command": "план на сегодня",
+    "original_utterance": "план на сегодня",
+    "type": "SimpleUtterance",
+    "nlu": {
+      "tokens": [
+        "план",
+        "на",
+        "сегодня"
+      ],
+      "entities": []
+    }
+  },
+  "session": {
+    "session_id": "cc6",
+    "user_id": "878",
+    "skill_id": "524",
+    "new": false,
+    "message_id": 8,
+    "application": {
+      "application_id": "8783",
+      "application_type": "web"
+    },
+    "auth_token": "636",
+    "user": {
+      "user_id": "a45"
+    }
+  },
+  "state": {
+    "session": {},
+    "user": {
+      "week": {
+        "days": [
+          {
+            "date": "31-10-2023",
+            "events": []
+          },
+          {
+            "date": "01-11-2023",
+            "events": []
+          },
+          {
+            "date": "todayDate",
+            "events": []
+          },
+          {
+            "date": "03-11-2023",
+            "events": []
+          },
+          {
+            "date": "04-11-2023",
+            "events": []
+          },
+          {
+            "date": "05-11-2023",
+            "events": []
+          },
+          {
+            "date": "06-11-2023",
+            "events": []
+          }
+        ]
       }
-    ]
-  }
+    }
+  },
+  "version": "1.0"
 }

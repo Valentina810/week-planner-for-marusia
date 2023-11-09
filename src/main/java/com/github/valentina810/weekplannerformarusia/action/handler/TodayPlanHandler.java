@@ -16,7 +16,7 @@ import static com.github.valentina810.weekplannerformarusia.action.TypeAction.TO
 
 @Component
 @RequiredArgsConstructor
-public class PlanTodayHandler implements BaseHandler {
+public class TodayPlanHandler implements BaseHandler {
 
     @Override
     public String find(UserRequest userRequest) {
