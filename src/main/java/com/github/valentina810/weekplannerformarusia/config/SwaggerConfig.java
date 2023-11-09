@@ -14,7 +14,7 @@ public class SwaggerConfig {
                 .info(
                         new Info()
                                 .title("week-planner-for-marusia API")
-                                .version("1.0.0 from 00 Oct 2023")
+                                .version("1.0.0 from 09 Now 2023")
                                 .contact(
                                         new Contact()
                                                 .email("valentinavasileva34@gmail.com")

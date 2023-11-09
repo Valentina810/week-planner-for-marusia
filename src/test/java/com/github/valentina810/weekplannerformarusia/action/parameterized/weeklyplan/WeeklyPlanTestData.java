@@ -1,4 +1,4 @@
-package com.github.valentina810.weekplannerformarusia.action.parametrized;
+package com.github.valentina810.weekplannerformarusia.action.parameterized.weeklyplan;
 
 import org.junit.jupiter.params.provider.Arguments;
 

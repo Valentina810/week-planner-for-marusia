@@ -1,6 +1,6 @@
 package com.github.valentina810.weekplannerformarusia.action;
 
-import com.github.valentina810.weekplannerformarusia.action.parametrized.ParameterForWeeklyPlanTest;
+import com.github.valentina810.weekplannerformarusia.action.parameterized.weeklyplan.ParameterForWeeklyPlanTest;
 import com.github.valentina810.weekplannerformarusia.model.request.UserRequest;
 import com.github.valentina810.weekplannerformarusia.util.FileReader;
 import com.google.gson.Gson;
@@ -18,7 +18,7 @@ public class WeeklyPlanHandlerTest {
     private ActionExecutor actionExecutor;
 
     @ParameterizedTest
-    @MethodSource("com.github.valentina810.weekplannerformarusia.action.parametrized.WeeklyPlanTestData#providerWeeklyPlanHandlerTest")
+    @MethodSource("com.github.valentina810.weekplannerformarusia.action.parameterized.weeklyplan.WeeklyPlanTestData#providerWeeklyPlanHandlerTest")
     public void checkWeeklyPlan(ParameterForWeeklyPlanTest parameterForWeeklyPlanTest) {
         UserRequest userRequest = new Gson().fromJson(
                 FileReader.loadJsonFromFile(parameterForWeeklyPlanTest.getJsonFileSource()),

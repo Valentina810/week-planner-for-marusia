@@ -26,7 +26,7 @@ public class FileReader {
         } catch (Exception e) {
             log.info("Произошла ошибка {} при попытке открыть файл {}", e.getMessage(), fileName);
         }
-        return null;
+        return new JsonObject();
     }
 
     /**
@@ -49,6 +49,6 @@ public class FileReader {
         } catch (Exception e) {
             log.info("Произошла ошибка {} при попытке открыть файл {}", e.getMessage(), fileName);
         }
-        return null;
+        return "";
     }
 }

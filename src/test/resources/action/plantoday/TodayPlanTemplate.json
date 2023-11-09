@@ -51,7 +51,11 @@
           },
           {
             "date": "{todayDate}",
-            "events": []
+            "events": [
+              {
+                todayEvents
+              }
+            ]
           },
           {
             "date": "03-11-2023",
