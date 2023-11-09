@@ -20,8 +20,8 @@ public class TodayPlanHandlerTest {
     @MethodSource("com.github.valentina810.weekplannerformarusia.action.parameterized.todayplan.TodayPlanTestData#providerTodayPlanHandlerTest")
     public void checkTodayPlan(ParameterForTodayPlanTest parameterForTodayPlanTest) {
         String json = FileReader.loadStringFromFile(parameterForTodayPlanTest.getJsonFileSource())
-                .replace("{todayDate}", parameterForTodayPlanTest.getTodayDate())
-                .replace("{todayEvents}", parameterForTodayPlanTest.getTodayEvents());
+                .replace("todayDate", parameterForTodayPlanTest.getTodayDate())
+                .replace("todayEvents", parameterForTodayPlanTest.getTodayEvents());
 
         UserRequest userRequest = new Gson().fromJson(json, UserRequest.class);
         actionExecutor.createUserResponse(userRequest);

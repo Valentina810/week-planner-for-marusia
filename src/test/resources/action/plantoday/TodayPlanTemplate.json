@@ -50,11 +50,9 @@
             "events": []
           },
           {
-            "date": "{todayDate}",
+            "date": "todayDate",
             "events": [
-              {
-                todayEvents
-              }
+              todayEvents
             ]
           },
           {
