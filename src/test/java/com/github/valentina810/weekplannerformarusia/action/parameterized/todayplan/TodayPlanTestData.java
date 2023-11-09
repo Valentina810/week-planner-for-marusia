@@ -8,13 +8,13 @@ import java.util.stream.Stream;
 
 public class TodayPlanTestData {
     private static final String today = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-    private static final String templateJson = "action/planToday/TodayPlanTemplate.json";
+    private static final String templateJson = "action/plantoday/TodayPlanTemplate.json";
 
     static Stream<Arguments> providerTodayPlanHandlerTest() {
         return Stream.of(
                 Arguments.of(ParameterForTodayPlanTest.builder()
                         .testName("getPlanToday_whenPlanTodayEmpty_thenReturnEmpty")
-                        .jsonFileSource("action/planToday/TodayPlanEmpty.json")
+                        .jsonFileSource("action/plantoday/TodayPlanEmpty.json")
                         .todayDate(today)
                         .todayEvents("")
                         .expectedResult("У вас пока нет событий на сегодня")
