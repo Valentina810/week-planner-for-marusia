@@ -14,11 +14,11 @@
     <name>week-planner-for-marusia</name>
     <description>week-planner-for-marusia</description>
     <properties>
-        <java.version>21</java.version>
+        <java.version>17</java.version>
         <start-class>com.github.valentina810.weekplannerformarusia.WeekPlannerForMarusiaApplication</start-class>
         <maven.compiler.release>${java.version}</maven.compiler.release>
         <com.google.code.gson.version>2.10.1</com.google.code.gson.version>
-        <org.json.version>20230227</org.json.version>
+        <org.json.version>20231013</org.json.version>
         <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
         <lombok.version>1.18.30</lombok.version>
         <mapstruct-lombok.version>0.2.0</mapstruct-lombok.version>
@@ -37,7 +37,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.springdoc</groupId>
@@ -95,8 +94,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
-                    <source>21</source>
-                    <target>21</target>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
                     <annotationProcessorPaths>
                         <path>
                             <groupId>org.mapstruct</groupId>
