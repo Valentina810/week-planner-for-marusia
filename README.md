@@ -12,7 +12,7 @@ https://miro.com/app/board/uXjVMBAr0bg=/?share_link_id=84728232957
 - [X] Добавить обработку PlanToday https://github.com/Valentina810/week-planner-for-marusia/pull/20
 - [X] Добавить юнит-тесты на PlanToday https://github.com/Valentina810/week-planner-for-marusia/pull/21
 - [ ] Разделить логику работы с хранилищем: создание, если оно не заполнено и получение если оно заполнено
-- [ ] Добавить обработку PlanForTomorrow
+- [X] Добавить обработку PlanForTomorrow
 - [ ] Добавить юнит-тесты на PlanForTomorrow
 - [ ] Добавить обработку Unknown
 - [ ] Добавить юнит-тесты на Unknown
