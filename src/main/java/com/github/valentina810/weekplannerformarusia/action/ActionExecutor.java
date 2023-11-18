@@ -34,9 +34,9 @@ public class ActionExecutor {
      * Формирует ответ для пользователя в поле userResponse
      */
     public void createUserResponse(UserRequest userRequest) {
-        BaseHandler baseHandlerResponsePhrase =
+        BaseHandler handler =
                 baseHandlerFactory.getByBaseHandlerResponsePhraseType(getAction(getPhrase(userRequest.getRequest().getCommand())));
-        String message = baseHandlerResponsePhrase.find(userRequest);
+        String message = handler.find(userRequest);
 
         userResponse.setResponse(Response.builder()
                 .text(message)
