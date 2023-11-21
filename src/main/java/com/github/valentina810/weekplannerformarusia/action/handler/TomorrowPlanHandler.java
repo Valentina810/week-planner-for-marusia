@@ -11,7 +11,7 @@ import static com.github.valentina810.weekplannerformarusia.action.TypeAction.TO
 
 @Component
 @RequiredArgsConstructor
-public class PlanForTomorrowHandler implements BaseHandler, ReceiverEventsForDate {
+public class TomorrowPlanHandler implements BaseHandler, ReceiverEventsForDate {
 
     @Override
     public String find(UserRequest userRequest) {
