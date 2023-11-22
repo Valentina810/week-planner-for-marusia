@@ -9,8 +9,8 @@
     "_city_ru": "Москва"
   },
   "request": {
-    "command": "план на сегодня",
-    "original_utterance": "план на сегодня",
+    "command": "phrase",
+    "original_utterance": "phrase",
     "type": "SimpleUtterance",
     "nlu": {
       "tokens": [
