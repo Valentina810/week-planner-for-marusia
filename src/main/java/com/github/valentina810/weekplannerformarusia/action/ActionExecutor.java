@@ -2,6 +2,7 @@ package com.github.valentina810.weekplannerformarusia.action;
 
 import com.github.valentina810.weekplannerformarusia.action.handler.BaseHandler;
 import com.github.valentina810.weekplannerformarusia.action.handler.BaseHandlerFactory;
+import com.github.valentina810.weekplannerformarusia.action.phrase.BasePhraseFactory;
 import com.github.valentina810.weekplannerformarusia.model.request.UserRequest;
 import com.github.valentina810.weekplannerformarusia.model.response.Response;
 import com.github.valentina810.weekplannerformarusia.model.response.Session;
@@ -13,20 +14,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import static com.github.valentina810.weekplannerformarusia.action.TypeAction.ADD_EVENT;
-import static com.github.valentina810.weekplannerformarusia.action.TypeAction.EXIT;
-import static com.github.valentina810.weekplannerformarusia.action.TypeAction.HELP;
-import static com.github.valentina810.weekplannerformarusia.action.TypeAction.NONE;
-import static com.github.valentina810.weekplannerformarusia.action.TypeAction.TODAY_PLAN;
-import static com.github.valentina810.weekplannerformarusia.action.TypeAction.TOMORROW_PLAN;
-import static com.github.valentina810.weekplannerformarusia.action.TypeAction.WEEKLY_PLAN;
-
 @Slf4j
 @RequiredArgsConstructor
 @Component
 public class ActionExecutor {
 
     private final BaseHandlerFactory baseHandlerFactory;
+    private final BasePhraseFactory basePhraseFactory;
     @Getter
     private final UserResponse userResponse;
 
@@ -76,18 +70,10 @@ public class ActionExecutor {
     /**
      * Возвращает тип активности, который удалось выделить из фразы пользователя
      *
-     * @param message - фраза
+     * @param phrase - фраза
      * @return - выделенная активность
      */
-    private TypeAction getAction(String message) {
-        return switch (message) {
-            case "план на неделю" -> WEEKLY_PLAN;
-            case "план на сегодня" -> TODAY_PLAN;
-            case "план на завтра" -> TOMORROW_PLAN;
-            case "добавь событие" -> ADD_EVENT;
-            case "справка" -> HELP;
-            case "выход" -> EXIT;
-            default -> NONE;
-        };
+    private TypeAction getAction(String phrase) {
+        return basePhraseFactory.getBasePhrase(phrase);
     }
 }

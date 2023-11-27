@@ -20,10 +20,10 @@ public class BaseHandlerFactory {
     }
 
     public BaseHandler getByBaseHandlerResponsePhraseType(TypeAction typeAction) {
-        BaseHandler phrase = baseHandlers.get(typeAction);
-        if (phrase == null) {
+        BaseHandler handler = baseHandlers.get(typeAction);
+        if (handler == null) {
             throw new RuntimeException("Отсутствует реализация для " + typeAction);
         }
-        return phrase;
+        return handler;
     }
 }
