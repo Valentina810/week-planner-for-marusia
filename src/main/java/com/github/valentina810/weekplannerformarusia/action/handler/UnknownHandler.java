@@ -5,7 +5,7 @@ import com.github.valentina810.weekplannerformarusia.model.request.UserRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import static com.github.valentina810.weekplannerformarusia.action.TypeAction.NONE;
+import static com.github.valentina810.weekplannerformarusia.action.TypeAction.UNKNOWN;
 
 @Component
 @RequiredArgsConstructor
@@ -18,6 +18,6 @@ public class UnknownHandler implements BaseHandler {
 
     @Override
     public TypeAction getType() {
-        return NONE;
+        return UNKNOWN;
     }
 }

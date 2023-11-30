@@ -31,7 +31,7 @@ public class SessionStorage {
 
     public void getPrevAction() {
         PrevAction action = PrevAction.builder()
-                .typeAction(TypeAction.NONE)
+                .typeAction(TypeAction.UNKNOWN)
                 .valueAction("")
                 .build();
         try {

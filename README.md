@@ -9,22 +9,23 @@ https://miro.com/app/board/uXjVMBAr0bg=/?share_link_id=84728232957
 - [X] Добавить обработку WeeklyPlan https://github.com/Valentina810/week-planner-for-marusia/pull/8
 - [X] Добавить юнит-тесты на WeeklyPlan https://github.com/Valentina810/week-planner-for-marusia/pull/14
 - [ ] В Enum добавить все экшены, каждому экшену сопоставить токены (слова во фразе)
-- [X] Добавить обработку PlanToday https://github.com/Valentina810/week-planner-for-marusia/pull/20
-- [X] Добавить юнит-тесты на PlanToday https://github.com/Valentina810/week-planner-for-marusia/pull/21
+- [X] Добавить обработку TodayPlan https://github.com/Valentina810/week-planner-for-marusia/pull/20
+- [X] Добавить юнит-тесты на TodayPlan https://github.com/Valentina810/week-planner-for-marusia/pull/21
 - [ ] Разделить логику работы с хранилищем: создание, если оно не заполнено и получение если оно заполнено
-- [X] Добавить обработку PlanForTomorrow
-- [X] Добавить юнит-тесты на PlanForTomorrow
+- [X] Добавить обработку TomorrowPlan https://github.com/Valentina810/week-planner-for-marusia/pull/27
+- [X] Добавить юнит-тесты на TomorrowPlan https://github.com/Valentina810/week-planner-for-marusia/pull/29
 - [ ] Добавить запрос события на день недели, например, фраза: "расскажи план на среду"
-- [X] Добавить обработку Unknown
-- [ ] Добавить юнит-тесты на Unknown
-- [ ] Добавить обработку Exit
+- [X] Добавить обработку Unknown https://github.com/Valentina810/week-planner-for-marusia/pull/32 (ранее уже было реализовано), отдельного обработчика нет, если не распознана входная команда, то в методе BasePhraseFactory возвращается UNKNOWN
+- [X] Добавить юнит-тесты на Unknown https://github.com/Valentina810/week-planner-for-marusia/pull/33
+- [X] Добавить обработку Exit
 - [ ] Добавить юнит-тесты на Exit
 - [ ] Добавить обработку Faq
 - [ ] Добавить юнит-тесты на Faq
 - [ ] Добавить обработку AddEvent
 - [ ] Добавить юнит-тесты на AddEvent
 - [ ] Сквозные тесты на контроллер и сервис
-- [ ] При первом обращении к навыку ("message_id":0) выполнять обновление расписания: первый день недели - сегодня,
+- [ ] Добавить распознавание команд по токенам (по вхождению всех слов в ключевой фразе в любом порядке)
+- [ ] При первом обращении к навыку (session.new: true и session.message_id: 0) выполнять обновление расписания: первый день недели - сегодня,
   остальные дни дозаполнить и добавить в конец, не затирая при этом уже добавленные события (если они есть)
 
 # Фичи на развитие:

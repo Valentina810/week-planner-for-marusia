@@ -11,7 +11,7 @@ import static com.github.valentina810.weekplannerformarusia.action.TypeAction.EX
 public class ExitPhrase implements BasePhrase {
     @Override
     public String getPhrase() {
-        return "выход";
+        return "пока";
     }
 
     @Override
