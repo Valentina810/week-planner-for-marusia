@@ -17,8 +17,8 @@ https://miro.com/app/board/uXjVMBAr0bg=/?share_link_id=84728232957
 - [ ] Добавить запрос события на день недели, например, фраза: "расскажи план на среду"
 - [X] Добавить обработку Unknown https://github.com/Valentina810/week-planner-for-marusia/pull/32 (ранее уже было реализовано), отдельного обработчика нет, если не распознана входная команда, то в методе BasePhraseFactory возвращается UNKNOWN
 - [X] Добавить юнит-тесты на Unknown https://github.com/Valentina810/week-planner-for-marusia/pull/33
-- [X] Добавить обработку Exit
-- [ ] Добавить юнит-тесты на Exit
+- [X] Добавить обработку Exit https://github.com/Valentina810/week-planner-for-marusia/issues/34
+- [X] Добавить юнит-тесты на Exit https://github.com/Valentina810/week-planner-for-marusia/issues/36
 - [ ] Добавить обработку Faq
 - [ ] Добавить юнит-тесты на Faq
 - [ ] Добавить обработку AddEvent
