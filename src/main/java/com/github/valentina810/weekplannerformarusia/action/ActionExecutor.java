@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import static com.github.valentina810.weekplannerformarusia.action.TypeAction.EXIT;
+
 @Slf4j
 @RequiredArgsConstructor
 @Component
@@ -29,13 +31,14 @@ public class ActionExecutor {
      */
     public void createUserResponse(UserRequest userRequest) {
         BaseHandler handler =
-                baseHandlerFactory.getByBaseHandlerResponsePhraseType(getAction(getPhrase(userRequest.getRequest().getCommand())));
+                baseHandlerFactory.getByBaseHandlerResponsePhraseType(getAction(getPhrase(
+                        userRequest.getRequest().getCommand())));
         String message = handler.find(userRequest);
 
         userResponse.setResponse(Response.builder()
                 .text(message)
                 .tts(message)
-                .end_session(false).build());
+                .end_session(handler.getType().equals(EXIT)).build());
 
         userResponse.setSession(Session.builder()
                 .user_id(userRequest.getSession().getUser_id())

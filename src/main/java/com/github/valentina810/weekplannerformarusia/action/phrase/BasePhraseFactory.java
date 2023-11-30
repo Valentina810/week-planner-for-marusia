@@ -20,6 +20,6 @@ public class BasePhraseFactory {
 
     public TypeAction getBasePhrase(String phrase) {
         TypeAction typeAction = basePhrases.get(phrase);
-        return typeAction != null ? typeAction : TypeAction.NONE;
+        return typeAction != null ? typeAction : TypeAction.UNKNOWN;
     }
 }

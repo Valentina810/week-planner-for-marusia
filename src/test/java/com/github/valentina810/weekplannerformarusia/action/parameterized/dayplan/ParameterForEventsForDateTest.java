@@ -2,9 +2,11 @@ package com.github.valentina810.weekplannerformarusia.action.parameterized.daypl
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
 @Builder
+@ToString
 public class ParameterForEventsForDateTest {
     private String testName;
     private String jsonFileSource;
