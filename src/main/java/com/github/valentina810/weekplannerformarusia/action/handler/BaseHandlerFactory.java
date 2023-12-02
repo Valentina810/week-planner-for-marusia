@@ -3,9 +3,11 @@ package com.github.valentina810.weekplannerformarusia.action.handler;
 import com.github.valentina810.weekplannerformarusia.action.TypeAction;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Component
 public class BaseHandlerFactory {
@@ -13,17 +15,12 @@ public class BaseHandlerFactory {
     private final Map<TypeAction, BaseHandler> baseHandlers;
 
     public BaseHandlerFactory(List<BaseHandler> baseHandlers) {
-        this.baseHandlers = new HashMap<>();
-        for (BaseHandler phrase : baseHandlers) {
-            this.baseHandlers.put(phrase.getType(), phrase);
-        }
+        this.baseHandlers = baseHandlers.stream()
+                .collect(Collectors.toMap(BaseHandler::getType, Function.identity()));
     }
 
     public BaseHandler getByBaseHandlerResponsePhraseType(TypeAction typeAction) {
-        BaseHandler phrase = baseHandlers.get(typeAction);
-        if (phrase == null) {
-            throw new RuntimeException("Отсутствует реализация для " + typeAction);
-        }
-        return phrase;
+        return Optional.of(baseHandlers.get(typeAction))
+                .orElseThrow(() -> new RuntimeException("Отсутствует реализация для " + typeAction));
     }
 }

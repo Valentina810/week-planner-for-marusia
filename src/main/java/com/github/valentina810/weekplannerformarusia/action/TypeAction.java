@@ -10,5 +10,5 @@ public enum TypeAction {
     ADD_NAME,
     HELP,
     EXIT,
-    NONE
+    UNKNOWN
 }

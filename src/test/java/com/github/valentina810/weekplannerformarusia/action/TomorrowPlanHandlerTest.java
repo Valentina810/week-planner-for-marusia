@@ -12,14 +12,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
-public class TodayPlanHandlerTest {
-
+public class TomorrowPlanHandlerTest {
     @Autowired
     private ActionExecutor actionExecutor;
 
     @ParameterizedTest
-    @MethodSource("com.github.valentina810.weekplannerformarusia.action.parameterized.dayplan.EventsForDateTestData#providerTodayPlanHandlerTest")
-    public void checkTodayPlan(ParameterForEventsForDateTest parameterForEventsForDateTest) {
+    @MethodSource("com.github.valentina810.weekplannerformarusia.action.parameterized.dayplan.EventsForDateTestData#providerTomorrowPlanHandlerTest")
+    public void checkTomorrowPlan(ParameterForEventsForDateTest parameterForEventsForDateTest) {
         String json = FileReader.loadStringFromFile(parameterForEventsForDateTest.getJsonFileSource())
                 .replace("testDate", parameterForEventsForDateTest.getDate())
                 .replace("testEvents", parameterForEventsForDateTest.getTodayEvents())

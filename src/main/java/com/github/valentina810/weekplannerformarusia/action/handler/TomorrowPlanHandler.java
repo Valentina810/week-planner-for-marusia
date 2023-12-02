@@ -7,20 +7,20 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 
-import static com.github.valentina810.weekplannerformarusia.action.TypeAction.TODAY_PLAN;
+import static com.github.valentina810.weekplannerformarusia.action.TypeAction.TOMORROW_PLAN;
 
 @Component
 @RequiredArgsConstructor
-public class TodayPlanHandler implements BaseHandler, ReceiverEventsForDate {
+public class TomorrowPlanHandler implements BaseHandler, ReceiverEventsForDate {
 
     @Override
     public String find(UserRequest userRequest) {
         return getEventsForDate(userRequest.getState().getUser(),
-                LocalDate.now(), "сегодня");
+                LocalDate.now().plusDays(1), "завтра");
     }
 
     @Override
     public TypeAction getType() {
-        return TODAY_PLAN;
+        return TOMORROW_PLAN;
     }
 }

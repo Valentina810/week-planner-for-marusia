@@ -1,7 +1,6 @@
-package com.github.valentina810.weekplannerformarusia.action.handler;
+package com.github.valentina810.weekplannerformarusia.action.phrase;
 
 import com.github.valentina810.weekplannerformarusia.action.TypeAction;
-import com.github.valentina810.weekplannerformarusia.model.request.UserRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -9,15 +8,14 @@ import static com.github.valentina810.weekplannerformarusia.action.TypeAction.EX
 
 @Component
 @RequiredArgsConstructor
-public class ExitHandler implements BaseHandler {
-
+public class ExitPhrase implements BasePhrase {
     @Override
-    public String find(UserRequest userRequest) {
-        return "До свидания!";
+    public String getPhrase() {
+        return "пока";
     }
 
     @Override
-    public TypeAction getType() {
+    public TypeAction getAction() {
         return EXIT;
     }
 }
