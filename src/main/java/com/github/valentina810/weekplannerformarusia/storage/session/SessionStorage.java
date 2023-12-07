@@ -1,15 +1,14 @@
 package com.github.valentina810.weekplannerformarusia.storage.session;
 
 
-import com.github.valentina810.weekplannerformarusia.action.PrevAction;
-import com.github.valentina810.weekplannerformarusia.action.TypeAction;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.stereotype.Component;
+
+import java.util.TreeSet;
 
 /**
  * Хранилище, которое хранит данные в контексте сессии
@@ -22,25 +21,30 @@ import org.springframework.stereotype.Component;
  * https://dev.vk.com/ru/marusia/session-state
  */
 @Slf4j
+
 @Component
 @RequiredArgsConstructor
 public class SessionStorage {
 
-    @Getter
     private Object session_state;
+    @Getter
+    private Actions actions;
 
-    public void getPrevAction() {
-        PrevAction action = PrevAction.builder()
-                .typeAction(TypeAction.UNKNOWN)
-                .valueAction("")
-                .build();
+    public Object getSession_state() {
+        return !actions.getActions().isEmpty() ? actions : session_state;
+    }
+
+    public void getPrevActions(Object object) {
         try {
-            JSONObject prevAction = new JSONObject(new Gson().toJson(session_state)).getJSONObject("prevAction");
-            action.setTypeAction(TypeAction.valueOf(prevAction.getString("typeAction")));
-            action.setValueAction(prevAction.getString("valueAction"));
-            session_state = action;
-        } catch (JSONException | NullPointerException e) {
-            log.info("В session_state не найдено предыдущее действие");
+            JsonElement jsonElement = new Gson()
+                    .fromJson(new Gson().toJson(object), JsonElement.class);
+            actions = new Gson()
+                    .fromJson(new Gson().toJson(jsonElement.getAsJsonObject()
+                            .getAsJsonObject("actions")), Actions.class);
+        } catch (NullPointerException e) {
+            log.info("В session_state не найдены предыдущие действия");
+        } finally {
+            actions = Actions.builder().actions(new TreeSet<>()).build();
         }
     }
 }
