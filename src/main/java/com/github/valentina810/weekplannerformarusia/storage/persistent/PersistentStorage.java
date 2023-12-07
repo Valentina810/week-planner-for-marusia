@@ -40,12 +40,11 @@ public class PersistentStorage {
      */
     public void getWeekEvents(final Object object) {
         try {
+            JsonElement jsonElement = new Gson()
+                    .fromJson(new Gson().toJson(object), JsonElement.class);
             Week week = new Gson()
-                    .fromJson(
-                            new Gson()
-                                    .fromJson(object.toString(), JsonElement.class)
-                                    .getAsJsonObject()
-                                    .getAsJsonObject("week"), Week.class);
+                    .fromJson(new Gson().toJson(jsonElement.getAsJsonObject()
+                            .getAsJsonObject("week")), Week.class);
             if (week != null) {
                 user_state_update = WeekStorage.builder().week(week).build();
                 log.info("Получили данные о событиях на неделю из ответа");
