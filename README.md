@@ -45,4 +45,7 @@ https://miro.com/app/board/uXjVMBAr0bg=/?share_link_id=84728232957
   связать)
 - [ ] добавить подробное логирование и сохранение логов в файл
 
+# Поддержка Маруси
+marusia-support@corp.mail.ru
+
 

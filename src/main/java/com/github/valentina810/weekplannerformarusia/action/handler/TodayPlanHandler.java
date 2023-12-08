@@ -1,26 +1,15 @@
 package com.github.valentina810.weekplannerformarusia.action.handler;
 
-import com.github.valentina810.weekplannerformarusia.action.TypeAction;
-import com.github.valentina810.weekplannerformarusia.model.request.UserRequest;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import lombok.Getter;
 
 import java.time.LocalDate;
 
-import static com.github.valentina810.weekplannerformarusia.action.TypeAction.TODAY_PLAN;
 
-@Component
-@RequiredArgsConstructor
-public class TodayPlanHandler implements BaseHandler, ReceiverEventsForDate {
+@Getter
+public class TodayPlanHandler extends Handler{
 
-    @Override
-    public String find(UserRequest userRequest) {
-        return getEventsForDate(userRequest.getState().getUser(),
-                LocalDate.now(), "сегодня");
-    }
-
-    @Override
-    public TypeAction getType() {
-        return TODAY_PLAN;
-    }
+    private final Runnable todayPlan = () -> {
+        setDefaultValueParameters();
+        respPhrase = getEventsForDate(LocalDate.now());
+    };
 }

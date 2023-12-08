@@ -1,0 +1,77 @@
+[
+  {
+    "phrase": "План на неделю",
+    "messagePositive": "Ваши события ",
+    "messageNegative": "У вас пока нет событий на этой неделе",
+    "operation": "WEEKLY_PLAN",
+    "actions": []
+  },
+  {
+    "phrase": "План на сегодня",
+    "messagePositive": "Ваши события на сегодня ",
+    "messageNegative": "У вас пока нет событий на сегодня",
+    "operation": "TODAY_PLAN",
+    "actions": []
+  },
+  {
+    "phrase": "План на завтра",
+    "messagePositive": "Ваши события на завтра ",
+    "messageNegative": "У вас пока нет событий на завтра",
+    "operation": "TOMORROW_PLAN",
+    "actions": []
+  },
+  {
+    "phrase": "Добавь событие",
+    "messagePositive": "Назовите день, например, среда ",
+    "messageNegative": "Не удалось добавить событие",
+    "operation": "ADD_EVENT",
+    "actions": [
+      {
+        "phrase": "custom",
+        "messagePositive": "Назовите время, например, 12 часов 30 минут ",
+        "messageNegative": "Не удалось добавить событие",
+        "operation": "ADD_DAY",
+        "actions": []
+      },
+      {
+        "phrase": "custom",
+        "messagePositive": "Назовите название события ",
+        "messageNegative": "Не удалось добавить событие",
+        "operation": "ADD_TIME",
+        "actions": []
+      },
+      {
+        "phrase": "custom",
+        "messagePositive": "Событие успешно добавлено!",
+        "messageNegative": "Не удалось добавить событие",
+        "operation": "ADD_NAME",
+        "actions": []
+      }
+    ]
+  },
+  {
+    "phrase": "Cправка",
+    "messagePositive": "Выберите раздел: команды, как добавить событие, об авторе",
+    "operation": "help",
+    "actions": [
+      {
+        "phrase": "команды",
+        "messagePositive": "Вот какие у меня есть команды: план на неделю, план на сегодня, план на завтра",
+        "operation": "commands",
+        "actions": []
+      },
+      {
+        "phrase": "добавить событие",
+        "messagePositive": "Для того чтобы добавить событие скажите: добавь событие",
+        "operation": "howAddEvent",
+        "actions": []
+      },
+      {
+        "phrase": "об авторе",
+        "messagePositive": "Имя автора Валентина",
+        "operation": "author",
+        "actions": []
+      }
+    ]
+  }
+]

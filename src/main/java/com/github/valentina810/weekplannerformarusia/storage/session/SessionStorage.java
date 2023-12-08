@@ -20,18 +20,17 @@ import java.util.TreeSet;
  * - выход происходит по таймауту, когда пользователь не отвечает некоторое время (1 минуту).
  * https://dev.vk.com/ru/marusia/session-state
  */
+@Getter
 @Slf4j
 
 @Component
 @RequiredArgsConstructor
 public class SessionStorage {
 
-    private Object session_state;
-    @Getter
     private Actions actions;
 
     public Object getSession_state() {
-        return !actions.getActions().isEmpty() ? actions : session_state;
+        return actions;
     }
 
     public void getPrevActions(Object object) {
