@@ -73,5 +73,17 @@
         "actions": []
       }
     ]
+  },
+  {
+    "phrase": "пока",
+    "messagePositive": "До свидания!",
+    "operation": "EXIT",
+    "actions": []
+  },
+  {
+    "phrase": "custom",
+    "messagePositive": "Получена неизвестная команда!",
+    "operation": "UNKNOWN",
+    "actions": []
   }
 ]

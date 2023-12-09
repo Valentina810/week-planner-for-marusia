@@ -1,6 +1,8 @@
 package com.github.valentina810.weekplannerformarusia.action;
 
-import com.github.valentina810.weekplannerformarusia.action.handler.Handler;
+import com.github.valentina810.weekplannerformarusia.action.handler.BaseHandler;
+import com.github.valentina810.weekplannerformarusia.action.handler.HandlerFactory;
+import com.github.valentina810.weekplannerformarusia.action.handler.LoadCommand;
 import com.github.valentina810.weekplannerformarusia.model.request.UserRequest;
 import com.github.valentina810.weekplannerformarusia.model.response.Response;
 import com.github.valentina810.weekplannerformarusia.model.response.Session;
@@ -15,7 +17,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ActionExecutor {
     private final Loader loader;
-    private final Handler handler;
+    private final HandlerFactory handlerFactory;
     @Getter
     private final UserResponse userResponse;
 
@@ -24,14 +26,16 @@ public class ActionExecutor {
      */
     public void createUserResponse(UserRequest userRequest) {
         String phrase = getPhrase(userRequest.getRequest().getCommand());
-        handler.setBaseLoaderHandler(loader.getBaseHandlers().get(phrase));
-        handler.setUserRequest(userRequest);
-        handler.getActs().get(handler.getBaseLoaderHandler().getOperation()).run();
+        LoadCommand loadCommand = loader.get(phrase);
+        BaseHandler handler = handlerFactory.getByBaseHandlerResponsePhraseType(loadCommand.getOperation());
+        handler.getParametersHandler().setLoadCommand(loadCommand);
+        handler.getParametersHandler().setUserRequest(userRequest);
+        handler.getAction(userRequest);
 
         userResponse.setResponse(Response.builder()
-                .text(handler.getRespPhrase())
-                .tts(handler.getRespPhrase())
-                .end_session(handler.getIsEndSession())
+                .text(handler.getParametersHandler().getRespPhrase())
+                .tts(handler.getParametersHandler().getRespPhrase())
+                .end_session(handler.getParametersHandler().getIsEndSession())
                 .build());
 
         userResponse.setSession(Session.builder()
@@ -40,9 +44,9 @@ public class ActionExecutor {
                 .message_id(userRequest.getSession().getMessage_id())
                 .build());
 
-        userResponse.setSession_state(handler.getSessionStorage().getSession_state());
+        userResponse.setSession_state(handler.getParametersHandler().getSessionStorage().getSession_state());
 
-        userResponse.setUser_state_update(handler.getPersistentStorage().getUser_state_update());
+        userResponse.setUser_state_update(handler.getParametersHandler().getPersistentStorage().getUser_state_update());
 
         userResponse.setVersion(userRequest.getVersion());
     }

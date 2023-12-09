@@ -5,22 +5,22 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Component
-public class BaseHandlerFactory {
-
+public class HandlerFactory {
     private final Map<TypeAction, BaseHandler> baseHandlers;
 
-    public BaseHandlerFactory(List<BaseHandler> baseHandlers) {
+    public HandlerFactory(List<BaseHandler> baseHandlers) {
         this.baseHandlers = baseHandlers.stream()
                 .collect(Collectors.toMap(BaseHandler::getType, Function.identity()));
     }
 
     public BaseHandler getByBaseHandlerResponsePhraseType(TypeAction typeAction) {
-        return Optional.of(baseHandlers.get(typeAction))
-                .orElseThrow(() -> new RuntimeException("Отсутствует реализация для " + typeAction));
+        if (typeAction == null) {
+            return baseHandlers.get(TypeAction.UNKNOWN);
+        } else
+            return baseHandlers.get(typeAction) != null ? baseHandlers.get(typeAction) : baseHandlers.get(TypeAction.UNKNOWN);
     }
 }
