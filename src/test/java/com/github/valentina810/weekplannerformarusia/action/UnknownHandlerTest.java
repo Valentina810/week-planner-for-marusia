@@ -26,11 +26,10 @@ public class UnknownHandlerTest {
                 .replace("testEvents", "")
                 .replace("phrase", "PhraseUnknown");
 
-        UserRequest userRequest = new Gson().fromJson(json, UserRequest.class);
-        actionExecutor.createUserResponse(userRequest);
+        actionExecutor.createUserResponse(new Gson().fromJson(json, UserRequest.class));
 
         assertAll(
-                () -> assertEquals("Получена неизвестная команда",
+                () -> assertEquals("Получена неизвестная команда! Используйте команду справка для того чтобы узнать мои команды",
                         actionExecutor.getUserResponse().getResponse().getText()),
                 () -> assertFalse(actionExecutor.getUserResponse().getResponse().isEnd_session())
         );
@@ -43,11 +42,10 @@ public class UnknownHandlerTest {
                 .replace("testEvents", "")
                 .replace("phrase", "");
 
-        UserRequest userRequest = new Gson().fromJson(json, UserRequest.class);
-        actionExecutor.createUserResponse(userRequest);
+        actionExecutor.createUserResponse(new Gson().fromJson(json, UserRequest.class));
 
         assertAll(
-                () -> assertEquals("Получена неизвестная команда",
+                () -> assertEquals("Получена неизвестная команда! Используйте команду справка для того чтобы узнать мои команды",
                         actionExecutor.getUserResponse().getResponse().getText()),
                 () -> assertFalse(actionExecutor.getUserResponse().getResponse().isEnd_session())
         );

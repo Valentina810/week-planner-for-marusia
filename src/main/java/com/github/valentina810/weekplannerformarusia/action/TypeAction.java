@@ -9,6 +9,10 @@ public enum TypeAction {
     ADD_TIME,
     ADD_NAME,
     HELP,
+    COMMANDS,
+    HOW_ADD_EVENT,
+    AUTHOR,
+    EXIT_MAIN_MENU,
     EXIT,
     UNKNOWN
 }

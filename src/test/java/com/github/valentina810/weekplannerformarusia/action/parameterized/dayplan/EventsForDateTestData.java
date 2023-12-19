@@ -27,7 +27,7 @@ public class EventsForDateTestData {
                         .phrase("план на сегодня")
                         .date(TODAY)
                         .todayEvents("{\"time\": \"12:00\", \"name\": \"Лекция\"}")
-                        .expectedResult("Ваши события " + TODAY + " 12:00 Лекция")
+                        .expectedResult("Ваши события на сегодня " + TODAY + " 12:00 Лекция")
                         .build()),
                 Arguments.of(ParameterForEventsForDateTest.builder()
                         .testName("getPlanToday_whenPlanTodayContainsTwoEvents_thenReturnAllEvent")
@@ -35,7 +35,7 @@ public class EventsForDateTestData {
                         .phrase("план на сегодня")
                         .date(TODAY)
                         .todayEvents("{\"time\": \"12:00\", \"name\": \"Лекция\"}, {\"time\": \"16:00\", \"name\": \"Прогулка на берегу моря\"}")
-                        .expectedResult("Ваши события " + TODAY + " 12:00 Лекция 16:00 Прогулка на берегу моря")
+                        .expectedResult("Ваши события на сегодня " + TODAY + " 12:00 Лекция 16:00 Прогулка на берегу моря")
                         .build())
         );
     }
@@ -56,7 +56,7 @@ public class EventsForDateTestData {
                         .phrase("план на завтра")
                         .date(TOMORROW)
                         .todayEvents("{\"time\": \"12:00\", \"name\": \"Лекция\"}")
-                        .expectedResult("Ваши события " + TOMORROW + " 12:00 Лекция")
+                        .expectedResult("Ваши события на завтра " + TOMORROW + " 12:00 Лекция")
                         .build()),
                 Arguments.of(ParameterForEventsForDateTest.builder()
                         .testName("getPlanTomorrow_whenPlanTomorrowContainsTwoEvents_thenReturnAllEvent")
@@ -64,7 +64,7 @@ public class EventsForDateTestData {
                         .phrase("план на завтра")
                         .date(TOMORROW)
                         .todayEvents("{\"time\": \"12:00\", \"name\": \"Лекция\"}, {\"time\": \"16:00\", \"name\": \"Прогулка на берегу моря\"}")
-                        .expectedResult("Ваши события " + TOMORROW + " 12:00 Лекция 16:00 Прогулка на берегу моря")
+                        .expectedResult("Ваши события на завтра " + TOMORROW + " 12:00 Лекция 16:00 Прогулка на берегу моря")
                         .build())
         );
     }

@@ -1,15 +1,14 @@
 package com.github.valentina810.weekplannerformarusia.storage.session;
 
 
-import com.github.valentina810.weekplannerformarusia.action.PrevAction;
-import com.github.valentina810.weekplannerformarusia.action.TypeAction;
 import com.google.gson.Gson;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
+
+import java.util.Collections;
 
 /**
  * Хранилище, которое хранит данные в контексте сессии
@@ -21,6 +20,8 @@ import org.springframework.stereotype.Component;
  * - выход происходит по таймауту, когда пользователь не отвечает некоторое время (1 минуту).
  * https://dev.vk.com/ru/marusia/session-state
  */
+
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -29,18 +30,50 @@ public class SessionStorage {
     @Getter
     private Object session_state;
 
-    public void getPrevAction() {
-        PrevAction action = PrevAction.builder()
-                .typeAction(TypeAction.UNKNOWN)
-                .valueAction("")
-                .build();
+    public void setSession_state(Object session_state) {
+        getPrevActions(session_state);
+    }
+
+    /**
+     * Возвращает session_state в виде объекта ActionsStorage
+     */
+    public ActionsStorage getActionsStorage() {
+        return new Gson().fromJson(new Gson().toJson(session_state), ActionsStorage.class);
+    }
+
+    public void setActions(Actions actions) {
+        session_state = ActionsStorage.builder().actions(actions).build();
+    }
+
+    /**
+     * Очистить список предыдущих активностей
+     */
+    public void clear() {
+        session_state = ActionsStorage.builder()
+                .actions(Actions.builder()
+                        .prevActions(Collections.EMPTY_LIST).build()).build();
+    }
+
+    public void addAction(PrevAction prevAction) {
+        ActionsStorage actionsStorage = getActionsStorage();
+        actionsStorage.getActions().getPrevActions().add(prevAction);
+        setActions(actionsStorage.getActions());
+    }
+
+    public void getPrevActions(Object object) {
         try {
-            JSONObject prevAction = new JSONObject(new Gson().toJson(session_state)).getJSONObject("prevAction");
-            action.setTypeAction(TypeAction.valueOf(prevAction.getString("typeAction")));
-            action.setValueAction(prevAction.getString("valueAction"));
-            session_state = action;
-        } catch (JSONException | NullPointerException e) {
-            log.info("В session_state не найдено предыдущее действие");
+            JSONObject jsonObject = (JSONObject) object;
+            ActionsStorage actionsStorage = new Gson().fromJson(jsonObject.toString(), ActionsStorage.class);
+            if (actionsStorage.getActions() != null) {
+                session_state = actionsStorage;
+            } else session_state = ActionsStorage.builder()
+                    .actions(Actions.builder()
+                            .prevActions(Collections.EMPTY_LIST).build()).build();
+        } catch (NullPointerException | ClassCastException e) {
+            log.info("В session_state не найдены предыдущие действия");
+            session_state = ActionsStorage.builder()
+                    .actions(Actions.builder()
+                            .prevActions(Collections.EMPTY_LIST).build()).build();
         }
     }
 }
