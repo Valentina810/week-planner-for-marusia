@@ -1,16 +1,21 @@
 package com.github.valentina810.weekplannerformarusia.action;
 
-import com.github.valentina810.weekplannerformarusia.action.handler.BaseHandler;
 import com.github.valentina810.weekplannerformarusia.action.handler.HandlerFactory;
-import com.github.valentina810.weekplannerformarusia.action.handler.LoadCommand;
+import com.github.valentina810.weekplannerformarusia.action.handler.handler.SimpleHandler;
 import com.github.valentina810.weekplannerformarusia.model.request.UserRequest;
 import com.github.valentina810.weekplannerformarusia.model.response.Response;
 import com.github.valentina810.weekplannerformarusia.model.response.Session;
 import com.github.valentina810.weekplannerformarusia.model.response.UserResponse;
+import com.github.valentina810.weekplannerformarusia.storage.session.PrevAction;
+import com.github.valentina810.weekplannerformarusia.storage.session.SessionStorage;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+
+import java.util.Comparator;
+
+import static com.github.valentina810.weekplannerformarusia.action.TypeAction.UNKNOWN;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -26,11 +31,27 @@ public class ActionExecutor {
      */
     public void createUserResponse(UserRequest userRequest) {
         String phrase = getPhrase(userRequest.getRequest().getCommand());
-        LoadCommand loadCommand = loader.get(phrase);
-        BaseHandler handler = handlerFactory.getByBaseHandlerResponsePhraseType(loadCommand.getOperation());
-        handler.getParametersHandler().setLoadCommand(loadCommand);
+        SessionStorage sessionStorage = new SessionStorage();
+        Object session = userRequest.getState().getSession();
+        sessionStorage.getPrevActions(session);
+        SimpleHandler handler;
+        if (!sessionStorage.getActionsStorage().getActions().getPrevActions().isEmpty()) {
+            PrevAction prevAction = sessionStorage.getActionsStorage().getActions().getPrevActions()
+                    .stream().max(Comparator.comparingInt(PrevAction::getNumber)).get();
+
+            LoadCommand loadCommand = loader.get(prevAction.getOperation());
+            LoadCommand chaildLoadCommand = loadCommand.getActions().stream()
+                    .filter(e -> e.getPhrase().equals(phrase)).findFirst().orElse(loader.get(UNKNOWN));
+
+            handler = handlerFactory.getHandler(chaildLoadCommand);
+            handler.getParametersHandler().setLoadCommand(chaildLoadCommand);
+        } else {
+            LoadCommand loadCommand = loader.get(phrase);
+            handler = handlerFactory.getHandler(loadCommand);
+            handler.getParametersHandler().setLoadCommand(loadCommand);
+        }
         handler.getParametersHandler().setUserRequest(userRequest);
-        handler.getAction(userRequest);
+        handler.execute();
 
         userResponse.setResponse(Response.builder()
                 .text(handler.getParametersHandler().getRespPhrase())

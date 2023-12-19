@@ -1,6 +1,5 @@
-package com.github.valentina810.weekplannerformarusia.action.handler;
+package com.github.valentina810.weekplannerformarusia.action;
 
-import com.github.valentina810.weekplannerformarusia.action.TypeAction;
 import lombok.Getter;
 
 import java.util.List;
@@ -9,6 +8,8 @@ import java.util.List;
 public class LoadCommand {
 
     private String phrase;
+    private Boolean isSimple;
+    private TypeAction prevOperation;
     private String messagePositive;
     private String messageNegative;
     private TypeAction operation;
