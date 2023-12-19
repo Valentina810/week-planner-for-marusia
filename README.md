@@ -19,7 +19,7 @@ https://miro.com/app/board/uXjVMBAr0bg=/?share_link_id=84728232957
 - [X] Добавить юнит-тесты на Unknown https://github.com/Valentina810/week-planner-for-marusia/pull/33
 - [X] Добавить обработку Exit https://github.com/Valentina810/week-planner-for-marusia/issues/34
 - [X] Добавить юнит-тесты на Exit https://github.com/Valentina810/week-planner-for-marusia/issues/36
-- [ ] Добавить обработку Faq
+- [X] Добавить обработку Faq https://github.com/Valentina810/week-planner-for-marusia/pull/40
 - [ ] Добавить юнит-тесты на Faq
 - [ ] Добавить обработку AddEvent
 - [ ] Добавить юнит-тесты на AddEvent
