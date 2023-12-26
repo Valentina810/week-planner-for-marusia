@@ -21,7 +21,6 @@ import java.util.Collections;
  * https://dev.vk.com/ru/marusia/session-state
  */
 
-
 @Slf4j
 @Component
 @RequiredArgsConstructor

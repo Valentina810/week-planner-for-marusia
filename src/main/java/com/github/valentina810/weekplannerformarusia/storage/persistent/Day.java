@@ -5,8 +5,8 @@ import lombok.Getter;
 
 import java.util.List;
 
-@Builder
 @Getter
+@Builder
 public class Day {
     private String date;
     private List<Event> events;

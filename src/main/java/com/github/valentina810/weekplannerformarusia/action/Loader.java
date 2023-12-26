@@ -25,12 +25,11 @@ public class Loader {
     }
 
     public LoadCommand get(String phrase) {
-        if (LoadCommands.get(phrase) == null) return LoadCommands.get("custom");
-        else return LoadCommands.get(phrase);
+        return LoadCommands.get(phrase) == null ? LoadCommands.get("custom") : LoadCommands.get(phrase);
     }
 
     public LoadCommand get(TypeAction operation) {
-        return  LoadCommands.values().stream()
+        return LoadCommands.values().stream()
                 .filter(e -> e.getOperation().equals(operation))
                 .findFirst().orElse(LoadCommands.get("custom"));
     }

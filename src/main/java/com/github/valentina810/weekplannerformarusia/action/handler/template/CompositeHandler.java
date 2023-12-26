@@ -1,4 +1,4 @@
-package com.github.valentina810.weekplannerformarusia.action.handler.handler;
+package com.github.valentina810.weekplannerformarusia.action.handler.template;
 
 import com.github.valentina810.weekplannerformarusia.action.handler.ParametersHandler;
 

@@ -1,7 +1,7 @@
 package com.github.valentina810.weekplannerformarusia.action;
 
 import com.github.valentina810.weekplannerformarusia.action.handler.HandlerFactory;
-import com.github.valentina810.weekplannerformarusia.action.handler.handler.SimpleHandler;
+import com.github.valentina810.weekplannerformarusia.action.handler.template.SimpleHandler;
 import com.github.valentina810.weekplannerformarusia.model.request.UserRequest;
 import com.github.valentina810.weekplannerformarusia.model.response.Response;
 import com.github.valentina810.weekplannerformarusia.model.response.Session;
@@ -14,12 +14,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.Comparator;
+import java.util.List;
 
 import static com.github.valentina810.weekplannerformarusia.action.TypeAction.UNKNOWN;
 
 @Slf4j
-@RequiredArgsConstructor
 @Component
+@RequiredArgsConstructor
 public class ActionExecutor {
     private final Loader loader;
     private final HandlerFactory handlerFactory;
@@ -30,28 +31,7 @@ public class ActionExecutor {
      * Формирует ответ для пользователя в поле userResponse
      */
     public void createUserResponse(UserRequest userRequest) {
-        String phrase = getPhrase(userRequest.getRequest().getCommand());
-        SessionStorage sessionStorage = new SessionStorage();
-        Object session = userRequest.getState().getSession();
-        sessionStorage.getPrevActions(session);
-        SimpleHandler handler;
-        if (!sessionStorage.getActionsStorage().getActions().getPrevActions().isEmpty()) {
-            PrevAction prevAction = sessionStorage.getActionsStorage().getActions().getPrevActions()
-                    .stream().max(Comparator.comparingInt(PrevAction::getNumber)).get();
-
-            LoadCommand loadCommand = loader.get(prevAction.getOperation());
-            LoadCommand chaildLoadCommand = loadCommand.getActions().stream()
-                    .filter(e -> e.getPhrase().equals(phrase)).findFirst().orElse(loader.get(UNKNOWN));
-
-            handler = handlerFactory.getHandler(chaildLoadCommand);
-            handler.getParametersHandler().setLoadCommand(chaildLoadCommand);
-        } else {
-            LoadCommand loadCommand = loader.get(phrase);
-            handler = handlerFactory.getHandler(loadCommand);
-            handler.getParametersHandler().setLoadCommand(loadCommand);
-        }
-        handler.getParametersHandler().setUserRequest(userRequest);
-        handler.execute();
+        SimpleHandler handler = getSimpleHandler(userRequest);
 
         userResponse.setResponse(Response.builder()
                 .text(handler.getParametersHandler().getRespPhrase())
@@ -70,6 +50,43 @@ public class ActionExecutor {
         userResponse.setUser_state_update(handler.getParametersHandler().getPersistentStorage().getUser_state_update());
 
         userResponse.setVersion(userRequest.getVersion());
+    }
+
+    private SimpleHandler getSimpleHandler(UserRequest userRequest) {
+        String phrase = getPhrase(userRequest.getRequest().getCommand());
+        SessionStorage sessionStorage = new SessionStorage();
+        Object session = userRequest.getState().getSession();
+        sessionStorage.getPrevActions(session);
+        List<PrevAction> prevActions = sessionStorage.getActionsStorage().getActions().getPrevActions();
+        SimpleHandler handler = getHandler(prevActions, phrase);
+        handler.getParametersHandler().setUserRequest(userRequest);
+        handler.execute();
+        return handler;
+    }
+
+    private SimpleHandler getHandler(List<PrevAction> prevActions, String phrase) {
+        return prevActions.isEmpty() ? getSimpleHandler(phrase) : getSimpleHandler(prevActions, phrase);
+    }
+
+    private SimpleHandler getSimpleHandler(String phrase) {
+        LoadCommand loadCommand = loader.get(phrase);
+        SimpleHandler handler = handlerFactory.getHandler(loadCommand);
+        handler.getParametersHandler().setLoadCommand(loadCommand);
+        return handler;
+    }
+
+    private SimpleHandler getSimpleHandler(List<PrevAction> prevActions, String phrase) {
+        PrevAction prevAction = prevActions
+                .stream().max(Comparator.comparingInt(PrevAction::getNumber))
+                .orElseThrow(()->new RuntimeException("Список prevActions пуст!"));
+
+        LoadCommand loadCommand = loader.get(prevAction.getOperation());
+        LoadCommand childLoadCommand = loadCommand.getActions().stream()
+                .filter(e -> e.getPhrase().equals(phrase)).findFirst().orElse(loader.get(UNKNOWN));
+
+        SimpleHandler handler = handlerFactory.getHandler(childLoadCommand);
+        handler.getParametersHandler().setLoadCommand(childLoadCommand);
+        return handler;
     }
 
     /**

@@ -13,9 +13,9 @@ import org.springframework.stereotype.Component;
  * Сущность, которая представляет запрос, который пришел от пользователя
  */
 @Slf4j
-@RequiredArgsConstructor
-@Component
 @Getter
+@Component
+@RequiredArgsConstructor
 public class UserRequest {
     private Request request;
     private Session session;

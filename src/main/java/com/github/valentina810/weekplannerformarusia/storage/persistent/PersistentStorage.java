@@ -18,9 +18,10 @@ import java.util.stream.IntStream;
  * лимит размера json-объекта user_state_update — 5 Кбайт
  * https://dev.vk.com/ru/marusia/session-state
  */
+
 @Slf4j
-@RequiredArgsConstructor
 @Component
+@RequiredArgsConstructor
 public class PersistentStorage {
 
     //#todo тут могут храниться и другие данные, лучше сделать так, чтобы их не затирать
