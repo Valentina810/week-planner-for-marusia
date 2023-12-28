@@ -5,8 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Builder
-@Getter
 @Setter
+@Getter
 public class Session {
     private String user_id;
     private String session_id;

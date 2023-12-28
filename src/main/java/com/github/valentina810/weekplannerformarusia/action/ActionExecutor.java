@@ -14,8 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import java.util.Comparator;
-import java.util.List;
+import java.util.Optional;
 
 import static com.github.valentina810.weekplannerformarusia.action.TypeAction.UNKNOWN;
 
@@ -29,7 +28,7 @@ public class ActionExecutor {
     private final UserResponse userResponse;
 
     /**
-     * Формирует ответ для пользователя в поле userResponse
+     * Формирует ответ для пользователя в объекте userResponse
      */
     public void createUserResponse(UserRequest userRequest) {
         ParametersHandler parametersHandler = getParametersHandler(userRequest);
@@ -57,41 +56,43 @@ public class ActionExecutor {
      * Получить ответ в формате набора параметров
      *
      * @param userRequest - запрос
-     * @return - набор парамтеров для ответа в виде модального объекта
+     * @return - набор параметров для ответа в виде модального объекта
      */
     private ParametersHandler getParametersHandler(UserRequest userRequest) {
         String phrase = getPhrase(userRequest.getRequest().getCommand());
-        SessionStorage sessionStorage = new SessionStorage();
-        Object session = userRequest.getState().getSession();
-        sessionStorage.getPrevActions(session);
-        List<PrevAction> prevActions = sessionStorage.getActionsStorage().getActions().getPrevActions();
-        SimpleHandler handler = getHandler(prevActions, phrase);
+        SimpleHandler handler = getHandler(userRequest.getState().getSession(), phrase);
         handler.getParametersHandler().setUserRequest(userRequest);
         handler.execute();
         return handler.getParametersHandler();
     }
 
-
-    private SimpleHandler getHandler(List<PrevAction> prevActions, String phrase) {
-        return prevActions.isEmpty() ? getParametersHandler(phrase) : getParametersHandler(prevActions, phrase);
+    /**
+     * Выбор обработчика в зависимости от наличия предыдущих команд
+     *
+     * @param requestSessionStorage - данные в хранилище сесии из запроса
+     * @param phrase                - фраза пользователя
+     * @return - обработчик, рассчитаный на основе входных параметров
+     */
+    private SimpleHandler getHandler(Object requestSessionStorage, String phrase) {
+        SessionStorage sessionStorage = new SessionStorage();
+        sessionStorage.calculatePrevActions(requestSessionStorage);
+        Optional<PrevAction> lastPrevAction = sessionStorage.getLastPrevAction();
+        return lastPrevAction.map(prevAction -> getHandlerBasedOnPreviousActivity(prevAction, phrase))
+                .orElseGet(() -> getMainMenuCommandHandler(phrase));
     }
 
-    private SimpleHandler getParametersHandler(String phrase) {
+    private SimpleHandler getMainMenuCommandHandler(String phrase) {
         LoadCommand loadCommand = loader.get(phrase);
         SimpleHandler handler = handlerFactory.getHandler(loadCommand);
         handler.getParametersHandler().setLoadCommand(loadCommand);
         return handler;
     }
 
-    private SimpleHandler getParametersHandler(List<PrevAction> prevActions, String phrase) {
-        PrevAction prevAction = prevActions
-                .stream().max(Comparator.comparingInt(PrevAction::getNumber))
-                .orElseThrow(() -> new RuntimeException("Список prevActions пуст!"));
-
-        LoadCommand loadCommand = loader.get(prevAction.getOperation());
-        LoadCommand childLoadCommand = loadCommand.getActions().stream()
-                .filter(e -> e.getPhrase().equals(phrase)).findFirst().orElse(loader.get(UNKNOWN));
-
+    private SimpleHandler getHandlerBasedOnPreviousActivity(PrevAction prevAction, String phrase) {
+        LoadCommand childLoadCommand = loader.get(prevAction.getOperation())
+                .getActions().stream()
+                .filter(e -> e.getPhrase().equals(phrase))
+                .findFirst().orElse(loader.get(UNKNOWN));
         SimpleHandler handler = handlerFactory.getHandler(childLoadCommand);
         handler.getParametersHandler().setLoadCommand(childLoadCommand);
         return handler;

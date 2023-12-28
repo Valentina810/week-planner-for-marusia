@@ -33,7 +33,7 @@ public class SimpleHandler {
         parameters.setIsEndSession(false);
 
         SessionStorage sessionStorage = new SessionStorage();
-        sessionStorage.setSession_state(parameters.getUserRequest().getState().getSession());
+        sessionStorage.calculatePrevActions(parameters.getUserRequest().getState().getSession());
         parameters.setSessionStorage(sessionStorage);
 
         PersistentStorage persistentStorage = new PersistentStorage();

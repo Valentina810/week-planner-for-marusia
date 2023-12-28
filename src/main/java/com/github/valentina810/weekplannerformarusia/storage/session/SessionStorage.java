@@ -9,6 +9,8 @@ import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.Optional;
 
 /**
  * Хранилище, которое хранит данные в контексте сессии
@@ -26,19 +28,10 @@ import java.util.Collections;
 @RequiredArgsConstructor
 public class SessionStorage {
 
+    private static final Actions ACTIONS_EMPTY = Actions.builder().prevActions(Collections.EMPTY_LIST).build();
+
     @Getter
     private Object session_state;
-
-    public void setSession_state(Object session_state) {
-        getPrevActions(session_state);
-    }
-
-    /**
-     * Возвращает session_state в виде объекта ActionsStorage
-     */
-    public ActionsStorage getActionsStorage() {
-        return new Gson().fromJson(new Gson().toJson(session_state), ActionsStorage.class);
-    }
 
     public void setActions(Actions actions) {
         session_state = ActionsStorage.builder().actions(actions).build();
@@ -49,8 +42,7 @@ public class SessionStorage {
      */
     public void clear() {
         session_state = ActionsStorage.builder()
-                .actions(Actions.builder()
-                        .prevActions(Collections.EMPTY_LIST).build()).build();
+                .actions(ACTIONS_EMPTY).build();
     }
 
     public void addAction(PrevAction prevAction) {
@@ -59,20 +51,29 @@ public class SessionStorage {
         setActions(actionsStorage.getActions());
     }
 
-    public void getPrevActions(Object object) {
+    public Optional<PrevAction> getLastPrevAction() {
+        return getActionsStorage().getActions().getPrevActions()
+                .stream().max(Comparator.comparingInt(PrevAction::getNumber));
+    }
+
+    /**
+     * Возвращает session_state в виде объекта ActionsStorage
+     */
+    private ActionsStorage getActionsStorage() {
+        return session_state != null ? new Gson().fromJson(new Gson().toJson(session_state), ActionsStorage.class) :
+                new Gson().fromJson(new Gson().toJson(new Object()), ActionsStorage.class);
+    }
+
+    public void calculatePrevActions(Object object) {
         try {
             JSONObject jsonObject = (JSONObject) object;
             ActionsStorage actionsStorage = new Gson().fromJson(jsonObject.toString(), ActionsStorage.class);
             if (actionsStorage.getActions() != null) {
                 session_state = actionsStorage;
-            } else session_state = ActionsStorage.builder()
-                    .actions(Actions.builder()
-                            .prevActions(Collections.EMPTY_LIST).build()).build();
+            } else setActions(ACTIONS_EMPTY);
         } catch (NullPointerException | ClassCastException e) {
             log.info("В session_state не найдены предыдущие действия");
-            session_state = ActionsStorage.builder()
-                    .actions(Actions.builder()
-                            .prevActions(Collections.EMPTY_LIST).build()).build();
+            setActions(ACTIONS_EMPTY);
         }
     }
 }
