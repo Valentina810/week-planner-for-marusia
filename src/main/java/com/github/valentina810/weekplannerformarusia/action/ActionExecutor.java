@@ -1,6 +1,7 @@
 package com.github.valentina810.weekplannerformarusia.action;
 
 import com.github.valentina810.weekplannerformarusia.action.handler.HandlerFactory;
+import com.github.valentina810.weekplannerformarusia.action.handler.ParametersHandler;
 import com.github.valentina810.weekplannerformarusia.action.handler.template.SimpleHandler;
 import com.github.valentina810.weekplannerformarusia.model.request.UserRequest;
 import com.github.valentina810.weekplannerformarusia.model.response.Response;
@@ -31,12 +32,12 @@ public class ActionExecutor {
      * Формирует ответ для пользователя в поле userResponse
      */
     public void createUserResponse(UserRequest userRequest) {
-        SimpleHandler handler = getSimpleHandler(userRequest);
+        ParametersHandler parametersHandler = getParametersHandler(userRequest);
 
         userResponse.setResponse(Response.builder()
-                .text(handler.getParametersHandler().getRespPhrase())
-                .tts(handler.getParametersHandler().getRespPhrase())
-                .end_session(handler.getParametersHandler().getIsEndSession())
+                .text(parametersHandler.getRespPhrase())
+                .tts(parametersHandler.getRespPhrase())
+                .end_session(parametersHandler.getIsEndSession())
                 .build());
 
         userResponse.setSession(Session.builder()
@@ -45,14 +46,20 @@ public class ActionExecutor {
                 .message_id(userRequest.getSession().getMessage_id())
                 .build());
 
-        userResponse.setSession_state(handler.getParametersHandler().getSessionStorage().getSession_state());
+        userResponse.setSession_state(parametersHandler.getSessionStorage().getSession_state());
 
-        userResponse.setUser_state_update(handler.getParametersHandler().getPersistentStorage().getUser_state_update());
+        userResponse.setUser_state_update(parametersHandler.getPersistentStorage().getUser_state_update());
 
         userResponse.setVersion(userRequest.getVersion());
     }
 
-    private SimpleHandler getSimpleHandler(UserRequest userRequest) {
+    /**
+     * Получить ответ в формате набора параметров
+     *
+     * @param userRequest - запрос
+     * @return - набор парамтеров для ответа в виде модального объекта
+     */
+    private ParametersHandler getParametersHandler(UserRequest userRequest) {
         String phrase = getPhrase(userRequest.getRequest().getCommand());
         SessionStorage sessionStorage = new SessionStorage();
         Object session = userRequest.getState().getSession();
@@ -61,24 +68,25 @@ public class ActionExecutor {
         SimpleHandler handler = getHandler(prevActions, phrase);
         handler.getParametersHandler().setUserRequest(userRequest);
         handler.execute();
-        return handler;
+        return handler.getParametersHandler();
     }
+
 
     private SimpleHandler getHandler(List<PrevAction> prevActions, String phrase) {
-        return prevActions.isEmpty() ? getSimpleHandler(phrase) : getSimpleHandler(prevActions, phrase);
+        return prevActions.isEmpty() ? getParametersHandler(phrase) : getParametersHandler(prevActions, phrase);
     }
 
-    private SimpleHandler getSimpleHandler(String phrase) {
+    private SimpleHandler getParametersHandler(String phrase) {
         LoadCommand loadCommand = loader.get(phrase);
         SimpleHandler handler = handlerFactory.getHandler(loadCommand);
         handler.getParametersHandler().setLoadCommand(loadCommand);
         return handler;
     }
 
-    private SimpleHandler getSimpleHandler(List<PrevAction> prevActions, String phrase) {
+    private SimpleHandler getParametersHandler(List<PrevAction> prevActions, String phrase) {
         PrevAction prevAction = prevActions
                 .stream().max(Comparator.comparingInt(PrevAction::getNumber))
-                .orElseThrow(()->new RuntimeException("Список prevActions пуст!"));
+                .orElseThrow(() -> new RuntimeException("Список prevActions пуст!"));
 
         LoadCommand loadCommand = loader.get(prevAction.getOperation());
         LoadCommand childLoadCommand = loadCommand.getActions().stream()

@@ -1,14 +1,13 @@
 package com.github.valentina810.weekplannerformarusia.action;
 
+import com.github.valentina810.weekplannerformarusia.action.parameterized.unknown.ParameterForUnknownTest;
 import com.github.valentina810.weekplannerformarusia.model.request.UserRequest;
 import com.github.valentina810.weekplannerformarusia.util.FileReader;
 import com.google.gson.Gson;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -19,33 +18,18 @@ public class UnknownHandlerTest {
     @Autowired
     private ActionExecutor actionExecutor;
 
-    @Test
-    public void getPhraseUnknownCommand_whenUnknownCommand_thenReturnMessage() {
-        String json = FileReader.loadStringFromFile("action/plantodate/PlanEmpty.json")
-                .replace("testDate", LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")))
-                .replace("testEvents", "")
-                .replace("phrase", "PhraseUnknown");
+    @ParameterizedTest
+    @MethodSource("com.github.valentina810.weekplannerformarusia.action.parameterized.unknown.UnknownTestData#providerUnknownTest")
+    public void checkUnknown(ParameterForUnknownTest parameterForUnknownTest) {
+        String json = FileReader.loadStringFromFile(parameterForUnknownTest.getJsonFileSource())
+                .replace("testDate", parameterForUnknownTest.getTestDate())
+                .replace("testEvents", parameterForUnknownTest.getTestEvents())
+                .replace("phrase", parameterForUnknownTest.getPhrase());
 
         actionExecutor.createUserResponse(new Gson().fromJson(json, UserRequest.class));
 
         assertAll(
-                () -> assertEquals("Получена неизвестная команда! Используйте команду справка для того чтобы узнать мои команды",
-                        actionExecutor.getUserResponse().getResponse().getText()),
-                () -> assertFalse(actionExecutor.getUserResponse().getResponse().isEnd_session())
-        );
-    }
-
-    @Test
-    public void getPhraseUnknownCommand_whenCommandEmpty_thenReturnMessage() {
-        String json = FileReader.loadStringFromFile("action/plantodate/PlanEmpty.json")
-                .replace("testDate", LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")))
-                .replace("testEvents", "")
-                .replace("phrase", "");
-
-        actionExecutor.createUserResponse(new Gson().fromJson(json, UserRequest.class));
-
-        assertAll(
-                () -> assertEquals("Получена неизвестная команда! Используйте команду справка для того чтобы узнать мои команды",
+                () -> assertEquals(parameterForUnknownTest.getExpectedResult(),
                         actionExecutor.getUserResponse().getResponse().getText()),
                 () -> assertFalse(actionExecutor.getUserResponse().getResponse().isEnd_session())
         );
