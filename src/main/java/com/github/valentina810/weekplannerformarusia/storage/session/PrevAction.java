@@ -2,6 +2,7 @@ package com.github.valentina810.weekplannerformarusia.storage.session;
 
 import com.github.valentina810.weekplannerformarusia.action.TypeAction;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,6 +15,7 @@ import lombok.Setter;
 @Builder
 @Setter
 @Getter
+@EqualsAndHashCode
 public class PrevAction {
     private Integer number;
     private TypeAction operation;

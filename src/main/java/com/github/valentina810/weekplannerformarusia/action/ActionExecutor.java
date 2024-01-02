@@ -14,8 +14,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
 import static com.github.valentina810.weekplannerformarusia.action.TypeAction.UNKNOWN;
 
 @Slf4j
@@ -76,8 +74,8 @@ public class ActionExecutor {
     private SimpleHandler getHandler(Object requestSessionStorage, String phrase) {
         SessionStorage sessionStorage = new SessionStorage();
         sessionStorage.calculatePrevActions(requestSessionStorage);
-        Optional<PrevAction> lastPrevAction = sessionStorage.getLastPrevAction();
-        return lastPrevAction.map(prevAction -> getHandlerBasedOnPreviousActivity(prevAction, phrase))
+        return sessionStorage.getLastPrevAction()
+                .map(prevAction -> getHandlerBasedOnPreviousActivity(prevAction, phrase))
                 .orElseGet(() -> getMainMenuCommandHandler(phrase));
     }
 

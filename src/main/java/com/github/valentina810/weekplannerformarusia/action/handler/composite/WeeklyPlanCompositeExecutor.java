@@ -24,15 +24,15 @@ public class WeeklyPlanCompositeExecutor implements BaseCompositeExecutor {
     public UnaryOperator<ParametersHandler> getActionExecute() {
         return parHandler ->
         {
-            List<Day> collect;
+            List<Day> days;
             try {
-                collect = parHandler.getPersistentStorage().getWeekStorage()
+                days = parHandler.getPersistentStorage().getWeekStorage()
                         .getWeek().getDays().stream()
                         .filter(e -> !e.getEvents().isEmpty()).collect(Collectors.toList());
-                if (collect.isEmpty()) {
+                if (days.isEmpty()) {
                     parHandler.setRespPhrase(parHandler.getLoadCommand().getMessageNegative());
                 } else {
-                    parHandler.setRespPhrase(parHandler.getLoadCommand().getMessagePositive() + collect.stream()
+                    parHandler.setRespPhrase(parHandler.getLoadCommand().getMessagePositive() + days.stream()
                             .map(day -> day.getDate() + " " + day.getEvents().stream()
                                     .map(event -> event.getTime() + " " + event.getName())
                                     .collect(Collectors.joining(" ")))
