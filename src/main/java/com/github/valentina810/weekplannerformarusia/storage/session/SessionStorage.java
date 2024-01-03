@@ -2,15 +2,19 @@ package com.github.valentina810.weekplannerformarusia.storage.session;
 
 
 import com.google.gson.Gson;
+import com.google.gson.internal.LinkedTreeMap;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * Хранилище, которое хранит данные в контексте сессии
@@ -66,14 +70,41 @@ public class SessionStorage {
 
     public void calculatePrevActions(Object object) {
         try {
-            JSONObject jsonObject = (JSONObject) object;
-            ActionsStorage actionsStorage = new Gson().fromJson(jsonObject.toString(), ActionsStorage.class);
-            if (actionsStorage.getActions() != null) {
-                session_state = actionsStorage;
-            } else setActions(ACTIONS_EMPTY);
-        } catch (NullPointerException | ClassCastException e) {
-            log.info("В session_state не найдены предыдущие действия");
+            ActionsStorage actionsStorage = Optional.of(object)
+                    .filter(isJSONObject().or(isLinkedTreeMap()))
+                    .map(parseObject())
+                    .orElseThrow(() -> new ClassCastException("Невозможно преобразовать объект в JSONObject или LinkedTreeMap: " + object));
+
+            session_state = Optional.of(actionsStorage)
+                    .filter(storage -> storage.getActions() != null)
+                    .orElse(ActionsStorage.builder().actions(ACTIONS_EMPTY).build());
+
+        } catch (Exception e) {
+            log.error("Ошибка при преобразовании ActionsStorage из входящего запроса:{}", e.getMessage());
             setActions(ACTIONS_EMPTY);
         }
+    }
+
+    private Predicate<Object> isJSONObject() {
+        return obj -> obj instanceof JSONObject;
+    }
+
+    private Predicate<Object> isLinkedTreeMap() {
+        return obj -> obj instanceof LinkedTreeMap;
+    }
+
+    private Function<Object, ActionsStorage> parseObject() {
+        return obj -> {
+            if (obj instanceof LinkedTreeMap) {
+                try {
+                    return new Gson().fromJson(new JSONObject(new Gson().toJsonTree(obj).getAsJsonObject().toString()).toString(), ActionsStorage.class);
+                } catch (JSONException e) {
+                    log.error("Ошибка при преобразовании ActionsStorage из входящего запроса:{}", e.getMessage());
+                }
+            } else if (obj instanceof JSONObject) {
+                return new Gson().fromJson(obj.toString(), ActionsStorage.class);
+            }
+            return ActionsStorage.builder().actions(ACTIONS_EMPTY).build();
+        };
     }
 }

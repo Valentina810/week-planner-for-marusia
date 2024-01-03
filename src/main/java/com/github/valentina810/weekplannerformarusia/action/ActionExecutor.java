@@ -104,8 +104,8 @@ public class ActionExecutor {
      * @return - фраза
      */
     private String getPhrase(String message) {
-        return message
-                .replaceAll("[^а-яА-Я0-9\\s]", "")
-                .toLowerCase();
+        return message != null ?
+                message.replaceAll("[^а-яА-Я0-9\\s]", "")
+                        .toLowerCase() : "";
     }
 }
