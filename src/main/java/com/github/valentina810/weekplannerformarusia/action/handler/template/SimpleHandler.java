@@ -1,4 +1,4 @@
-package com.github.valentina810.weekplannerformarusia.action.handler.handler;
+package com.github.valentina810.weekplannerformarusia.action.handler.template;
 
 import com.github.valentina810.weekplannerformarusia.action.handler.ParametersHandler;
 import com.github.valentina810.weekplannerformarusia.storage.persistent.PersistentStorage;
@@ -9,7 +9,7 @@ import lombok.Getter;
  * Простой обработчик, который:
  * - не модифицирует данные в session_state и user_state_update
  * - не содержит вложенных команд
- * - в качестве ответа использует простую фразу (без действий по вычислению её параметров)
+ * - в качестве ответа возвращает простую фразу (без действий по вычислению её параметров)
  */
 public class SimpleHandler {
     @Getter
@@ -32,14 +32,12 @@ public class SimpleHandler {
     void setDefaultValueParameters(ParametersHandler parameters) {
         parameters.setIsEndSession(false);
 
-        Object session = parameters.getUserRequest().getState().getSession();
         SessionStorage sessionStorage = new SessionStorage();
-        sessionStorage.setSession_state(session);
+        sessionStorage.calculatePrevActions(parameters.getUserRequest().getState().getSession());
         parameters.setSessionStorage(sessionStorage);
 
-        Object user = parameters.getUserRequest().getState().getUser();
         PersistentStorage persistentStorage = new PersistentStorage();
-        persistentStorage.getWeekEvents(user);
+        persistentStorage.getWeekEvents(parameters.getUserRequest().getState().getUser());
         parameters.setPersistentStorage(persistentStorage);
     }
 }

@@ -1,62 +1,36 @@
 package com.github.valentina810.weekplannerformarusia.action.handler;
 
 import com.github.valentina810.weekplannerformarusia.action.LoadCommand;
-import com.github.valentina810.weekplannerformarusia.action.handler.handler.CompositeHandler;
-import com.github.valentina810.weekplannerformarusia.action.handler.handler.SimpleHandler;
+import com.github.valentina810.weekplannerformarusia.action.TypeAction;
+import com.github.valentina810.weekplannerformarusia.action.handler.composite.BaseCompositeExecutor;
+import com.github.valentina810.weekplannerformarusia.action.handler.template.CompositeHandler;
+import com.github.valentina810.weekplannerformarusia.action.handler.template.SimpleHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import java.util.function.UnaryOperator;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
-@Component
 @Slf4j
+@Component
 public class HandlerFactory {
-    /**
-     * Определяет метод execute для
-     * конкретной команды
-     *
-     * @param loadCommand
-     * @return
-     */
+    private final Map<TypeAction, BaseCompositeExecutor> baseExecutors;
+
+    public HandlerFactory(List<BaseCompositeExecutor> baseExecutors) {
+        this.baseExecutors = baseExecutors.stream()
+                .collect(Collectors.toMap(BaseCompositeExecutor::getType, Function.identity()));
+    }
+
     public SimpleHandler getHandler(LoadCommand loadCommand) {
+        ParametersHandler parametersHandler = ParametersHandler.builder().loadCommand(loadCommand).build();
         if (loadCommand.getIsSimple()) {
-            return new SimpleHandler(ParametersHandler.builder().loadCommand(loadCommand).build());
+            return new SimpleHandler(parametersHandler);
         } else {
-            UnaryOperator<ParametersHandler> actionExecute;
-            CompositeHandlersActionExecute compositeHandlersActionExecute = new CompositeHandlersActionExecute();
-            switch (loadCommand.getOperation()) {
-                case WEEKLY_PLAN:
-                    actionExecute = compositeHandlersActionExecute.getWeeklyPlan();
-                    break;
-                case TODAY_PLAN:
-                    actionExecute = compositeHandlersActionExecute.getTodayPlan();
-                    break;
-                case TOMORROW_PLAN:
-                    actionExecute = compositeHandlersActionExecute.getTomorrowPlan();
-                    break;
-//                case ADD_EVENT:
-//                    break;
-//                case ADD_DAY:
-//                    break;
-//                case ADD_TIME:
-//                    break;
-//                case ADD_NAME:
-//                    break;
-                case HELP:
-                    actionExecute = compositeHandlersActionExecute.getHelp();
-                    break;
-                case EXIT:
-                    actionExecute = compositeHandlersActionExecute.getExit();
-                    break;
-                case EXIT_MAIN_MENU:
-                    actionExecute = compositeHandlersActionExecute.getExitMainMenu();
-                    break;
-                case UNKNOWN:
-                    return new SimpleHandler(ParametersHandler.builder().loadCommand(loadCommand).build());
-                default:
-                    actionExecute = compositeHandlersActionExecute.getExit();
-            }
-            return new CompositeHandler(ParametersHandler.builder().loadCommand(loadCommand).build(), actionExecute);
+            BaseCompositeExecutor baseCompositeExecutor = baseExecutors.get(loadCommand.getOperation());
+            return baseCompositeExecutor == null ? new CompositeHandler(parametersHandler, baseExecutors.get(TypeAction.UNKNOWN).getActionExecute()) :
+                    new CompositeHandler(parametersHandler, baseCompositeExecutor.getActionExecute());
         }
     }
 }

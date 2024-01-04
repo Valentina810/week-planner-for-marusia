@@ -1,7 +1,8 @@
 package com.github.valentina810.weekplannerformarusia.action;
 
 import com.github.valentina810.weekplannerformarusia.action.handler.HandlerFactory;
-import com.github.valentina810.weekplannerformarusia.action.handler.handler.SimpleHandler;
+import com.github.valentina810.weekplannerformarusia.action.handler.ParametersHandler;
+import com.github.valentina810.weekplannerformarusia.action.handler.template.SimpleHandler;
 import com.github.valentina810.weekplannerformarusia.model.request.UserRequest;
 import com.github.valentina810.weekplannerformarusia.model.response.Response;
 import com.github.valentina810.weekplannerformarusia.model.response.Session;
@@ -13,13 +14,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import java.util.Comparator;
-
 import static com.github.valentina810.weekplannerformarusia.action.TypeAction.UNKNOWN;
 
 @Slf4j
-@RequiredArgsConstructor
 @Component
+@RequiredArgsConstructor
 public class ActionExecutor {
     private final Loader loader;
     private final HandlerFactory handlerFactory;
@@ -27,36 +26,15 @@ public class ActionExecutor {
     private final UserResponse userResponse;
 
     /**
-     * Формирует ответ для пользователя в поле userResponse
+     * Формирует ответ для пользователя в объекте userResponse
      */
     public void createUserResponse(UserRequest userRequest) {
-        String phrase = getPhrase(userRequest.getRequest().getCommand());
-        SessionStorage sessionStorage = new SessionStorage();
-        Object session = userRequest.getState().getSession();
-        sessionStorage.getPrevActions(session);
-        SimpleHandler handler;
-        if (!sessionStorage.getActionsStorage().getActions().getPrevActions().isEmpty()) {
-            PrevAction prevAction = sessionStorage.getActionsStorage().getActions().getPrevActions()
-                    .stream().max(Comparator.comparingInt(PrevAction::getNumber)).get();
-
-            LoadCommand loadCommand = loader.get(prevAction.getOperation());
-            LoadCommand chaildLoadCommand = loadCommand.getActions().stream()
-                    .filter(e -> e.getPhrase().equals(phrase)).findFirst().orElse(loader.get(UNKNOWN));
-
-            handler = handlerFactory.getHandler(chaildLoadCommand);
-            handler.getParametersHandler().setLoadCommand(chaildLoadCommand);
-        } else {
-            LoadCommand loadCommand = loader.get(phrase);
-            handler = handlerFactory.getHandler(loadCommand);
-            handler.getParametersHandler().setLoadCommand(loadCommand);
-        }
-        handler.getParametersHandler().setUserRequest(userRequest);
-        handler.execute();
+        ParametersHandler parametersHandler = getParametersHandler(userRequest);
 
         userResponse.setResponse(Response.builder()
-                .text(handler.getParametersHandler().getRespPhrase())
-                .tts(handler.getParametersHandler().getRespPhrase())
-                .end_session(handler.getParametersHandler().getIsEndSession())
+                .text(parametersHandler.getRespPhrase())
+                .tts(parametersHandler.getRespPhrase())
+                .end_session(parametersHandler.getIsEndSession())
                 .build());
 
         userResponse.setSession(Session.builder()
@@ -65,11 +43,57 @@ public class ActionExecutor {
                 .message_id(userRequest.getSession().getMessage_id())
                 .build());
 
-        userResponse.setSession_state(handler.getParametersHandler().getSessionStorage().getSession_state());
+        userResponse.setSession_state(parametersHandler.getSessionStorage().getSession_state());
 
-        userResponse.setUser_state_update(handler.getParametersHandler().getPersistentStorage().getUser_state_update());
+        userResponse.setUser_state_update(parametersHandler.getPersistentStorage().getUser_state_update());
 
         userResponse.setVersion(userRequest.getVersion());
+    }
+
+    /**
+     * Получить ответ в формате набора параметров
+     *
+     * @param userRequest - запрос
+     * @return - набор параметров для ответа в виде модального объекта
+     */
+    private ParametersHandler getParametersHandler(UserRequest userRequest) {
+        String phrase = getPhrase(userRequest.getRequest().getCommand());
+        SimpleHandler handler = getHandler(userRequest.getState().getSession(), phrase);
+        handler.getParametersHandler().setUserRequest(userRequest);
+        handler.execute();
+        return handler.getParametersHandler();
+    }
+
+    /**
+     * Выбор обработчика в зависимости от наличия предыдущих команд
+     *
+     * @param requestSessionStorage - данные в хранилище сесии из запроса
+     * @param phrase                - фраза пользователя
+     * @return - обработчик, рассчитаный на основе входных параметров
+     */
+    private SimpleHandler getHandler(Object requestSessionStorage, String phrase) {
+        SessionStorage sessionStorage = new SessionStorage();
+        sessionStorage.calculatePrevActions(requestSessionStorage);
+        return sessionStorage.getLastPrevAction()
+                .map(prevAction -> getHandlerBasedOnPreviousActivity(prevAction, phrase))
+                .orElseGet(() -> getMainMenuCommandHandler(phrase));
+    }
+
+    private SimpleHandler getMainMenuCommandHandler(String phrase) {
+        LoadCommand loadCommand = loader.get(phrase);
+        SimpleHandler handler = handlerFactory.getHandler(loadCommand);
+        handler.getParametersHandler().setLoadCommand(loadCommand);
+        return handler;
+    }
+
+    private SimpleHandler getHandlerBasedOnPreviousActivity(PrevAction prevAction, String phrase) {
+        LoadCommand childLoadCommand = loader.get(prevAction.getOperation())
+                .getActions().stream()
+                .filter(e -> e.getPhrase().equals(phrase))
+                .findFirst().orElse(loader.get(UNKNOWN));
+        SimpleHandler handler = handlerFactory.getHandler(childLoadCommand);
+        handler.getParametersHandler().setLoadCommand(childLoadCommand);
+        return handler;
     }
 
     /**
@@ -80,8 +104,8 @@ public class ActionExecutor {
      * @return - фраза
      */
     private String getPhrase(String message) {
-        return message
-                .replaceAll("[^а-яА-Я0-9\\s]", "")
-                .toLowerCase();
+        return message != null ?
+                message.replaceAll("[^а-яА-Я0-9\\s]", "")
+                        .toLowerCase() : "";
     }
 }

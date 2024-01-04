@@ -14,24 +14,23 @@ import java.util.stream.Collectors;
 @Getter
 @Component
 public class Loader {
-    private final Map<String, LoadCommand> LoadCommands;
+    private final Map<String, LoadCommand> loadCommands;
 
     public Loader() {
         List<LoadCommand> handler = new ArrayList<>();
         FileReader.loadJsonFromFile("dictionary.json")
                 .forEach(e -> handler.add(new Gson().fromJson(new Gson().toJson(e), LoadCommand.class)));
-        this.LoadCommands = handler.stream()
+        this.loadCommands = handler.stream()
                 .collect(Collectors.toMap(e -> e.getPhrase().toLowerCase(), Function.identity()));
     }
 
     public LoadCommand get(String phrase) {
-        if (LoadCommands.get(phrase) == null) return LoadCommands.get("custom");
-        else return LoadCommands.get(phrase);
+        return loadCommands.get(phrase) == null ? loadCommands.get("custom") : loadCommands.get(phrase);
     }
 
     public LoadCommand get(TypeAction operation) {
-        return  LoadCommands.values().stream()
+        return loadCommands.values().stream()
                 .filter(e -> e.getOperation().equals(operation))
-                .findFirst().orElse(LoadCommands.get("custom"));
+                .findFirst().orElse(loadCommands.get("custom"));
     }
 }
