@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * Активность
@@ -15,6 +16,7 @@ import lombok.Setter;
 @Builder
 @Setter
 @Getter
+@ToString
 @EqualsAndHashCode
 public class PrevAction {
     private Integer number;
