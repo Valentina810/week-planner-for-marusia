@@ -13,16 +13,16 @@ import org.springframework.stereotype.Component;
  * Сущность, которая представляет запрос, который пришел от пользователя
  */
 @Slf4j
-@RequiredArgsConstructor
-@Component
 @Getter
+@Component
+@RequiredArgsConstructor
 public class UserRequest {
     private Request request;
     private Session session;
     private State state;
     private String version;
 
-    public void fillUserRequest(final Object object) {
+    public void fillUserRequest(Object object) {
         try {
             JSONObject jsonObject = new JSONObject(new Gson().toJson(object));
             request = Request.builder().command(jsonObject.getJSONObject("request").getString("command")).build();

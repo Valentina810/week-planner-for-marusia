@@ -26,8 +26,7 @@ public class ExitHandlerTest {
                 .replace("testEvents", "")
                 .replace("phrase", "пока");
 
-        UserRequest userRequest = new Gson().fromJson(json, UserRequest.class);
-        actionExecutor.createUserResponse(userRequest);
+        actionExecutor.createUserResponse(new Gson().fromJson(json, UserRequest.class));
 
         assertAll(
                 () -> assertEquals("До свидания!",

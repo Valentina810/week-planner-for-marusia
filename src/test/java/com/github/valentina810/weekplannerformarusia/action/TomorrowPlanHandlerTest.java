@@ -24,8 +24,7 @@ public class TomorrowPlanHandlerTest {
                 .replace("testEvents", parameterForEventsForDateTest.getTodayEvents())
                 .replace("phrase", parameterForEventsForDateTest.getPhrase());
 
-        UserRequest userRequest = new Gson().fromJson(json, UserRequest.class);
-        actionExecutor.createUserResponse(userRequest);
+        actionExecutor.createUserResponse(new Gson().fromJson(json, UserRequest.class));
 
         assertEquals(parameterForEventsForDateTest.getExpectedResult(),
                 actionExecutor.getUserResponse().getResponse().getText());
