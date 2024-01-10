@@ -22,7 +22,7 @@ public class ExitCompositeExecutor implements BaseCompositeExecutor {
         return parHandler ->
         {
             parHandler.setIsEndSession(true);
-            parHandler.setRespPhrase(parHandler.getLoadCommand().getMessagePositive());
+            parHandler.setRespPhrase(parHandler.getCommand().getMessagePositive());
             return parHandler;
         };
     }

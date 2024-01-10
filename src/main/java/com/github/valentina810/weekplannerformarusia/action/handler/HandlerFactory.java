@@ -1,6 +1,6 @@
 package com.github.valentina810.weekplannerformarusia.action.handler;
 
-import com.github.valentina810.weekplannerformarusia.action.LoadCommand;
+import com.github.valentina810.weekplannerformarusia.action.Command;
 import com.github.valentina810.weekplannerformarusia.action.TypeAction;
 import com.github.valentina810.weekplannerformarusia.action.handler.composite.BaseCompositeExecutor;
 import com.github.valentina810.weekplannerformarusia.action.handler.template.CompositeHandler;
@@ -23,12 +23,12 @@ public class HandlerFactory {
                 .collect(Collectors.toMap(BaseCompositeExecutor::getType, Function.identity()));
     }
 
-    public SimpleHandler getHandler(LoadCommand loadCommand) {
-        ParametersHandler parametersHandler = ParametersHandler.builder().loadCommand(loadCommand).build();
-        if (loadCommand.getIsSimple()) {
+    public SimpleHandler getHandler(Command command) {
+        ParametersHandler parametersHandler = ParametersHandler.builder().command(command).build();
+        if (command.getIsSimple()) {
             return new SimpleHandler(parametersHandler);
         } else {
-            BaseCompositeExecutor baseCompositeExecutor = baseExecutors.get(loadCommand.getOperation());
+            BaseCompositeExecutor baseCompositeExecutor = baseExecutors.get(command.getOperation());
             return baseCompositeExecutor == null ? new CompositeHandler(parametersHandler, baseExecutors.get(TypeAction.UNKNOWN).getActionExecute()) :
                     new CompositeHandler(parametersHandler, baseCompositeExecutor.getActionExecute());
         }

@@ -30,16 +30,16 @@ public class WeeklyPlanCompositeExecutor implements BaseCompositeExecutor {
                         .getWeek().getDays().stream()
                         .filter(e -> !e.getEvents().isEmpty()).collect(Collectors.toList());
                 if (days.isEmpty()) {
-                    parHandler.setRespPhrase(parHandler.getLoadCommand().getMessageNegative());
+                    parHandler.setRespPhrase(parHandler.getCommand().getMessageNegative());
                 } else {
-                    parHandler.setRespPhrase(parHandler.getLoadCommand().getMessagePositive() + days.stream()
+                    parHandler.setRespPhrase(parHandler.getCommand().getMessagePositive() + days.stream()
                             .map(day -> day.getDate() + " " + day.getEvents().stream()
                                     .map(event -> event.getTime() + " " + event.getName())
                                     .collect(Collectors.joining(" ")))
                             .collect(Collectors.joining(" ")));
                 }
             } catch (NullPointerException e) {
-                parHandler.setRespPhrase(parHandler.getLoadCommand().getMessageNegative());
+                parHandler.setRespPhrase(parHandler.getCommand().getMessageNegative());
             }
             return parHandler;
         };

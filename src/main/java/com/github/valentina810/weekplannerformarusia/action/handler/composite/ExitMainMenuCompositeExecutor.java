@@ -21,7 +21,7 @@ public class ExitMainMenuCompositeExecutor implements BaseCompositeExecutor {
     public UnaryOperator<ParametersHandler> getActionExecute() {
         return parHandler ->
         {
-            parHandler.setRespPhrase(parHandler.getLoadCommand().getMessagePositive());
+            parHandler.setRespPhrase(parHandler.getCommand().getMessagePositive());
             parHandler.getSessionStorage().clear();
             return parHandler;
         };

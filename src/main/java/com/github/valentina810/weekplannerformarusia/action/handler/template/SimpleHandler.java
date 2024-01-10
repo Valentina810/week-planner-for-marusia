@@ -21,7 +21,7 @@ public class SimpleHandler {
 
     public void execute() {
         setDefaultValueParameters(parametersHandler);
-        parametersHandler.setRespPhrase(parametersHandler.getLoadCommand().getMessagePositive());
+        parametersHandler.setRespPhrase(parametersHandler.getCommand().getMessagePositive());
     }
 
     /**

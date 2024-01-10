@@ -22,11 +22,11 @@ public class HelpCompositeExecutor implements BaseCompositeExecutor {
     public UnaryOperator<ParametersHandler> getActionExecute() {
         return parHandler ->
         {
-            parHandler.setRespPhrase(parHandler.getLoadCommand().getMessagePositive());
+            parHandler.setRespPhrase(parHandler.getCommand().getMessagePositive());
             parHandler.getSessionStorage().addAction(
                     PrevAction.builder()
                             .number(0)
-                            .operation(parHandler.getLoadCommand().getOperation())
+                            .operation(parHandler.getCommand().getOperation())
                             .valueAction("").build());
             return parHandler;
         };

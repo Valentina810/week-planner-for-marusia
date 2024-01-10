@@ -20,7 +20,7 @@ import static com.github.valentina810.weekplannerformarusia.action.TypeAction.UN
 @Component
 @RequiredArgsConstructor
 public class ActionExecutor {
-    private final Loader loader;
+    private final CommandLoader commandLoader;
     private final HandlerFactory handlerFactory;
     @Getter
     private final UserResponse userResponse;
@@ -80,19 +80,19 @@ public class ActionExecutor {
     }
 
     private SimpleHandler getMainMenuCommandHandler(String phrase) {
-        LoadCommand loadCommand = loader.get(phrase);
-        SimpleHandler handler = handlerFactory.getHandler(loadCommand);
-        handler.getParametersHandler().setLoadCommand(loadCommand);
+        Command command = commandLoader.get(phrase);
+        SimpleHandler handler = handlerFactory.getHandler(command);
+        handler.getParametersHandler().setCommand(command);
         return handler;
     }
 
     private SimpleHandler getHandlerBasedOnPreviousActivity(PrevAction prevAction, String phrase) {
-        LoadCommand childLoadCommand = loader.get(prevAction.getOperation())
+        Command childCommand = commandLoader.get(prevAction.getOperation())
                 .getActions().stream()
                 .filter(e -> e.getPhrase().equals(phrase))
-                .findFirst().orElse(loader.get(UNKNOWN));
-        SimpleHandler handler = handlerFactory.getHandler(childLoadCommand);
-        handler.getParametersHandler().setLoadCommand(childLoadCommand);
+                .findFirst().orElse(commandLoader.get(UNKNOWN));
+        SimpleHandler handler = handlerFactory.getHandler(childCommand);
+        handler.getParametersHandler().setCommand(childCommand);
         return handler;
     }
 

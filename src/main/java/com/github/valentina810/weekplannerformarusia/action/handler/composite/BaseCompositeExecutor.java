@@ -24,7 +24,7 @@ public interface BaseCompositeExecutor {
      * @return - ответная фраза со списком событий
      */
     default String getEventsForDate(LocalDate date, ParametersHandler parametersHandler) {
-        String defaultMessage = parametersHandler.getLoadCommand().getMessageNegative();
+        String defaultMessage = parametersHandler.getCommand().getMessageNegative();
         try {
             parametersHandler.getPersistentStorage().getWeekEvents(parametersHandler.getUserRequest().getState().getUser());
             List<Day> events = parametersHandler.getPersistentStorage().getWeekStorage().getWeek().getDays().stream()
@@ -32,7 +32,7 @@ public interface BaseCompositeExecutor {
                     .filter(a -> !a.getEvents().isEmpty())
                     .toList();
             return events.isEmpty() ? defaultMessage :
-                    parametersHandler.getLoadCommand().getMessagePositive() + events.stream()
+                    parametersHandler.getCommand().getMessagePositive() + events.stream()
                             .map(day -> day.getDate() + " " + day.getEvents().stream()
                                     .map(event -> event.getTime() + " " + event.getName())
                                     .collect(Collectors.joining(" ")))

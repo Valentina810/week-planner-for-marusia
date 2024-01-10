@@ -5,7 +5,7 @@ import lombok.Getter;
 import java.util.List;
 
 @Getter
-public class LoadCommand {
+public class Command {
 
     private String phrase;
     private Boolean isSimple;
@@ -13,5 +13,5 @@ public class LoadCommand {
     private String messagePositive;
     private String messageNegative;
     private TypeAction operation;
-    private List<LoadCommand> actions;
+    private List<Command> actions;
 }

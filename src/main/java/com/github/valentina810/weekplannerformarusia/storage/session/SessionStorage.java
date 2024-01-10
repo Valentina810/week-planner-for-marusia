@@ -29,7 +29,8 @@ import java.util.function.Function;
 @RequiredArgsConstructor
 public class SessionStorage {
 
-    private static final Actions ACTIONS_EMPTY = Actions.builder().prevActions(Collections.EMPTY_LIST).build();
+    private static final Actions ACTIONS_EMPTY = Actions.builder().prevActions(Collections.emptyList()).build();
+    private static final ActionsStorage ACTIONS_STORAGE_EMPTY = ActionsStorage.builder().actions(ACTIONS_EMPTY).build();
 
     @Getter
     private Object session_state;
@@ -42,8 +43,7 @@ public class SessionStorage {
      * Очистить список предыдущих активностей
      */
     public void clear() {
-        session_state = ActionsStorage.builder()
-                .actions(ACTIONS_EMPTY).build();
+        session_state = ACTIONS_STORAGE_EMPTY;
     }
 
     public void addAction(PrevAction prevAction) {
@@ -67,15 +67,10 @@ public class SessionStorage {
 
     public void calculatePrevActions(Object object) {
         try {
-            ActionsStorage actionsStorage = Optional.of(object)
+            session_state = Optional.of(object)
                     .filter(obj -> obj instanceof JSONObject)
                     .map(parseObject())
-                    .orElseThrow(() -> new ClassCastException("Невозможно преобразовать объект в JSONObject: " + object));
-
-            session_state = Optional.of(actionsStorage)
-                    .filter(storage -> storage.getActions() != null)
-                    .orElse(ActionsStorage.builder().actions(ACTIONS_EMPTY).build());
-
+                    .orElse(ACTIONS_STORAGE_EMPTY);
         } catch (Exception e) {
             log.error("Ошибка при преобразовании ActionsStorage из входящего запроса:{}", e.getMessage());
             setActions(ACTIONS_EMPTY);
@@ -83,6 +78,11 @@ public class SessionStorage {
     }
 
     private Function<Object, ActionsStorage> parseObject() {
-        return obj -> new Gson().fromJson(obj.toString(), ActionsStorage.class);
+        return obj -> {
+            if ("{}".equals(obj.toString())) {
+                return ACTIONS_STORAGE_EMPTY;
+            }
+            return new Gson().fromJson(obj.toString(), ActionsStorage.class);
+        };
     }
 }

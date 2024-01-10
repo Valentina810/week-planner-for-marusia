@@ -13,22 +13,22 @@ import java.util.stream.Collectors;
 
 @Getter
 @Component
-public class Loader {
-    private final Map<String, LoadCommand> loadCommands;
+public class CommandLoader {
+    private final Map<String, Command> loadCommands;
 
-    public Loader() {
-        List<LoadCommand> handler = new ArrayList<>();
+    public CommandLoader() {
+        List<Command> commands = new ArrayList<>();
         FileReader.loadJsonFromFile("dictionary.json")
-                .forEach(e -> handler.add(new Gson().fromJson(new Gson().toJson(e), LoadCommand.class)));
-        this.loadCommands = handler.stream()
+                .forEach(e -> commands.add(new Gson().fromJson(new Gson().toJson(e), Command.class)));
+        this.loadCommands = commands.stream()
                 .collect(Collectors.toMap(e -> e.getPhrase().toLowerCase(), Function.identity()));
     }
 
-    public LoadCommand get(String phrase) {
+    public Command get(String phrase) {
         return loadCommands.get(phrase) == null ? loadCommands.get("custom") : loadCommands.get(phrase);
     }
 
-    public LoadCommand get(TypeAction operation) {
+    public Command get(TypeAction operation) {
         return loadCommands.values().stream()
                 .filter(e -> e.getOperation().equals(operation))
                 .findFirst().orElse(loadCommands.get("custom"));

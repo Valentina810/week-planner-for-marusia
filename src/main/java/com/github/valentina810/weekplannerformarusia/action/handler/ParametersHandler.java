@@ -1,6 +1,6 @@
 package com.github.valentina810.weekplannerformarusia.action.handler;
 
-import com.github.valentina810.weekplannerformarusia.action.LoadCommand;
+import com.github.valentina810.weekplannerformarusia.action.Command;
 import com.github.valentina810.weekplannerformarusia.model.request.UserRequest;
 import com.github.valentina810.weekplannerformarusia.storage.persistent.PersistentStorage;
 import com.github.valentina810.weekplannerformarusia.storage.session.SessionStorage;
@@ -13,7 +13,7 @@ import lombok.Setter;
 @Builder
 public class ParametersHandler {
 
-    private LoadCommand loadCommand;
+    private Command command;
     private UserRequest userRequest;
     private SessionStorage sessionStorage;
     private PersistentStorage persistentStorage;
