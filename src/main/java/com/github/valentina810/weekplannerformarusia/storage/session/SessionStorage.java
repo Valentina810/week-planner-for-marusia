@@ -47,9 +47,14 @@ public class SessionStorage {
     }
 
     public void addAction(PrevAction prevAction) {
+        ActionsStorage actionsStorage = addPrevActionToStorage(prevAction);
+        setActions(actionsStorage.getActions());
+    }
+
+    private ActionsStorage addPrevActionToStorage(PrevAction prevAction) {
         ActionsStorage actionsStorage = getActionsStorage();
         actionsStorage.getActions().getPrevActions().add(prevAction);
-        setActions(actionsStorage.getActions());
+        return actionsStorage;
     }
 
     public Optional<PrevAction> getLastPrevAction() {
@@ -60,9 +65,11 @@ public class SessionStorage {
     /**
      * Возвращает session_state в виде объекта ActionsStorage
      */
+
     private ActionsStorage getActionsStorage() {
-        return session_state != null ? new Gson().fromJson(new Gson().toJson(session_state), ActionsStorage.class) :
-                new Gson().fromJson(new Gson().toJson(new Object()), ActionsStorage.class);
+        return Optional.ofNullable(session_state)
+                .map(obj -> new Gson().fromJson(new Gson().toJson(obj), ActionsStorage.class))
+                .orElse(ACTIONS_STORAGE_EMPTY);
     }
 
     public void calculatePrevActions(Object object) {

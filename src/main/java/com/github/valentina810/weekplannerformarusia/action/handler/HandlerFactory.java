@@ -24,11 +24,19 @@ public class HandlerFactory {
     }
 
     public SimpleHandler getHandler(Command command) {
-        ParametersHandler parametersHandler = ParametersHandler.builder().command(command).build();
-        if (command.getIsSimple()) {
+        ParametersHandler parametersHandler = createParametersHandler(command);
+        return createHandler(parametersHandler);
+    }
+
+    private ParametersHandler createParametersHandler(Command command) {
+        return ParametersHandler.builder().command(command).build();
+    }
+
+    private SimpleHandler createHandler(ParametersHandler parametersHandler) {
+        if (parametersHandler.getCommand().getIsSimple()) {
             return new SimpleHandler(parametersHandler);
         } else {
-            BaseCompositeExecutor baseCompositeExecutor = baseExecutors.get(command.getOperation());
+            BaseCompositeExecutor baseCompositeExecutor = baseExecutors.get(parametersHandler.getCommand().getOperation());
             return baseCompositeExecutor == null ? new CompositeHandler(parametersHandler, baseExecutors.get(TypeAction.UNKNOWN).getActionExecute()) :
                     new CompositeHandler(parametersHandler, baseCompositeExecutor.getActionExecute());
         }

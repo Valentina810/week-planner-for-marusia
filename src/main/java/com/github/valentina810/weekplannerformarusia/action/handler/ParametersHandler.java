@@ -12,7 +12,6 @@ import lombok.Setter;
 @Setter
 @Builder
 public class ParametersHandler {
-
     private Command command;
     private UserRequest userRequest;
     private SessionStorage sessionStorage;

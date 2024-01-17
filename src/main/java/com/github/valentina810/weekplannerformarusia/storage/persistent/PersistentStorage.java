@@ -75,4 +75,15 @@ public class PersistentStorage {
                                     .events(new ArrayList<>()).build();
                         }).toArray(Day[]::new))).build()).build();
     }
+
+    /**
+     * Возвращает массив из дней, наполненных
+     * событиями
+     */
+    public List<Day> getEventsByDay() {
+        return this
+                .getWeekStorage()
+                .getWeek()
+                .getDays();
+    }
 }

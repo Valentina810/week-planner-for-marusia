@@ -25,20 +25,30 @@ public interface BaseCompositeExecutor {
      */
     default String getEventsForDate(LocalDate date, ParametersHandler parametersHandler) {
         String defaultMessage = parametersHandler.getCommand().getMessageNegative();
-        try {
+        if (defaultMessage != null) {
             parametersHandler.getPersistentStorage().getWeekEvents(parametersHandler.getUserRequest().getState().getUser());
-            List<Day> events = parametersHandler.getPersistentStorage().getWeekStorage().getWeek().getDays().stream()
-                    .filter(e -> e.getDate().equals(date.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))))
-                    .filter(a -> !a.getEvents().isEmpty())
-                    .toList();
-            return events.isEmpty() ? defaultMessage :
-                    parametersHandler.getCommand().getMessagePositive() + events.stream()
-                            .map(day -> day.getDate() + " " + day.getEvents().stream()
-                                    .map(event -> event.getTime() + " " + event.getName())
-                                    .collect(Collectors.joining(" ")))
-                            .collect(Collectors.joining(" "));
-        } catch (NullPointerException e) {
-            return defaultMessage;
+            List<Day> eventsByDay = getDays(date, parametersHandler);
+            return getMessage(parametersHandler, eventsByDay, defaultMessage);
+        } else {
+            return "";
         }
+    }
+
+    private String getMessage(ParametersHandler parametersHandler, List<Day> eventsByDay, String defaultMessage) {
+        return eventsByDay.isEmpty() ? defaultMessage :
+                parametersHandler.getCommand().getMessagePositive() + eventsByDay.stream()
+                        .map(day -> day.getDate() + " " + day.getEvents().stream()
+                                .map(event -> event.getTime() + " " + event.getName())
+                                .collect(Collectors.joining(" ")))
+                        .collect(Collectors.joining(" "));
+    }
+
+    private static List<Day> getDays(LocalDate date, ParametersHandler parametersHandler) {
+        return parametersHandler.getPersistentStorage()
+                .getEventsByDay()
+                .stream()
+                .filter(e -> e.getDate().equals(date.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))))
+                .filter(a -> !a.getEvents().isEmpty())
+                .toList();
     }
 }

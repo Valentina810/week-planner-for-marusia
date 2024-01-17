@@ -31,11 +31,17 @@ public class SimpleHandler {
      */
     void setDefaultValueParameters(ParametersHandler parameters) {
         parameters.setIsEndSession(false);
+        setSessionStorage(parameters);
+        setPersistentStorage(parameters);
+    }
 
+    void setSessionStorage(ParametersHandler parameters) {
         SessionStorage sessionStorage = new SessionStorage();
         sessionStorage.calculatePrevActions(parameters.getUserRequest().getState().getSession());
         parameters.setSessionStorage(sessionStorage);
+    }
 
+    void setPersistentStorage(ParametersHandler parameters) {
         PersistentStorage persistentStorage = new PersistentStorage();
         persistentStorage.getWeekEvents(parameters.getUserRequest().getState().getUser());
         parameters.setPersistentStorage(persistentStorage);

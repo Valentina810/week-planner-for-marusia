@@ -12,6 +12,7 @@ import com.github.valentina810.weekplannerformarusia.storage.session.SessionStor
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import static com.github.valentina810.weekplannerformarusia.action.TypeAction.UNKNOWN;
@@ -104,8 +105,7 @@ public class ActionExecutor {
      * @return - фраза
      */
     private String getPhrase(String message) {
-        return message != null ?
-                message.replaceAll("[^а-яА-Я0-9\\s]", "")
-                        .toLowerCase() : "";
+        return StringUtils.isNotBlank(message) ?
+                message.replaceAll("[^а-яА-Я0-9\\s]", "").toLowerCase() : "";
     }
 }

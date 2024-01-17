@@ -6,7 +6,9 @@ import com.github.valentina810.weekplannerformarusia.storage.persistent.Day;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
@@ -26,8 +28,10 @@ public class WeeklyPlanCompositeExecutor implements BaseCompositeExecutor {
         {
             List<Day> days;
             try {
-                days = parHandler.getPersistentStorage().getWeekStorage()
-                        .getWeek().getDays().stream()
+                days = Optional.ofNullable(parHandler.getPersistentStorage()
+                                .getEventsByDay())
+                        .orElse(Collections.emptyList())
+                        .stream()
                         .filter(e -> !e.getEvents().isEmpty()).collect(Collectors.toList());
                 if (days.isEmpty()) {
                     parHandler.setRespPhrase(parHandler.getCommand().getMessageNegative());
