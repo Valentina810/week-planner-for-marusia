@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -60,6 +61,10 @@ public class SessionStorage {
     public Optional<PrevAction> getLastPrevAction() {
         return getActionsStorage().getActions().getPrevActions()
                 .stream().max(Comparator.comparingInt(PrevAction::getNumber));
+    }
+
+    public List<PrevAction> getPrevActions() {
+        return getActionsStorage().getActions().getPrevActions().stream().toList();
     }
 
     /**

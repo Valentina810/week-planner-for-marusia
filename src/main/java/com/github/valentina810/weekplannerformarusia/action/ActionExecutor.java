@@ -1,5 +1,6 @@
 package com.github.valentina810.weekplannerformarusia.action;
 
+import com.github.valentina810.weekplannerformarusia.FileReader;
 import com.github.valentina810.weekplannerformarusia.action.handler.HandlerFactory;
 import com.github.valentina810.weekplannerformarusia.action.handler.ParametersHandler;
 import com.github.valentina810.weekplannerformarusia.action.handler.template.SimpleHandler;
@@ -9,11 +10,14 @@ import com.github.valentina810.weekplannerformarusia.model.response.Session;
 import com.github.valentina810.weekplannerformarusia.model.response.UserResponse;
 import com.github.valentina810.weekplannerformarusia.storage.session.PrevAction;
 import com.github.valentina810.weekplannerformarusia.storage.session.SessionStorage;
+import com.google.gson.Gson;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.github.valentina810.weekplannerformarusia.action.TypeAction.UNKNOWN;
 
@@ -58,8 +62,12 @@ public class ActionExecutor {
      * @return - набор параметров для ответа в виде модального объекта
      */
     private ParametersHandler getParametersHandler(UserRequest userRequest) {
-        String phrase = getPhrase(userRequest.getRequest().getCommand());
-        SimpleHandler handler = getHandler(userRequest.getState().getSession(), phrase);
+        SessionStorage sessionStorage = new SessionStorage();
+        sessionStorage.calculatePrevActions(userRequest.getState().getSession());
+        List<PrevAction> prevActions = sessionStorage.getPrevActions();
+
+        TypeAction requestSessionStorage = defineCommand(prevActions, userRequest.getRequest().getCommand());
+        SimpleHandler handler = getHandler(requestSessionStorage);
         handler.getParametersHandler().setUserRequest(userRequest);
         handler.execute();
         return handler.getParametersHandler();
@@ -98,14 +106,29 @@ public class ActionExecutor {
     }
 
     /**
-     * Получить из объекта фразу, которую сказал пользователь
-     * #todo - позже будет анализ по токенам
+     * Получить из фразы, которую сказал пользователь, код активности
      *
-     * @param message - объект
-     * @return - фраза
+     * @param phrase - фраза пользователя
+     * @return код активности
      */
-    private String getPhrase(String message) {
-        return StringUtils.isNotBlank(message) ?
-                message.replaceAll("[^а-яА-Я0-9\\s]", "").toLowerCase() : "";
+    private TypeAction defineCommand(List<PrevAction> prevActions, String phrase) {
+        if (prevActions.size() > 0) {
+            //определяем команду по предыдущей активности
+        } else { //ищем фразу по токенам
+            return loadCommand().stream()
+                    .filter(token -> token.getTokens().stream()
+                            .anyMatch(phraseTokens -> phraseTokens.getPhrase().stream()
+                                    .allMatch(e -> e.contains(phrase))))
+                    .map(Token::getOperation)
+                    .findFirst()
+                    .orElse(UNKNOWN);
+        }
+    }
+
+    public List<Token> loadCommand() {
+        return FileReader.loadJsonFromFile("tokens.json").asList()
+                .stream()
+                .map(json -> new Gson().fromJson(new Gson().toJson(json), Token.class))
+                .collect(Collectors.toList());
     }
 }

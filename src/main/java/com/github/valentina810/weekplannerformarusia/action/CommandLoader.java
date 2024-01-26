@@ -15,12 +15,11 @@ public class CommandLoader {
     private final Map<String, Command> loadCommands;
 
     public CommandLoader() {
-        this.loadCommands = FileReader.loadJsonFromFile("dictionary.json").asList()
+        this.loadCommands = FileReader.loadJsonFromFile("commands.json").asList()
                 .stream()
                 .map(json -> new Gson().fromJson(new Gson().toJson(json), Command.class))
                 .collect(Collectors.toMap(e -> e.getPhrase().toLowerCase(), Function.identity()));
     }
-
 
     public Command get(String phrase) {
         return loadCommands.getOrDefault(phrase, loadCommands.get("custom"));

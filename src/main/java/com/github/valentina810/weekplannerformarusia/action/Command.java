@@ -6,12 +6,10 @@ import java.util.List;
 
 @Getter
 public class Command {
-
-    private String phrase;
+    private TypeAction operation;
     private Boolean isSimple;
     private TypeAction prevOperation;
     private String messagePositive;
     private String messageNegative;
-    private TypeAction operation;
     private List<Command> actions;
 }
