@@ -1,4 +1,4 @@
-package com.github.valentina810.weekplannerformarusia.action;
+package com.github.valentina810.weekplannerformarusia.dto;
 
 
 import lombok.Getter;

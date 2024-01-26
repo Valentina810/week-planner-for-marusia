@@ -28,6 +28,10 @@ public class PersistentStorage {
     @Getter
     private Object user_state_update;
 
+    public void setWeekStorage(Week week) {
+        user_state_update = WeekStorage.builder().week(week).build();
+    }
+
     /**
      * Возвращает user_state_update в виде объекта WeekStorage
      */
@@ -47,15 +51,15 @@ public class PersistentStorage {
                     .fromJson(new Gson().toJson(jsonElement.getAsJsonObject()
                             .getAsJsonObject("week")), Week.class);
             if (week != null) {
-                user_state_update = WeekStorage.builder().week(week).build();
+                setWeekStorage(week);
                 log.info("Получили данные о событиях на неделю из ответа");
             } else {
-                user_state_update = generateEmptyWeeklyStorage();
+                setWeekStorage(generateEmptyWeeklyStorage());
                 log.info("Данные о событиях отсутствуют, записали пустую структуру");
             }
         } catch (IllegalStateException | NullPointerException e) {
             log.info("В процессе получения данных о событиях из ответа возникла ошибка {}", e.getMessage());
-            user_state_update = generateEmptyWeeklyStorage();
+            setWeekStorage(generateEmptyWeeklyStorage());
             log.info("Данные о событиях отсутствуют, записали пустую структуру");
         }
     }
@@ -65,15 +69,15 @@ public class PersistentStorage {
      *
      * @return - объект-хранилище
      */
-    private WeekStorage generateEmptyWeeklyStorage() {
+    private Week generateEmptyWeeklyStorage() {
         int dayInMilliseconds = 86400000;
-        return WeekStorage.builder().week(Week.builder()
+        return Week.builder()
                 .days(List.of(IntStream.range(0, 7)
                         .mapToObj(i -> {
                             return Day.builder()
                                     .date(new SimpleDateFormat("dd-MM-yyyy").format(System.currentTimeMillis() + (long) i * dayInMilliseconds))
                                     .events(new ArrayList<>()).build();
-                        }).toArray(Day[]::new))).build()).build();
+                        }).toArray(Day[]::new))).build();
     }
 
     /**

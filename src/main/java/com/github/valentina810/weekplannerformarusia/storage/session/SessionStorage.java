@@ -41,6 +41,15 @@ public class SessionStorage {
     }
 
     /**
+     * Возвращает session_state в виде объекта ActionsStorage
+     */
+    public ActionsStorage getActionsStorage() {
+        return Optional.ofNullable(session_state)
+                .map(obj -> new Gson().fromJson(new Gson().toJson(obj), ActionsStorage.class))
+                .orElse(ACTIONS_STORAGE_EMPTY);
+    }
+
+    /**
      * Очистить список предыдущих активностей
      */
     public void clear() {
@@ -65,16 +74,6 @@ public class SessionStorage {
 
     public List<PrevAction> getPrevActions() {
         return getActionsStorage().getActions().getPrevActions().stream().toList();
-    }
-
-    /**
-     * Возвращает session_state в виде объекта ActionsStorage
-     */
-
-    private ActionsStorage getActionsStorage() {
-        return Optional.ofNullable(session_state)
-                .map(obj -> new Gson().fromJson(new Gson().toJson(obj), ActionsStorage.class))
-                .orElse(ACTIONS_STORAGE_EMPTY);
     }
 
     public void calculatePrevActions(Object object) {
