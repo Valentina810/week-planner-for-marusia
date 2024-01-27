@@ -1,11 +1,12 @@
 package com.github.valentina810.weekplannerformarusia.action.handler.composite;
 
 import com.github.valentina810.weekplannerformarusia.action.TypeAction;
-import com.github.valentina810.weekplannerformarusia.dto.Command;
 import com.github.valentina810.weekplannerformarusia.dto.ExecutorParameter;
 import com.github.valentina810.weekplannerformarusia.dto.ResponseParameters;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDate;
 
 import static com.github.valentina810.weekplannerformarusia.action.TypeAction.TOMORROW_PLAN;
 
@@ -18,21 +19,12 @@ public class TomorrowPlanExecutor implements BaseExecutor {
     }
 
     @Override
-    public ResponseParameters getResponseParameters(ExecutorParameter executorParameter) {
-        return null;
+    public ResponseParameters getResponseParameters(ExecutorParameter exParam) {
+        return ResponseParameters.builder()
+                .isEndSession(getCommand().getIsEndSession())
+                .respPhrase(getEventsForDate(LocalDate.now().plusDays(1), exParam.getPersistentStorage()))
+                .sessionStorage(exParam.getSessionStorage())
+                .persistentStorage(exParam.getPersistentStorage())
+                .build();
     }
-
-    @Override
-    public Command getCommand() {
-        return BaseExecutor.super.getCommand();
-    }
-
-//    @Override
-//    public UnaryOperator<ResponseParameters> getActionExecute() {
-//        return parHandler ->
-//        {
-//            parHandler.setRespPhrase(getEventsForDate(LocalDate.now().plusDays(1), parHandler));
-//            return parHandler;
-//        };
-//    }
 }

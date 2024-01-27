@@ -12,5 +12,6 @@ public class Command {
     private TypeAction prevOperation;
     private String messagePositive;
     private String messageNegative;
+    private Boolean isEndSession;
     private List<Command> actions;
 }

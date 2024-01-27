@@ -4,6 +4,7 @@
     "isSimple": false,
     "messagePositive": "Ваши события ",
     "messageNegative": "У вас пока нет событий на этой неделе",
+    "isEndSession": false,
     "actions": []
   },
   {
@@ -11,6 +12,7 @@
     "isSimple": false,
     "messagePositive": "Ваши события на сегодня ",
     "messageNegative": "У вас пока нет событий на сегодня",
+    "isEndSession": false,
     "actions": []
   },
   {
@@ -18,6 +20,7 @@
     "isSimple": false,
     "messagePositive": "Ваши события на завтра ",
     "messageNegative": "У вас пока нет событий на завтра",
+    "isEndSession": false,
     "actions": []
   },
   {
@@ -25,6 +28,7 @@
     "isSimple": false,
     "messagePositive": "Назовите день, например, среда ",
     "messageNegative": "Не удалось добавить событие",
+    "isEndSession": false,
     "actions": [
       {
         "operation": "ADD_DAY",
@@ -32,6 +36,7 @@
         "messagePositive": "Назовите время, например, 12 часов 30 минут ",
         "messageNegative": "Не удалось добавить событие",
         "prevOperation": "ADD_EVENT",
+        "isEndSession": false,
         "actions": [
           {
             "operation": "ADD_TIME",
@@ -39,6 +44,7 @@
             "prevOperation": "ADD_DAY",
             "messagePositive": "Назовите название события ",
             "messageNegative": "Не удалось добавить событие",
+            "isEndSession": false,
             "actions": [
               {
                 "operation": "ADD_NAME",
@@ -46,6 +52,7 @@
                 "prevOperation": "ADD_TIME",
                 "messagePositive": "Событие успешно добавлено!",
                 "messageNegative": "Не удалось добавить событие",
+                "isEndSession": false,
                 "actions": []
               }
             ]
@@ -58,12 +65,14 @@
     "operation": "HELP",
     "isSimple": false,
     "messagePositive": "Выберите раздел: команды, добавить событие, об авторе, вернуться в главное меню",
+    "isEndSession": false,
     "actions": [
       {
         "operation": "COMMANDS",
         "isSimple": true,
         "prevOperation": "HELP",
         "messagePositive": "Вот какие у меня есть команды: план на неделю, план на сегодня, план на завтра",
+        "isEndSession": false,
         "actions": []
       },
       {
@@ -71,6 +80,7 @@
         "isSimple": true,
         "prevOperation": "HELP",
         "messagePositive": "Для того чтобы добавить событие скажите: добавь событие",
+        "isEndSession": false,
         "actions": []
       },
       {
@@ -78,6 +88,7 @@
         "isSimple": true,
         "prevOperation": "HELP",
         "messagePositive": "Имя автора Валентина",
+        "isEndSession": false,
         "actions": []
       },
       {
@@ -85,6 +96,7 @@
         "isSimple": false,
         "prevOperation": "HELP",
         "messagePositive": "Выполнен выход в главное меню",
+        "isEndSession": false,
         "actions": []
       }
     ]
@@ -93,12 +105,14 @@
     "operation": "EXIT",
     "isSimple": false,
     "messagePositive": "До свидания!",
+    "isEndSession": true,
     "actions": []
   },
   {
     "operation": "UNKNOWN",
     "isSimple": true,
     "messagePositive": "Получена неизвестная команда! Используйте команду справка для того чтобы узнать мои команды",
+    "isEndSession": false,
     "actions": []
   }
 ]

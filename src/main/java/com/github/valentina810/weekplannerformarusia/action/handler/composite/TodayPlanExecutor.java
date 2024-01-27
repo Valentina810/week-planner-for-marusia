@@ -6,6 +6,8 @@ import com.github.valentina810.weekplannerformarusia.dto.ResponseParameters;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+
 import static com.github.valentina810.weekplannerformarusia.action.TypeAction.TODAY_PLAN;
 
 @Component
@@ -17,16 +19,12 @@ public class TodayPlanExecutor implements BaseExecutor {
     }
 
     @Override
-    public ResponseParameters getResponseParameters(ExecutorParameter executorParameter) {
-        return null;
+    public ResponseParameters getResponseParameters(ExecutorParameter exParam) {
+        return ResponseParameters.builder()
+                .isEndSession(getCommand().getIsEndSession())
+                .respPhrase(getEventsForDate(LocalDate.now(), exParam.getPersistentStorage()))
+                .sessionStorage(exParam.getSessionStorage())
+                .persistentStorage(exParam.getPersistentStorage())
+                .build();
     }
-
-//    @Override
-//    public UnaryOperator<ResponseParameters> getActionExecute() {
-//        return parHandler ->
-//        {
-//            parHandler.setRespPhrase(getEventsForDate(LocalDate.now(), parHandler));
-//            return parHandler;
-//        };
-//    }
 }

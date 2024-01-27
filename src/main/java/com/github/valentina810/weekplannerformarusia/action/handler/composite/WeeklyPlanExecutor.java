@@ -3,8 +3,14 @@ package com.github.valentina810.weekplannerformarusia.action.handler.composite;
 import com.github.valentina810.weekplannerformarusia.action.TypeAction;
 import com.github.valentina810.weekplannerformarusia.dto.ExecutorParameter;
 import com.github.valentina810.weekplannerformarusia.dto.ResponseParameters;
+import com.github.valentina810.weekplannerformarusia.storage.persistent.Day;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.github.valentina810.weekplannerformarusia.action.TypeAction.WEEKLY_PLAN;
 
@@ -17,34 +23,32 @@ public class WeeklyPlanExecutor implements BaseExecutor {
     }
 
     @Override
-    public ResponseParameters getResponseParameters(ExecutorParameter executorParameter) {
-        return null;
+    public ResponseParameters getResponseParameters(ExecutorParameter exParam) {
+        List<Day> days;
+        String respPhrase;
+        try {
+            days = Optional.ofNullable(exParam.getPersistentStorage()
+                            .getEventsByDay())
+                    .orElse(Collections.emptyList())
+                    .stream()
+                    .filter(e -> !e.getEvents().isEmpty()).collect(Collectors.toList());
+            if (days.isEmpty()) {
+                respPhrase = getCommand().getMessageNegative();
+            } else {
+                respPhrase = getCommand().getMessagePositive() + days.stream()
+                        .map(day -> day.getDate() + " " + day.getEvents().stream()
+                                .map(event -> event.getTime() + " " + event.getName())
+                                .collect(Collectors.joining(" ")))
+                        .collect(Collectors.joining(" "));
+            }
+        } catch (NullPointerException e) {
+            respPhrase = getCommand().getMessageNegative();
+        }
+        return ResponseParameters.builder()
+                .isEndSession(getCommand().getIsEndSession())
+                .respPhrase(respPhrase)
+                .sessionStorage(exParam.getSessionStorage())
+                .persistentStorage(exParam.getPersistentStorage())
+                .build();
     }
-
-//    @Override
-//    public UnaryOperator<ResponseParameters> getActionExecute() {
-//        return parHandler ->
-//        {
-//            List<Day> days;
-//            try {
-//                days = Optional.ofNullable(parHandler.getPersistentStorage()
-//                                .getEventsByDay())
-//                        .orElse(Collections.emptyList())
-//                        .stream()
-//                        .filter(e -> !e.getEvents().isEmpty()).collect(Collectors.toList());
-//                if (days.isEmpty()) {
-//                    parHandler.setRespPhrase(parHandler.getCommand().getMessageNegative());
-//                } else {
-//                    parHandler.setRespPhrase(parHandler.getCommand().getMessagePositive() + days.stream()
-//                            .map(day -> day.getDate() + " " + day.getEvents().stream()
-//                                    .map(event -> event.getTime() + " " + event.getName())
-//                                    .collect(Collectors.joining(" ")))
-//                            .collect(Collectors.joining(" ")));
-//                }
-//            } catch (NullPointerException e) {
-//                parHandler.setRespPhrase(parHandler.getCommand().getMessageNegative());
-//            }
-//            return parHandler;
-//        };
-//    }
 }

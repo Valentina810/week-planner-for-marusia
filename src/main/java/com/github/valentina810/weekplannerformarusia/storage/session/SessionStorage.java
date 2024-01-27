@@ -28,7 +28,7 @@ import java.util.function.Function;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class SessionStorage {
+public class SessionStorage { //#todo унифицировать методы, есть дублирующиеся, задокументировать
 
     private static final Actions ACTIONS_EMPTY = Actions.builder().prevActions(Collections.emptyList()).build();
     private static final ActionsStorage ACTIONS_STORAGE_EMPTY = ActionsStorage.builder().actions(ACTIONS_EMPTY).build();
@@ -57,8 +57,13 @@ public class SessionStorage {
     }
 
     public void addAction(PrevAction prevAction) {
-        ActionsStorage actionsStorage = addPrevActionToStorage(prevAction);
-        setActions(actionsStorage.getActions());
+        getLastPrevAction()
+                .ifPresentOrElse(
+                        lastPrevAction -> prevAction.setNumber(lastPrevAction.getNumber() + 1),
+                        () -> prevAction.setNumber(0)
+                );
+
+        setActions(addPrevActionToStorage(prevAction).getActions());
     }
 
     private ActionsStorage addPrevActionToStorage(PrevAction prevAction) {

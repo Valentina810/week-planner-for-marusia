@@ -1,9 +1,9 @@
 package com.github.valentina810.weekplannerformarusia.action.handler.composite;
 
 import com.github.valentina810.weekplannerformarusia.action.TypeAction;
-import com.github.valentina810.weekplannerformarusia.dto.Command;
 import com.github.valentina810.weekplannerformarusia.dto.ExecutorParameter;
 import com.github.valentina810.weekplannerformarusia.dto.ResponseParameters;
+import com.github.valentina810.weekplannerformarusia.storage.session.SessionStorage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -18,22 +18,14 @@ public class ExitMainMenuExecutor implements BaseExecutor {
     }
 
     @Override
-    public ResponseParameters getResponseParameters(ExecutorParameter executorParameter) {
-        return null;
+    public ResponseParameters getResponseParameters(ExecutorParameter exParam) {
+        SessionStorage sessionStorage = exParam.getSessionStorage();
+        sessionStorage.clear();
+        return ResponseParameters.builder()
+                .isEndSession(getCommand().getIsEndSession())
+                .respPhrase(getCommand().getMessagePositive())
+                .sessionStorage(sessionStorage)
+                .persistentStorage(exParam.getPersistentStorage())
+                .build();
     }
-
-    @Override
-    public Command getCommand() {
-        return BaseExecutor.super.getCommand();
-    }
-
-//    @Override
-//    public UnaryOperator<ResponseParameters> getActionExecute() {
-//        return parHandler ->
-//        {
-//            parHandler.setRespPhrase(parHandler.getCommand().getMessagePositive());
-//            parHandler.getSessionStorage().clear();
-//            return parHandler;
-//        };
-//    }
 }
