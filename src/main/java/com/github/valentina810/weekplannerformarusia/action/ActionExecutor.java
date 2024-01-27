@@ -2,7 +2,7 @@ package com.github.valentina810.weekplannerformarusia.action;
 
 import com.github.valentina810.weekplannerformarusia.FileReader;
 import com.github.valentina810.weekplannerformarusia.action.handler.HandlerFactory;
-import com.github.valentina810.weekplannerformarusia.action.handler.composite.BaseCompositeExecutor;
+import com.github.valentina810.weekplannerformarusia.action.handler.composite.BaseExecutor;
 import com.github.valentina810.weekplannerformarusia.dto.ExecutorParameter;
 import com.github.valentina810.weekplannerformarusia.dto.ResponseParameters;
 import com.github.valentina810.weekplannerformarusia.dto.Token;
@@ -68,6 +68,7 @@ public class ActionExecutor {
         List<PrevAction> prevActions = sessionStorage.getPrevActions();
         String phrase = userRequest.getRequest().getCommand();
         TypeAction typeAction = defineCommand(prevActions, phrase);
+        log.info("Получить тип активности на основании prevActions={}, phrase={}, typeAction={}", prevActions, phrase, typeAction);
 
         return getHandler(typeAction)
                 .getResponseParameters(ExecutorParameter.builder()
@@ -76,7 +77,7 @@ public class ActionExecutor {
                         .persistentStorage(persistentStorage).build());
     }
 
-    private BaseCompositeExecutor getHandler(TypeAction typeAction) {
+    private BaseExecutor getHandler(TypeAction typeAction) {
         return handlerFactory.getHandler(typeAction);
     }
 
@@ -103,6 +104,7 @@ public class ActionExecutor {
     }
 
     public List<Token> loadCommand() {
+        log.info("Загрузка токенов из файла tokens.json");
         return FileReader.loadJsonFromFile("tokens.json").asList()
                 .stream()
                 .map(json -> new Gson().fromJson(new Gson().toJson(json), Token.class))

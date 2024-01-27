@@ -10,7 +10,7 @@ import static com.github.valentina810.weekplannerformarusia.action.TypeAction.EX
 
 @Component
 @RequiredArgsConstructor
-public class ExitCompositeExecutor implements BaseCompositeExecutor {
+public class ExitExecutor implements BaseExecutor {
 
     @Override
     public TypeAction getType() {

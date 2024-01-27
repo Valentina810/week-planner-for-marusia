@@ -7,14 +7,14 @@ import com.github.valentina810.weekplannerformarusia.dto.ResponseParameters;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import static com.github.valentina810.weekplannerformarusia.action.TypeAction.EXIT_MAIN_MENU;
+import static com.github.valentina810.weekplannerformarusia.action.TypeAction.TOMORROW_PLAN;
 
 @Component
 @RequiredArgsConstructor
-public class ExitMainMenuCompositeExecutor implements BaseCompositeExecutor {
+public class TomorrowPlanExecutor implements BaseExecutor {
     @Override
     public TypeAction getType() {
-        return EXIT_MAIN_MENU;
+        return TOMORROW_PLAN;
     }
 
     @Override
@@ -24,15 +24,14 @@ public class ExitMainMenuCompositeExecutor implements BaseCompositeExecutor {
 
     @Override
     public Command getCommand() {
-        return BaseCompositeExecutor.super.getCommand();
+        return BaseExecutor.super.getCommand();
     }
 
 //    @Override
 //    public UnaryOperator<ResponseParameters> getActionExecute() {
 //        return parHandler ->
 //        {
-//            parHandler.setRespPhrase(parHandler.getCommand().getMessagePositive());
-//            parHandler.getSessionStorage().clear();
+//            parHandler.setRespPhrase(getEventsForDate(LocalDate.now().plusDays(1), parHandler));
 //            return parHandler;
 //        };
 //    }

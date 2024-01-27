@@ -10,7 +10,7 @@ import static com.github.valentina810.weekplannerformarusia.action.TypeAction.WE
 
 @Component
 @RequiredArgsConstructor
-public class WeeklyPlanCompositeExecutor implements BaseCompositeExecutor {
+public class WeeklyPlanExecutor implements BaseExecutor {
     @Override
     public TypeAction getType() {
         return WEEKLY_PLAN;

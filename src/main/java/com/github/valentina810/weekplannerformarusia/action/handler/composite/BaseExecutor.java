@@ -13,15 +13,14 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public interface BaseCompositeExecutor {
-    CommandLoader commandLoader = new CommandLoader();
+public interface BaseExecutor {
 
     TypeAction getType();
 
     ResponseParameters getResponseParameters(ExecutorParameter executorParameter);
 
     default Command getCommand() {
-        return commandLoader.get(getType());
+        return CommandLoader.get(getType());
     }
 
     /**

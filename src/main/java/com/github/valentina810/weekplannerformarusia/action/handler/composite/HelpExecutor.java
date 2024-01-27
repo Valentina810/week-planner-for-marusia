@@ -11,7 +11,7 @@ import static com.github.valentina810.weekplannerformarusia.action.TypeAction.HE
 
 @Component
 @RequiredArgsConstructor
-public class HelpCompositeExecutor implements BaseCompositeExecutor {
+public class HelpExecutor implements BaseExecutor {
     @Override
     public TypeAction getType() {
         return HELP;
@@ -24,7 +24,7 @@ public class HelpCompositeExecutor implements BaseCompositeExecutor {
 
     @Override
     public Command getCommand() {
-        return BaseCompositeExecutor.super.getCommand();
+        return BaseExecutor.super.getCommand();
     }
 
 //    @Override
