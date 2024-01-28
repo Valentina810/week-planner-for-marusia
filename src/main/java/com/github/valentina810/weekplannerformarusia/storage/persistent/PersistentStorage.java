@@ -3,9 +3,7 @@ package com.github.valentina810.weekplannerformarusia.storage.persistent;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -20,30 +18,21 @@ import java.util.stream.IntStream;
  */
 
 @Slf4j
-@Component
-@RequiredArgsConstructor
 public class PersistentStorage {
 
     //#todo тут могут храниться и другие данные, лучше сделать так, чтобы их не затирать
     @Getter
-    private Object user_state_update;
+    private WeekStorage weekStorage;
 
     public void setWeekStorage(Week week) {
-        user_state_update = WeekStorage.builder().week(week).build();
-    }
-
-    /**
-     * Возвращает user_state_update в виде объекта WeekStorage
-     */
-    public WeekStorage getWeekStorage() {
-        return new Gson().fromJson(new Gson().toJson(user_state_update), WeekStorage.class);
+        weekStorage = WeekStorage.builder().week(week).build();
     }
 
     /**
      * Получить из хранилища массив с данными, если он есть
      * если массива с данными нет, то записать пустой
      */
-    public void getWeekEvents(final Object object) {
+    public void setWeekStorage(Object object) {
         try {
             JsonElement jsonElement = new Gson()
                     .fromJson(new Gson().toJson(object), JsonElement.class);
@@ -62,6 +51,10 @@ public class PersistentStorage {
             setWeekStorage(generateEmptyWeeklyStorage());
             log.info("Данные о событиях отсутствуют, записали пустую структуру");
         }
+    }
+
+    public WeekStorage getUser_state_update() {
+        return weekStorage;
     }
 
     /**

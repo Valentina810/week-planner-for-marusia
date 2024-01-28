@@ -1,6 +1,7 @@
 package com.github.valentina810.weekplannerformarusia.action.handler.composite;
 
 import com.github.valentina810.weekplannerformarusia.action.TypeAction;
+import com.github.valentina810.weekplannerformarusia.dto.Command;
 import com.github.valentina810.weekplannerformarusia.dto.ExecutorParameter;
 import com.github.valentina810.weekplannerformarusia.dto.ResponseParameters;
 import com.github.valentina810.weekplannerformarusia.storage.session.PrevAction;
@@ -21,12 +22,13 @@ public class HelpExecutor implements BaseExecutor {
     @Override
     public ResponseParameters getResponseParameters(ExecutorParameter exParam) {
         SessionStorage sessionStorage = exParam.getSessionStorage();
-        sessionStorage.addAction(PrevAction.builder()
+        sessionStorage.addPrevAction(PrevAction.builder()
                 .operation(getType())
                 .valueAction("").build());
+        Command command = getCommand(exParam.getTypeAction());
         return ResponseParameters.builder()
-                .isEndSession(getCommand().getIsEndSession())
-                .respPhrase(getCommand().getMessagePositive())
+                .isEndSession(command.getIsEndSession())
+                .respPhrase(command.getMessagePositive())
                 .sessionStorage(sessionStorage)
                 .persistentStorage(exParam.getPersistentStorage())
                 .build();

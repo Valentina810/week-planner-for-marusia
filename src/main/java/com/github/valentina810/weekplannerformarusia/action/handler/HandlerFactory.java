@@ -6,8 +6,11 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static com.github.valentina810.weekplannerformarusia.action.TypeAction.SIMPLE;
 
 @Component
 public class HandlerFactory {
@@ -19,6 +22,7 @@ public class HandlerFactory {
     }
 
     public BaseExecutor getHandler(TypeAction typeAction) {
-        return baseExecutors.get(typeAction);
+        return Optional.ofNullable(baseExecutors.get(typeAction))
+                .orElseGet(() -> baseExecutors.get(SIMPLE));
     }
 }

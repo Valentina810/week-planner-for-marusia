@@ -3,6 +3,7 @@ package com.github.valentina810.weekplannerformarusia.action;
 import com.github.valentina810.weekplannerformarusia.FileReader;
 import com.github.valentina810.weekplannerformarusia.action.handler.HandlerFactory;
 import com.github.valentina810.weekplannerformarusia.action.handler.composite.BaseExecutor;
+import com.github.valentina810.weekplannerformarusia.dto.Command;
 import com.github.valentina810.weekplannerformarusia.dto.ExecutorParameter;
 import com.github.valentina810.weekplannerformarusia.dto.ResponseParameters;
 import com.github.valentina810.weekplannerformarusia.dto.Token;
@@ -11,6 +12,7 @@ import com.github.valentina810.weekplannerformarusia.model.response.Response;
 import com.github.valentina810.weekplannerformarusia.model.response.Session;
 import com.github.valentina810.weekplannerformarusia.model.response.UserResponse;
 import com.github.valentina810.weekplannerformarusia.storage.persistent.PersistentStorage;
+import com.github.valentina810.weekplannerformarusia.storage.session.Actions;
 import com.github.valentina810.weekplannerformarusia.storage.session.PrevAction;
 import com.github.valentina810.weekplannerformarusia.storage.session.SessionStorage;
 import com.google.gson.Gson;
@@ -19,10 +21,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import static com.github.valentina810.weekplannerformarusia.action.TypeAction.EXIT;
+import static com.github.valentina810.weekplannerformarusia.action.TypeAction.UNKNOWN;
 
 @Slf4j
 @Component
@@ -36,6 +41,8 @@ public class ActionExecutor {
      * Формирует ответ для пользователя в объекте userResponse
      */
     public void createUserResponse(UserRequest userRequest) {
+        log.info("Получен запрос {}", userRequest);
+
         ResponseParameters respParam = getResponseParameters(userRequest);
 
         userResponse.setResponse(Response.builder()
@@ -55,23 +62,29 @@ public class ActionExecutor {
         userResponse.setUser_state_update(respParam.getPersistentStorage().getUser_state_update());
 
         userResponse.setVersion(userRequest.getVersion());
+
+        log.info("Сформирован ответ {}", userResponse);
     }
 
     private ResponseParameters getResponseParameters(UserRequest userRequest) {
 
+
         SessionStorage sessionStorage = new SessionStorage();
-        sessionStorage.calculatePrevActions(userRequest.getState().getSession());
+        sessionStorage.setActionsInSessionState(userRequest.getState().getSession());
 
         PersistentStorage persistentStorage = new PersistentStorage();
-        persistentStorage.getWeekEvents(userRequest.getState().getUser());
+        persistentStorage.setWeekStorage(userRequest.getState().getUser());
 
-        List<PrevAction> prevActions = sessionStorage.getPrevActions();
+        Actions actions = sessionStorage.getActions();
         String phrase = userRequest.getRequest().getCommand();
-        TypeAction typeAction = defineCommand(prevActions, phrase);
-        log.info("Получить тип активности на основании prevActions={}, phrase={}, typeAction={}", prevActions, phrase, typeAction);
+        TypeAction typeAction = defineCommand(actions, phrase);
+        log.info("Получить тип активности на основании actions={}, phrase={}, typeAction={}",
+                actions, phrase, typeAction);
 
-        return getHandler(typeAction)
+        BaseExecutor handler = getHandler(typeAction);
+        return handler
                 .getResponseParameters(ExecutorParameter.builder()
+                        .typeAction(typeAction)
                         .phrase(phrase)
                         .sessionStorage(sessionStorage)
                         .persistentStorage(persistentStorage).build());
@@ -87,20 +100,39 @@ public class ActionExecutor {
      * @param phrase - фраза пользователя
      * @return код активности
      */
-    private TypeAction defineCommand(List<PrevAction> prevActions, String phrase) {
-//        if (prevActions.size() > 0) {
-//            return EXIT;
-//            //определяем команду по предыдущей активности
-//        } else { //ищем фразу по токенам
-//            return loadCommand().stream()
-//                    .filter(token -> token.getTokens().stream()
-//                            .anyMatch(phraseTokens -> phraseTokens.getPhrase().stream()
-//                                    .allMatch(e -> e.contains(phrase))))
-//                    .map(Token::getOperation)
-//                    .findFirst()
-//                    .orElse(UNKNOWN);
-//        }
-        return EXIT;
+    private TypeAction defineCommand(Actions actions, String phrase) {
+        List<PrevAction> prevActions = actions.getPrevActions();
+        List<Token> tokens = loadCommand();
+        if (!prevActions.isEmpty()) { //есть предыдущая активность, по ней определяем какая может быть следующей
+            //собираем все команды у которых prevOperation=предыдущей активности с максимальным номером из массива prevActions
+            PrevAction prevAction = prevActions.stream().max(Comparator.comparingInt(PrevAction::getNumber)).get();
+            //команды нужно перебрать рекусрсивно, так как текущая команда может быть вложенной
+            TypeAction operation = prevAction.getOperation();
+            List<Command> commandsByPrevOperation =
+                    CommandLoader.findCommandsByPrevOperation(operation);
+            if (commandsByPrevOperation.size() == 1) {
+                return commandsByPrevOperation.get(0).getOperation();
+            } else {//иначе нужно подключать поиск по фразе, но только для вложенных команд
+                Set<TypeAction> set = commandsByPrevOperation.stream().map(Command::getOperation).collect(Collectors.toSet());
+                List<Token> collect = tokens.stream().filter(e -> set.contains(e.getTypeAction())).toList();
+                return collect.stream()
+                        .filter(token -> token.getTokens().stream()
+                                .anyMatch(phraseTokens -> phraseTokens.getPhrase().stream()
+                                        .allMatch(e -> e.contains(phrase))))
+                        .map(Token::getTypeAction)
+                        .findFirst()
+                        .orElse(UNKNOWN);
+            }
+        } else { //ищем фразу по токенам
+            Stream<Token> tokenStream = tokens.stream()
+                    .filter(token -> token.getTokens().stream()
+                            .anyMatch(phraseTokens -> phraseTokens.getPhrase().stream()
+                                    .allMatch(e -> e.contains(phrase))));
+            Set<Token> collect = tokenStream.collect(Collectors.toSet());
+            if (!collect.isEmpty()) {
+                return collect.stream().findFirst().get().getTypeAction();
+            } else return UNKNOWN;
+        }
     }
 
     public List<Token> loadCommand() {

@@ -19,19 +19,18 @@ public interface BaseExecutor {
 
     ResponseParameters getResponseParameters(ExecutorParameter executorParameter);
 
-    default Command getCommand() {
-        return CommandLoader.get(getType());
+    default Command getCommand(TypeAction typeAction) {
+        return CommandLoader.get(typeAction);
     }
 
     /**
      * Выбирает из массива дней все события на определённую дату
      */
-    default String getEventsForDate(LocalDate date, Object persistentStorage) {
-        Command command = getCommand();
+    default String getEventsForDate(Command command,LocalDate date, Object persistentStorage) {
         String defaultMessage = command.getMessageNegative();
         if (defaultMessage != null) {
             PersistentStorage persistentStorage1 = new PersistentStorage();
-            persistentStorage1.getWeekEvents(persistentStorage);
+            persistentStorage1.setWeekStorage(persistentStorage);
             List<Day> eventsByDay = getDays(date, persistentStorage1);
             return getMessage(command, eventsByDay, defaultMessage);
         } else {

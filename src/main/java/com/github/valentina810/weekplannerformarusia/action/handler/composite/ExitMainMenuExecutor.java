@@ -1,6 +1,7 @@
 package com.github.valentina810.weekplannerformarusia.action.handler.composite;
 
 import com.github.valentina810.weekplannerformarusia.action.TypeAction;
+import com.github.valentina810.weekplannerformarusia.dto.Command;
 import com.github.valentina810.weekplannerformarusia.dto.ExecutorParameter;
 import com.github.valentina810.weekplannerformarusia.dto.ResponseParameters;
 import com.github.valentina810.weekplannerformarusia.storage.session.SessionStorage;
@@ -19,12 +20,11 @@ public class ExitMainMenuExecutor implements BaseExecutor {
 
     @Override
     public ResponseParameters getResponseParameters(ExecutorParameter exParam) {
-        SessionStorage sessionStorage = exParam.getSessionStorage();
-        sessionStorage.clear();
+        Command command = getCommand(exParam.getTypeAction());
         return ResponseParameters.builder()
-                .isEndSession(getCommand().getIsEndSession())
-                .respPhrase(getCommand().getMessagePositive())
-                .sessionStorage(sessionStorage)
+                .isEndSession(command.getIsEndSession())
+                .respPhrase(command.getMessagePositive())
+                .sessionStorage(new SessionStorage())
                 .persistentStorage(exParam.getPersistentStorage())
                 .build();
     }

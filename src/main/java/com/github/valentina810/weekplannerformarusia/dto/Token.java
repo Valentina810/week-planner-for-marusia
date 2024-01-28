@@ -7,6 +7,6 @@ import java.util.List;
 
 @Getter
 public class Token {
-    private TypeAction operation;
+    private TypeAction typeAction;
     private List<PhraseTokens> tokens;
 }

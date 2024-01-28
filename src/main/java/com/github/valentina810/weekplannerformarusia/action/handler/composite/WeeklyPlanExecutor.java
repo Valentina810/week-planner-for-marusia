@@ -1,6 +1,7 @@
 package com.github.valentina810.weekplannerformarusia.action.handler.composite;
 
 import com.github.valentina810.weekplannerformarusia.action.TypeAction;
+import com.github.valentina810.weekplannerformarusia.dto.Command;
 import com.github.valentina810.weekplannerformarusia.dto.ExecutorParameter;
 import com.github.valentina810.weekplannerformarusia.dto.ResponseParameters;
 import com.github.valentina810.weekplannerformarusia.storage.persistent.Day;
@@ -26,6 +27,7 @@ public class WeeklyPlanExecutor implements BaseExecutor {
     public ResponseParameters getResponseParameters(ExecutorParameter exParam) {
         List<Day> days;
         String respPhrase;
+        Command command = getCommand(exParam.getTypeAction());
         try {
             days = Optional.ofNullable(exParam.getPersistentStorage()
                             .getEventsByDay())
@@ -33,19 +35,19 @@ public class WeeklyPlanExecutor implements BaseExecutor {
                     .stream()
                     .filter(e -> !e.getEvents().isEmpty()).collect(Collectors.toList());
             if (days.isEmpty()) {
-                respPhrase = getCommand().getMessageNegative();
+                respPhrase = command.getMessageNegative();
             } else {
-                respPhrase = getCommand().getMessagePositive() + days.stream()
+                respPhrase = command.getMessagePositive() + days.stream()
                         .map(day -> day.getDate() + " " + day.getEvents().stream()
                                 .map(event -> event.getTime() + " " + event.getName())
                                 .collect(Collectors.joining(" ")))
                         .collect(Collectors.joining(" "));
             }
         } catch (NullPointerException e) {
-            respPhrase = getCommand().getMessageNegative();
+            respPhrase = command.getMessageNegative();
         }
         return ResponseParameters.builder()
-                .isEndSession(getCommand().getIsEndSession())
+                .isEndSession(command.getIsEndSession())
                 .respPhrase(respPhrase)
                 .sessionStorage(exParam.getSessionStorage())
                 .persistentStorage(exParam.getPersistentStorage())

@@ -14,5 +14,6 @@ public enum TypeAction {
     AUTHOR,
     EXIT_MAIN_MENU,
     EXIT,
-    UNKNOWN
+    UNKNOWN,
+    SIMPLE
 }
