@@ -36,20 +36,16 @@ public class CommandLoader {
         if (commands == null || commands.isEmpty()) {
             return null;
         }
-
         for (Command command : commands) {
             if (command.getOperation() == targetOperation) {
-                return command; // Найден элемент с нужной операцией
+                return command;
             }
-
-            // Рекурсивный поиск во вложенных командах
             Command nestedResult = findCommandByOperation(command.getActions(), targetOperation);
             if (nestedResult != null) {
-                return nestedResult; // Найден элемент во вложенных командах
+                return nestedResult;
             }
         }
-
-        return null; // Элемент не найден
+        return null;
     }
 
     public static List<Command> findCommandsByPrevOperation(TypeAction prevOperation) {

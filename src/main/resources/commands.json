@@ -37,6 +37,7 @@
         "messageNegative": "Не удалось добавить событие",
         "prevOperation": "ADD_EVENT",
         "isEndSession": false,
+        "isTerminal": false,
         "actions": [
           {
             "operation": "ADD_TIME",
@@ -45,6 +46,7 @@
             "messagePositive": "Назовите название события ",
             "messageNegative": "Не удалось добавить событие",
             "isEndSession": false,
+            "isTerminal": false,
             "actions": [
               {
                 "operation": "ADD_NAME",
@@ -53,6 +55,7 @@
                 "messagePositive": "Событие успешно добавлено!",
                 "messageNegative": "Не удалось добавить событие",
                 "isEndSession": false,
+                "isTerminal": true,
                 "actions": []
               }
             ]
@@ -73,6 +76,7 @@
         "prevOperation": "HELP",
         "messagePositive": "Вот какие у меня есть команды: план на неделю, план на сегодня, план на завтра",
         "isEndSession": false,
+        "isTerminal": false,
         "actions": []
       },
       {
@@ -81,6 +85,7 @@
         "prevOperation": "HELP",
         "messagePositive": "Для того чтобы добавить событие скажите: добавь событие",
         "isEndSession": false,
+        "isTerminal": false,
         "actions": []
       },
       {
@@ -89,6 +94,7 @@
         "prevOperation": "HELP",
         "messagePositive": "Имя автора Валентина",
         "isEndSession": false,
+        "isTerminal": false,
         "actions": []
       },
       {
@@ -97,6 +103,7 @@
         "prevOperation": "HELP",
         "messagePositive": "Выполнен выход в главное меню",
         "isEndSession": false,
+        "isTerminal": false,
         "actions": []
       }
     ]

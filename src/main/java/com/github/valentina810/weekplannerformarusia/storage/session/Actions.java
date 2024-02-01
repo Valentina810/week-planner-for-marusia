@@ -14,10 +14,6 @@ import java.util.Optional;
 @EqualsAndHashCode
 @ToString
 public class Actions {
-    public Actions() {
-        this.prevActions = new ArrayList<>();
-    }
-
     @Getter
     private List<PrevAction> prevActions;
 
@@ -31,6 +27,9 @@ public class Actions {
                         lastPrevAction -> prevAction.setNumber(lastPrevAction.getNumber() + 1),
                         () -> prevAction.setNumber(0)
                 );
+        if (prevActions.isEmpty()) {
+            prevActions = new ArrayList<>();
+        }
 
         prevActions.add(prevAction);
     }

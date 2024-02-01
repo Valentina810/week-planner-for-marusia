@@ -35,7 +35,7 @@ import static com.github.valentina810.weekplannerformarusia.action.TypeAction.UN
 public class ActionExecutor {
     private final HandlerFactory handlerFactory;
     @Getter
-    private final UserResponse userResponse;
+    private UserResponse userResponse = new UserResponse();
 
     /**
      * Формирует ответ для пользователя в объекте userResponse
@@ -68,7 +68,6 @@ public class ActionExecutor {
 
     private ResponseParameters getResponseParameters(UserRequest userRequest) {
 
-
         SessionStorage sessionStorage = new SessionStorage();
         sessionStorage.setActionsInSessionState(userRequest.getState().getSession());
 
@@ -100,7 +99,7 @@ public class ActionExecutor {
      * @param phrase - фраза пользователя
      * @return код активности
      */
-    private TypeAction defineCommand(Actions actions, String phrase) {
+    private TypeAction defineCommand(Actions actions, String phrase) {//#todo разбить не несколько методов
         List<PrevAction> prevActions = actions.getPrevActions();
         List<Token> tokens = loadCommand();
         if (!prevActions.isEmpty()) { //есть предыдущая активность, по ней определяем какая может быть следующей
@@ -115,19 +114,20 @@ public class ActionExecutor {
             } else {//иначе нужно подключать поиск по фразе, но только для вложенных команд
                 Set<TypeAction> set = commandsByPrevOperation.stream().map(Command::getOperation).collect(Collectors.toSet());
                 List<Token> collect = tokens.stream().filter(e -> set.contains(e.getTypeAction())).toList();
-                return collect.stream()
+                Stream<Token> tokenStream = collect.stream()
                         .filter(token -> token.getTokens().stream()
                                 .anyMatch(phraseTokens -> phraseTokens.getPhrase().stream()
-                                        .allMatch(e -> e.contains(phrase))))
-                        .map(Token::getTypeAction)
-                        .findFirst()
-                        .orElse(UNKNOWN);
+                                        .allMatch(e -> phrase.contains(e))));
+                Set<Token> collect1 = tokenStream.collect(Collectors.toSet());
+                if (!collect1.isEmpty()) {
+                    return collect.stream().findFirst().get().getTypeAction();
+                } else return UNKNOWN;
             }
         } else { //ищем фразу по токенам
             Stream<Token> tokenStream = tokens.stream()
                     .filter(token -> token.getTokens().stream()
                             .anyMatch(phraseTokens -> phraseTokens.getPhrase().stream()
-                                    .allMatch(e -> e.contains(phrase))));
+                                    .allMatch(e -> phrase.contains(e))));
             Set<Token> collect = tokenStream.collect(Collectors.toSet());
             if (!collect.isEmpty()) {
                 return collect.stream().findFirst().get().getTypeAction();
@@ -135,7 +135,7 @@ public class ActionExecutor {
         }
     }
 
-    public List<Token> loadCommand() {
+    public List<Token> loadCommand() {//#todo загружать один раз при старте сервиса!
         log.info("Загрузка токенов из файла tokens.json");
         return FileReader.loadJsonFromFile("tokens.json").asList()
                 .stream()

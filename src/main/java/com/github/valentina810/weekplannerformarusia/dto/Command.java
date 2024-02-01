@@ -13,5 +13,6 @@ public class Command {
     private String messagePositive;
     private String messageNegative;
     private Boolean isEndSession;
+    private Boolean isTerminal;
     private List<Command> actions;
 }

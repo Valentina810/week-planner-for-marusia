@@ -10,14 +10,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.springframework.stereotype.Component;
 
 /**
  * Сущность, которая представляет запрос, который пришел от пользователя
  */
 @Slf4j
 @Getter
-@Component
 @RequiredArgsConstructor
 public class UserRequest {
     private Request request;
@@ -34,7 +32,7 @@ public class UserRequest {
         try {
             return objectMapper.writeValueAsString(this);
         } catch (Exception e) {
-            log.error("Возникла ошибка при попытке преобразовать UserRequest в строку json "+e.getMessage());
+            log.error("Возникла ошибка при попытке преобразовать UserRequest в строку json " + e.getMessage());
             return "{}";
         }
     }

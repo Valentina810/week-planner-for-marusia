@@ -83,4 +83,11 @@ public class PersistentStorage {
                 .getWeek()
                 .getDays();
     }
+
+    /**
+     * Добавление события в коллекцию
+     */
+    public void addEvent(Event event, String day) {
+
+    }
 }
