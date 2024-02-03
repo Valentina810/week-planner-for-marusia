@@ -2,7 +2,6 @@ package com.github.valentina810.weekplannerformarusia.storage.session;
 
 
 import com.google.gson.Gson;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 
@@ -28,6 +27,10 @@ public class SessionStorage {
     private static final ActionsStorage ACTIONS_STORAGE_EMPTY = ActionsStorage.builder().actions(ACTIONS_EMPTY).build();
 
     private ActionsStorage actionsStorage;
+
+    public void clear() {
+        actionsStorage = ACTIONS_STORAGE_EMPTY;
+    }
 
     public void setActions(Actions actions) {
         actionsStorage = ActionsStorage.builder().actions(actions).build();

@@ -34,7 +34,8 @@ public class AddEventNameExecutor implements BaseExecutor {
         Command command = getCommand(exParam.getTypeAction());
         PersistentStorage persistentStorage = exParam.getPersistentStorage();
         if (command.getIsTerminal()) {//команда должна привести к выполнению действия
-            persistentStorage.addEvent(Event.builder().build(), "среда");
+            persistentStorage.addEvent("среда", Event.builder().time("12:00").name("Новое событие").build());
+            sessionStorage.clear();
         }
         return ResponseParameters.builder()
                 .isEndSession(command.getIsEndSession())

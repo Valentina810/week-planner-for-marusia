@@ -7,4 +7,8 @@ import lombok.Getter;
 public class WeekStorage {
     @Getter
     private Week week;
+
+    public void addEvent(String date, Event event) {
+        week.addEvent(date, event);
+    }
 }
