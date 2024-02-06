@@ -20,7 +20,6 @@ public class HandlerFactory {
         this.baseExecutors = baseExecutors.stream()
                 .collect(Collectors.toMap(BaseExecutor::getType, Function.identity()));
     }
-
     public BaseExecutor getHandler(TypeAction typeAction) {
         return Optional.ofNullable(baseExecutors.get(typeAction))
                 .orElseGet(() -> baseExecutors.get(SIMPLE));

@@ -21,7 +21,7 @@ public class Actions {
     }
 
     public Optional<PrevAction> getLastPrevAction() {
-        return prevActions.stream().max(Comparator.comparingInt(PrevAction::getNumber));
+        return prevActions == null ? Optional.empty() : prevActions.stream().max(Comparator.comparingInt(PrevAction::getNumber));
     }
 
     public void addAction(PrevAction prevAction) {

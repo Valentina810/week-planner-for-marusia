@@ -6,9 +6,14 @@ import com.google.gson.JsonParser;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
@@ -55,21 +60,17 @@ public class PersistentStorage {
 
     /**
      * Возвращает события за определённый день
-     * событиями
      */
     public List<Event> getEventsByDay(String date) {
-        List<Event> events = Optional.ofNullable(getWeekStorage())
+        return Optional.ofNullable(getWeekStorage())
                 .map(WeekStorage::getWeek)
                 .map(Week::getDays)
                 .map(days -> days.get(date))
-                .orElse(null);
-
-        return events != null ? events : new ArrayList<>();
+                .orElse(new ArrayList<>());
     }
 
     /**
      * Возвращает события за все дни
-     * событиями
      */
     public Map<String, List<Event>> getEventsByWeek() {
         return weekStorage.getWeek().getDays();
@@ -93,7 +94,25 @@ public class PersistentStorage {
      * @return - дата в формате dd-MM-yyyy
      */
     private String getDateEvent(String day) {
-        return "06-02-2024";
+        LocalDate nextDate;
+        try {
+            nextDate = LocalDate.now().with(TemporalAdjusters.nextOrSame(parseDayOfWeek(day)));
+        } catch (IllegalArgumentException e) {
+            nextDate = LocalDate.now();
+        }
+        return nextDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));//todo паттерн вынести
+    }
+
+    /**
+     * Метод для парсинга названия дня недели на русском
+     */
+    private static DayOfWeek parseDayOfWeek(String dayOfWeek) {
+        for (DayOfWeek dow : DayOfWeek.values()) {
+            if (dow.getDisplayName(TextStyle.FULL, Locale.forLanguageTag("ru")).equalsIgnoreCase(dayOfWeek)) {
+                return dow;
+            }
+        }
+        throw new IllegalArgumentException("Недопустимое название дня недели: " + dayOfWeek);
     }
 
     /**
