@@ -21,16 +21,6 @@ public class HelpExecutor implements BaseExecutor {
 
     @Override
     public ResponseParameters getResponseParameters(ExecutorParameter exParam) {
-        SessionStorage sessionStorage = exParam.getSessionStorage();
-        sessionStorage.addPrevAction(PrevAction.builder()
-                .operation(getType())
-                .valueAction("").build());
-        Command command = getCommand(exParam.getTypeAction());
-        return ResponseParameters.builder()
-                .isEndSession(command.getIsEndSession())
-                .respPhrase(command.getMessagePositive())
-                .sessionStorage(sessionStorage)
-                .persistentStorage(exParam.getPersistentStorage())
-                .build();
+        return getResponseParametersForChainCommand(exParam);
     }
 }

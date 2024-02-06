@@ -23,8 +23,7 @@ public class WeekPlannerServiceImpl implements WeekPlannerService {
         headers.set("Content-Type", "application/json");
         UserRequest userRequest = new UserRequest();
         userRequest.fillUserRequest(object);
-        actionExecutor.createUserResponse(userRequest);
-        return new ResponseEntity<>(new Gson().toJson(actionExecutor.getUserResponse()),
+        return new ResponseEntity<>(new Gson().toJson(actionExecutor.createUserResponse(userRequest)),
                 headers, HttpStatus.OK);
     }
 }

@@ -1,12 +1,16 @@
 package com.github.valentina810.weekplannerformarusia.storage.persistent;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Хранилище, которое хранит данные в УЗ пользователя
@@ -32,22 +36,16 @@ public class PersistentStorage {
      */
     public void setWeekStorage(Object object) {//todo переписать  - пустое хранилище - не ошибка, просто нет событий, чтобы не хранить избыточную информацию
         try {//но если события есть, добавить сортировку по ключам от ранней даты к поздней
-            JsonElement jsonElement = new Gson()
-                    .fromJson(new Gson().toJson(object), JsonElement.class);
-            Week week = new Gson()
-                    .fromJson(new Gson().toJson(jsonElement.getAsJsonObject()
-                            .getAsJsonObject("week")), Week.class);
+            JsonObject jsonObject = JsonParser.parseString(object.toString()).getAsJsonObject();
+            Week week = new Gson().fromJson(jsonObject.get("week"), Week.class);
             if (week != null) {
                 setWeekStorage(week);
                 log.info("Получили данные о событиях на неделю из ответа");
             } else {
-                setWeekStorage(Week.builder().build());
-                log.info("Данные о событиях отсутствуют, записали пустую структуру");
+                log.info("Данные о событиях отсутствуют");
             }
         } catch (IllegalStateException | NullPointerException e) {
             log.info("В процессе получения данных о событиях из ответа возникла ошибка {}", e.getMessage());
-            setWeekStorage(Week.builder().build());
-            log.info("Данные о событиях отсутствуют, записали пустую структуру");
         }
     }
 
@@ -56,28 +54,17 @@ public class PersistentStorage {
     }
 
     /**
-     * Заполнение хранилища пустой структурой с данными
-     *
-     * @return - объект-хранилище
-     */
-//    private Week generateEmptyWeeklyStorage() {
-//        int dayInMilliseconds = 86400000;
-//        return Week.builder()
-//                .days(List.of(IntStream.range(0, 7)
-//                        .mapToObj(i -> {
-//                            return Day.builder()
-//                                    .date(new SimpleDateFormat("dd-MM-yyyy").format(System.currentTimeMillis() + (long) i * dayInMilliseconds))
-//                                    .events(new ArrayList<>()).build();
-//                        }).toArray(Day[]::new))).build();
-//    }
-
-    /**
      * Возвращает события за определённый день
      * событиями
      */
     public List<Event> getEventsByDay(String date) {
-        return getWeekStorage()
-                .getWeek().getDays().get(date);
+        List<Event> events = Optional.ofNullable(getWeekStorage())
+                .map(WeekStorage::getWeek)
+                .map(Week::getDays)
+                .map(days -> days.get(date))
+                .orElse(null);
+
+        return events != null ? events : new ArrayList<>();
     }
 
     /**
@@ -91,8 +78,31 @@ public class PersistentStorage {
     /**
      * Добавление события в коллекцию
      */
-    public void addEvent(String day, Event event) {
-        String date = "04-02-2024"; //dd-MM-yyyy
-        weekStorage.addEvent(date, event);
+    public void addEvent(String day, String time, String eventName) {
+        String date = getDateEvent(day);
+        if (weekStorage == null) {
+            weekStorage = WeekStorage.builder().build();
+        }
+        weekStorage.addEvent(date, Event.builder().time(getTime(time)).name(eventName).build());
+    }
+
+    /**
+     * Получить дату ближаишего дня недели day
+     *
+     * @param day - день недели
+     * @return - дата в формате dd-MM-yyyy
+     */
+    private String getDateEvent(String day) {
+        return "06-02-2024";
+    }
+
+    /**
+     * Получить время из строки
+     *
+     * @param time - время в формате "двенадцать часов ноль-ноль минут"
+     * @return - время в формате 12:00
+     */
+    private String getTime(String time) {
+        return "12:00";
     }
 }

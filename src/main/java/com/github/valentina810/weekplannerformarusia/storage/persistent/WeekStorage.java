@@ -9,6 +9,9 @@ public class WeekStorage {
     private Week week;
 
     public void addEvent(String date, Event event) {
+        if (week == null) {
+            week = Week.builder().build();
+        }
         week.addEvent(date, event);
     }
 }

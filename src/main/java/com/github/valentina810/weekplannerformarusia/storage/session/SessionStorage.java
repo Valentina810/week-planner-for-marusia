@@ -2,10 +2,11 @@ package com.github.valentina810.weekplannerformarusia.storage.session;
 
 
 import com.google.gson.Gson;
+import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -21,20 +22,10 @@ import java.util.function.Function;
  */
 
 @Slf4j
+@Builder
 public class SessionStorage {
 
-    private static final Actions ACTIONS_EMPTY = Actions.builder().prevActions(Collections.emptyList()).build();
-    private static final ActionsStorage ACTIONS_STORAGE_EMPTY = ActionsStorage.builder().actions(ACTIONS_EMPTY).build();
-
     private ActionsStorage actionsStorage;
-
-    public void clear() {
-        actionsStorage = ACTIONS_STORAGE_EMPTY;
-    }
-
-    public void setActions(Actions actions) {
-        actionsStorage = ActionsStorage.builder().actions(actions).build();
-    }
 
     public ActionsStorage getSession_state() {
         return actionsStorage;
@@ -45,6 +36,9 @@ public class SessionStorage {
     }
 
     public void addPrevAction(PrevAction prevAction) {
+        if (actionsStorage == null) {
+            actionsStorage = ActionsStorage.builder().actions(Actions.builder().prevActions(new ArrayList<>()).build()).build();
+        }
         Actions actions = actionsStorage.getActions();
         actions.addAction(prevAction);
         actionsStorage = ActionsStorage.builder().actions(actions).build();
@@ -55,10 +49,10 @@ public class SessionStorage {
             actionsStorage = Optional.of(object)
                     .filter(obj -> obj instanceof JSONObject)
                     .map(parseObject())
-                    .orElse(ACTIONS_STORAGE_EMPTY);
+                    .orElse(null);
         } catch (Exception e) {
             log.error("Ошибка при преобразовании ActionsStorage из входящего запроса:{}", e.getMessage());
-            setActions(ACTIONS_EMPTY);
+            actionsStorage = ActionsStorage.builder().actions(Actions.builder().prevActions(new ArrayList<>()).build()).build();
         }
     }
 
@@ -68,13 +62,13 @@ public class SessionStorage {
     private ActionsStorage getActionsStorage() {
         return Optional.ofNullable(actionsStorage)
                 .map(obj -> new Gson().fromJson(new Gson().toJson(obj), ActionsStorage.class))
-                .orElse(ACTIONS_STORAGE_EMPTY);
+                .orElse(ActionsStorage.builder().build());
     }
 
     private Function<Object, ActionsStorage> parseObject() {
         return obj -> {
             if ("{}".equals(obj.toString())) {
-                return ACTIONS_STORAGE_EMPTY;
+                return null;
             }
             return new Gson().fromJson(obj.toString(), ActionsStorage.class);
         };

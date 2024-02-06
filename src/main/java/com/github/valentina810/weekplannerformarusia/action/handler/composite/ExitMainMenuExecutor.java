@@ -4,7 +4,6 @@ import com.github.valentina810.weekplannerformarusia.action.TypeAction;
 import com.github.valentina810.weekplannerformarusia.dto.Command;
 import com.github.valentina810.weekplannerformarusia.dto.ExecutorParameter;
 import com.github.valentina810.weekplannerformarusia.dto.ResponseParameters;
-import com.github.valentina810.weekplannerformarusia.storage.session.SessionStorage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +23,6 @@ public class ExitMainMenuExecutor implements BaseExecutor {
         return ResponseParameters.builder()
                 .isEndSession(command.getIsEndSession())
                 .respPhrase(command.getMessagePositive())
-                .sessionStorage(new SessionStorage())
                 .persistentStorage(exParam.getPersistentStorage())
                 .build();
     }

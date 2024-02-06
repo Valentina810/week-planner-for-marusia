@@ -7,10 +7,13 @@ import com.github.valentina810.weekplannerformarusia.dto.ExecutorParameter;
 import com.github.valentina810.weekplannerformarusia.dto.ResponseParameters;
 import com.github.valentina810.weekplannerformarusia.storage.persistent.Event;
 import com.github.valentina810.weekplannerformarusia.storage.persistent.PersistentStorage;
+import com.github.valentina810.weekplannerformarusia.storage.session.PrevAction;
+import com.github.valentina810.weekplannerformarusia.storage.session.SessionStorage;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public interface BaseExecutor {
@@ -26,12 +29,10 @@ public interface BaseExecutor {
     /**
      * Выбирает из массива дней все события на определённую дату
      */
-    default String getEventsForDate(Command command, LocalDate date, Object persistentStorage) {
+    default String getEventsForDate(Command command, LocalDate date, PersistentStorage persistentStorage) {
         String defaultMessage = command.getMessageNegative();
         if (defaultMessage != null) {
-            PersistentStorage persistentStorage1 = new PersistentStorage();
-            persistentStorage1.setWeekStorage(persistentStorage);
-            List<Event> eventsByDay = getDaysEvents(date, persistentStorage1);
+            List<Event> eventsByDay = getDaysEvents(date, persistentStorage);
             return getMessage(command, eventsByDay, defaultMessage);
         } else {
             return "";
@@ -48,5 +49,24 @@ public interface BaseExecutor {
     private static List<Event> getDaysEvents(LocalDate date, PersistentStorage persistentStorage) {
         return persistentStorage
                 .getEventsByDay(date.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))); //#todo паттерн вынести в константу
+    }
+
+    /**
+     * Обработка команды из цепочки + к стандартной обработке дозаписать предыдыщее событие в sessionStorage
+     */
+    default ResponseParameters getResponseParametersForChainCommand(ExecutorParameter exParam) {
+        SessionStorage sessionStorage = exParam.getSessionStorage();
+        Optional<PrevAction> lastPrevAction = sessionStorage.getActions().getLastPrevAction();
+        sessionStorage.addPrevAction(PrevAction.builder()
+                .prevOperation(lastPrevAction.isEmpty() ? null : lastPrevAction.get().getOperation())
+                .operation(getType())
+                .valueAction(exParam.getPhrase()).build());
+        Command command = getCommand(exParam.getTypeAction());
+        return ResponseParameters.builder()
+                .isEndSession(command.getIsEndSession())
+                .respPhrase(command.getMessagePositive())
+                .sessionStorage(sessionStorage)
+                .persistentStorage(exParam.getPersistentStorage())
+                .build();
     }
 }

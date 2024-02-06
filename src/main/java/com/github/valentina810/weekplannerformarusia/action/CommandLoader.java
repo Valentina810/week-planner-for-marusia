@@ -3,6 +3,7 @@ package com.github.valentina810.weekplannerformarusia.action;
 import com.github.valentina810.weekplannerformarusia.FileReader;
 import com.github.valentina810.weekplannerformarusia.dto.Command;
 import com.google.gson.Gson;
+import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -20,7 +21,8 @@ import java.util.stream.Collectors;
 public class CommandLoader {
     private static Map<TypeAction, Command> loadCommands;
 
-    public CommandLoader() {
+    @PostConstruct
+    public void loadCommands() {
         log.info("Загрузка комманд из файла commands.json");
         loadCommands = FileReader.loadJsonFromFile("commands.json").asList()
                 .stream()

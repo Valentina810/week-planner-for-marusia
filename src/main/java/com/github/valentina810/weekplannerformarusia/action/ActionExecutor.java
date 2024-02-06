@@ -1,6 +1,5 @@
 package com.github.valentina810.weekplannerformarusia.action;
 
-import com.github.valentina810.weekplannerformarusia.FileReader;
 import com.github.valentina810.weekplannerformarusia.action.handler.HandlerFactory;
 import com.github.valentina810.weekplannerformarusia.action.handler.composite.BaseExecutor;
 import com.github.valentina810.weekplannerformarusia.dto.Command;
@@ -12,15 +11,17 @@ import com.github.valentina810.weekplannerformarusia.model.response.Response;
 import com.github.valentina810.weekplannerformarusia.model.response.Session;
 import com.github.valentina810.weekplannerformarusia.model.response.UserResponse;
 import com.github.valentina810.weekplannerformarusia.storage.persistent.PersistentStorage;
+import com.github.valentina810.weekplannerformarusia.storage.persistent.WeekStorage;
 import com.github.valentina810.weekplannerformarusia.storage.session.Actions;
+import com.github.valentina810.weekplannerformarusia.storage.session.ActionsStorage;
 import com.github.valentina810.weekplannerformarusia.storage.session.PrevAction;
 import com.github.valentina810.weekplannerformarusia.storage.session.SessionStorage;
-import com.google.gson.Gson;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -34,17 +35,17 @@ import static com.github.valentina810.weekplannerformarusia.action.TypeAction.UN
 @RequiredArgsConstructor
 public class ActionExecutor {
     private final HandlerFactory handlerFactory;
-    @Getter
-    private UserResponse userResponse = new UserResponse();
+    private final TokenLoader tokenLoader;
 
     /**
      * Формирует ответ для пользователя в объекте userResponse
      */
-    public void createUserResponse(UserRequest userRequest) {
+    public UserResponse createUserResponse(UserRequest userRequest) {
         log.info("Получен запрос {}", userRequest);
 
         ResponseParameters respParam = getResponseParameters(userRequest);
 
+        UserResponse userResponse = new UserResponse();
         userResponse.setResponse(Response.builder()
                 .text(respParam.getRespPhrase())
                 .tts(respParam.getRespPhrase())
@@ -56,19 +57,25 @@ public class ActionExecutor {
                 .session_id(userRequest.getSession().getSession_id())
                 .message_id(userRequest.getSession().getMessage_id())
                 .build());
+        try {
+            userResponse.setSession_state(respParam.getSessionStorage().getSession_state());
+        } catch (Exception e) {
+            userResponse.setSession_state(null);
+        }
 
-        userResponse.setSession_state(respParam.getSessionStorage().getSession_state());
-
-        userResponse.setUser_state_update(respParam.getPersistentStorage().getUser_state_update());
+        WeekStorage userStateUpdate = respParam.getPersistentStorage().getUser_state_update();
+        userResponse.setUser_state_update(userStateUpdate);
 
         userResponse.setVersion(userRequest.getVersion());
 
         log.info("Сформирован ответ {}", userResponse);
+        log.info("---------------------------------------------------");
+        return userResponse;
     }
 
-    private ResponseParameters getResponseParameters(UserRequest userRequest) {
+    private ResponseParameters getResponseParameters(final UserRequest userRequest) {
 
-        SessionStorage sessionStorage = new SessionStorage();
+        SessionStorage sessionStorage = SessionStorage.builder().actionsStorage(ActionsStorage.builder().actions(Actions.builder().prevActions(new ArrayList<>()).build()).build()).build();
         sessionStorage.setActionsInSessionState(userRequest.getState().getSession());
 
         PersistentStorage persistentStorage = new PersistentStorage();
@@ -101,7 +108,7 @@ public class ActionExecutor {
      */
     private TypeAction defineCommand(Actions actions, String phrase) {//#todo разбить не несколько методов
         List<PrevAction> prevActions = actions.getPrevActions();
-        List<Token> tokens = loadCommand();
+        List<Token> tokens = tokenLoader.getTokens();
         if (!prevActions.isEmpty()) { //есть предыдущая активность, по ней определяем какая может быть следующей
             //собираем все команды у которых prevOperation=предыдущей активности с максимальным номером из массива prevActions
             PrevAction prevAction = prevActions.stream().max(Comparator.comparingInt(PrevAction::getNumber)).get();
@@ -120,7 +127,7 @@ public class ActionExecutor {
                                         .allMatch(e -> phrase.contains(e))));
                 Set<Token> collect1 = tokenStream.collect(Collectors.toSet());
                 if (!collect1.isEmpty()) {
-                    return collect.stream().findFirst().get().getTypeAction();
+                    return collect1.stream().findFirst().get().getTypeAction();
                 } else return UNKNOWN;
             }
         } else { //ищем фразу по токенам
@@ -133,13 +140,5 @@ public class ActionExecutor {
                 return collect.stream().findFirst().get().getTypeAction();
             } else return UNKNOWN;
         }
-    }
-
-    public List<Token> loadCommand() {//#todo загружать один раз при старте сервиса!
-        log.info("Загрузка токенов из файла tokens.json");
-        return FileReader.loadJsonFromFile("tokens.json").asList()
-                .stream()
-                .map(json -> new Gson().fromJson(new Gson().toJson(json), Token.class))
-                .collect(Collectors.toList());
     }
 }
