@@ -79,12 +79,14 @@ public class PersistentStorage {
     /**
      * Добавление события в коллекцию
      */
-    public void addEvent(String day, String time, String eventName) {
-        String date = getDateEvent(day);
+    public String addEvent(String day, String time, String eventName) {
         if (weekStorage == null) {
             weekStorage = WeekStorage.builder().build();
         }
-        weekStorage.addEvent(date, Event.builder().time(getTime(time)).name(eventName).build());
+        String eventDate = getDateEvent(day);
+        String eventTime = TimeConverter.getTime(time);
+        weekStorage.addEvent(eventDate, Event.builder().time(eventTime).name(eventName).build());
+        return eventDate + " " + eventTime + " " + eventName;
     }
 
     /**
@@ -113,15 +115,5 @@ public class PersistentStorage {
             }
         }
         throw new IllegalArgumentException("Недопустимое название дня недели: " + dayOfWeek);
-    }
-
-    /**
-     * Получить время из строки
-     *
-     * @param time - время в формате "двенадцать часов ноль-ноль минут"
-     * @return - время в формате 12:00
-     */
-    private String getTime(String time) {
-        return "12:00";
     }
 }

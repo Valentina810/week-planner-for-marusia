@@ -16,7 +16,6 @@ import com.github.valentina810.weekplannerformarusia.storage.session.Actions;
 import com.github.valentina810.weekplannerformarusia.storage.session.ActionsStorage;
 import com.github.valentina810.weekplannerformarusia.storage.session.PrevAction;
 import com.github.valentina810.weekplannerformarusia.storage.session.SessionStorage;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -57,7 +56,7 @@ public class ActionExecutor {
                 .session_id(userRequest.getSession().getSession_id())
                 .message_id(userRequest.getSession().getMessage_id())
                 .build());
-        try {
+        try {//#todo - вынести в отдельный метод
             userResponse.setSession_state(respParam.getSessionStorage().getSession_state());
         } catch (Exception e) {
             userResponse.setSession_state(null);
@@ -116,9 +115,9 @@ public class ActionExecutor {
             TypeAction operation = prevAction.getOperation();
             List<Command> commandsByPrevOperation =
                     CommandLoader.findCommandsByPrevOperation(operation);
-            if (commandsByPrevOperation.size() == 1) {
+            if (commandsByPrevOperation.size() == 1) {//у предыдущей активности только одна дочерняя команда
                 return commandsByPrevOperation.get(0).getOperation();
-            } else {//иначе нужно подключать поиск по фразе, но только для вложенных команд
+            } else {//дочерних команд несколько, нужно подключать поиск по фразе, но только для дочерних команд
                 Set<TypeAction> set = commandsByPrevOperation.stream().map(Command::getOperation).collect(Collectors.toSet());
                 List<Token> collect = tokens.stream().filter(e -> set.contains(e.getTypeAction())).toList();
                 Stream<Token> tokenStream = collect.stream()

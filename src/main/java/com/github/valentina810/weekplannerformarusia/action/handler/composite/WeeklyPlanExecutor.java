@@ -28,15 +28,14 @@ public class WeeklyPlanExecutor implements BaseExecutor {
         String respPhrase;
         Command command = getCommand(exParam.getTypeAction());
         try {
-
             days = exParam.getPersistentStorage().getEventsByWeek();
             if (days.isEmpty()) {
                 respPhrase = command.getMessageNegative();
             } else {
-                respPhrase = days.keySet().stream().map(e ->
+                respPhrase = command.getMessagePositive() + days.keySet().stream().map(e ->
                                 e + days.get(e).stream()
-                                        .map(a -> a.getName() + " " + a.getTime())
-                                        .collect(Collectors.joining(" ")))
+                                        .map(a -> " " + a.getName() + " " + a.getTime())
+                                        .collect(Collectors.joining(",")))
                         .collect(Collectors.joining(" "));
             }
         } catch (NullPointerException e) {

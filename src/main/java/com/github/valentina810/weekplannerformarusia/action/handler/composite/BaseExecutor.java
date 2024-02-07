@@ -42,7 +42,7 @@ public interface BaseExecutor {
     private String getMessage(Command command, List<Event> eventsByDay, String defaultMessage) {
         return eventsByDay.isEmpty() ? defaultMessage :
                 command.getMessagePositive() + eventsByDay.stream()
-                        .map(event -> event.getName() + " " + event.getTime())
+                        .map(event -> event.getTime() + " " + event.getName())
                         .collect(Collectors.joining(" "));
     }
 

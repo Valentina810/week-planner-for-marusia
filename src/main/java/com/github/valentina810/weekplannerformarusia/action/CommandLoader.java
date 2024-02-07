@@ -31,7 +31,8 @@ public class CommandLoader {
     }
 
     public static Command get(TypeAction operation) {
-        return Optional.ofNullable(findCommandByOperation(loadCommands.values().stream().toList(), operation)).orElse(new Command());
+        return Optional.ofNullable(findCommandByOperation(loadCommands.values().stream().toList(), operation))
+                .orElse(new Command());
     }
 
     private static Command findCommandByOperation(List<Command> commands, TypeAction targetOperation) {
@@ -62,7 +63,6 @@ public class CommandLoader {
         if (currentCommand.getPrevOperation() != null && currentCommand.getPrevOperation().equals(prevOperation)) {
             result.add(currentCommand);
         }
-
         if (currentCommand.getActions() != null) {
             for (Command nestedCommand : currentCommand.getActions()) {
                 findCommandsRecursively(nestedCommand, prevOperation, result);

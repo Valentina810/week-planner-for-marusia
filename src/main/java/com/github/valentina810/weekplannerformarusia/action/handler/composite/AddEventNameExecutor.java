@@ -44,14 +44,15 @@ public class AddEventNameExecutor implements BaseExecutor {
                 .valueAction(exParam.getPhrase()).build());
         Command command = getCommand(exParam.getTypeAction());
         PersistentStorage persistentStorage = exParam.getPersistentStorage();
+        String messageInfo = "";
         if (command.getIsTerminal()) {
-            persistentStorage.addEvent(getValueAction.apply(ADD_DAY),
+            messageInfo = persistentStorage.addEvent(getValueAction.apply(ADD_DAY),
                     getValueAction.apply(ADD_TIME),
                     getValueAction.apply(ADD_NAME));
         }
         return ResponseParameters.builder()
                 .isEndSession(command.getIsEndSession())
-                .respPhrase(command.getMessagePositive())
+                .respPhrase(command.getMessagePositive().replace("{messageInfo}", messageInfo))
                 .persistentStorage(persistentStorage)
                 .build();
     }

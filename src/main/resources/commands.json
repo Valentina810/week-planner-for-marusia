@@ -52,7 +52,7 @@
                 "operation": "ADD_NAME",
                 "isSimple": false,
                 "prevOperation": "ADD_TIME",
-                "messagePositive": "Событие успешно добавлено! Выполнен выход в главное меню ",
+                "messagePositive": "Событие успешно добавлено на {messageInfo}! Выполнен выход в главное меню ",
                 "messageNegative": "Не удалось добавить событие",
                 "isEndSession": false,
                 "isTerminal": true,
