@@ -1,6 +1,6 @@
 package com.github.valentina810.weekplannerformarusia.action;
 
-import com.github.valentina810.weekplannerformarusia.FileReader;
+import com.github.valentina810.weekplannerformarusia.util.JsonFileReader;
 import com.github.valentina810.weekplannerformarusia.dto.Token;
 import com.google.gson.Gson;
 import jakarta.annotation.PostConstruct;
@@ -21,7 +21,7 @@ public class TokenLoader {
     @PostConstruct
     public void loadTokens() {
         log.info("Загрузка токенов из файла tokens.json");
-        tokens = FileReader.loadJsonFromFile("tokens.json").asList()
+        tokens = JsonFileReader.readJsonArrayFromFile("src/main/resources/tokens.json").asList()
                 .stream()
                 .map(json -> new Gson().fromJson(new Gson().toJson(json), Token.class))
                 .collect(Collectors.toList());

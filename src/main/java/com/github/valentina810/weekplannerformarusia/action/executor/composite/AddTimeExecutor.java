@@ -1,4 +1,4 @@
-package com.github.valentina810.weekplannerformarusia.action.handler.composite;
+package com.github.valentina810.weekplannerformarusia.action.executor.composite;
 
 import com.github.valentina810.weekplannerformarusia.action.TypeAction;
 import com.github.valentina810.weekplannerformarusia.dto.ExecutorParameter;

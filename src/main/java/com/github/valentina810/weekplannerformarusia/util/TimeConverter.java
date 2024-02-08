@@ -1,4 +1,4 @@
-package com.github.valentina810.weekplannerformarusia.storage.persistent;
+package com.github.valentina810.weekplannerformarusia.util;
 
 import lombok.experimental.UtilityClass;
 

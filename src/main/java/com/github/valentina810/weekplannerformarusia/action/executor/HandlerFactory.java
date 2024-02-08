@@ -1,7 +1,7 @@
-package com.github.valentina810.weekplannerformarusia.action.handler;
+package com.github.valentina810.weekplannerformarusia.action.executor;
 
 import com.github.valentina810.weekplannerformarusia.action.TypeAction;
-import com.github.valentina810.weekplannerformarusia.action.handler.composite.BaseExecutor;
+import com.github.valentina810.weekplannerformarusia.action.executor.composite.BaseExecutor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -20,6 +20,7 @@ public class HandlerFactory {
         this.baseExecutors = baseExecutors.stream()
                 .collect(Collectors.toMap(BaseExecutor::getType, Function.identity()));
     }
+
     public BaseExecutor getHandler(TypeAction typeAction) {
         return Optional.ofNullable(baseExecutors.get(typeAction))
                 .orElseGet(() -> baseExecutors.get(SIMPLE));

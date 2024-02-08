@@ -1,4 +1,4 @@
-package com.github.valentina810.weekplannerformarusia.action.handler.composite;
+package com.github.valentina810.weekplannerformarusia.action.executor.composite;
 
 import com.github.valentina810.weekplannerformarusia.action.TypeAction;
 import com.github.valentina810.weekplannerformarusia.dto.Command;
@@ -10,9 +10,11 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.github.valentina810.weekplannerformarusia.action.TypeAction.WEEKLY_PLAN;
+
 
 @Component
 @RequiredArgsConstructor
@@ -24,28 +26,28 @@ public class WeeklyPlanExecutor implements BaseExecutor {
 
     @Override
     public ResponseParameters getResponseParameters(ExecutorParameter exParam) {
-        Map<String, List<Event>> days;
-        String respPhrase;
         Command command = getCommand(exParam.getTypeAction());
-        try {
-            days = exParam.getPersistentStorage().getEventsByWeek();
-            if (days.isEmpty()) {
-                respPhrase = command.getMessageNegative();
-            } else {
-                respPhrase = command.getMessagePositive() + days.keySet().stream().map(e ->
-                                e + days.get(e).stream()
-                                        .map(a -> " " + a.getName() + " " + a.getTime())
-                                        .collect(Collectors.joining(",")))
-                        .collect(Collectors.joining(" "));
-            }
-        } catch (NullPointerException e) {
-            respPhrase = command.getMessageNegative();
-        }
         return ResponseParameters.builder()
                 .isEndSession(command.getIsEndSession())
-                .respPhrase(respPhrase)
+                .respPhrase(getResponsePhrase(exParam, command))
                 .sessionStorage(exParam.getSessionStorage())
                 .persistentStorage(exParam.getPersistentStorage())
                 .build();
+    }
+
+    private String getResponsePhrase(ExecutorParameter exParam, Command command) {
+        return Optional.ofNullable(exParam.getPersistentStorage().getEventsByWeek())
+                .map(events -> events.isEmpty() ? command.getMessageNegative() : getPhraseWithNotEmptyEvents(command, events))
+                .orElse(command.getMessageNegative());
+    }
+
+    private String getPhraseWithNotEmptyEvents(Command command, Map<String, List<Event>> days) {
+        String respPhrase;
+        respPhrase = command.getMessagePositive() + days.keySet().stream().map(e ->
+                        e + days.get(e).stream()
+                                .map(a -> " " + a.getName() + " " + a.getTime())
+                                .collect(Collectors.joining(",")))
+                .collect(Collectors.joining(" "));
+        return respPhrase;
     }
 }

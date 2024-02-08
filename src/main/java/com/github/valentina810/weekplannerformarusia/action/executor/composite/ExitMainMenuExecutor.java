@@ -1,4 +1,4 @@
-package com.github.valentina810.weekplannerformarusia.action.handler.composite;
+package com.github.valentina810.weekplannerformarusia.action.executor.composite;
 
 import com.github.valentina810.weekplannerformarusia.action.TypeAction;
 import com.github.valentina810.weekplannerformarusia.dto.Command;
@@ -7,16 +7,14 @@ import com.github.valentina810.weekplannerformarusia.dto.ResponseParameters;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
-
-import static com.github.valentina810.weekplannerformarusia.action.TypeAction.TOMORROW_PLAN;
+import static com.github.valentina810.weekplannerformarusia.action.TypeAction.EXIT_MAIN_MENU;
 
 @Component
 @RequiredArgsConstructor
-public class TomorrowPlanExecutor implements BaseExecutor {
+public class ExitMainMenuExecutor implements BaseExecutor {
     @Override
     public TypeAction getType() {
-        return TOMORROW_PLAN;
+        return EXIT_MAIN_MENU;
     }
 
     @Override
@@ -24,8 +22,7 @@ public class TomorrowPlanExecutor implements BaseExecutor {
         Command command = getCommand(exParam.getTypeAction());
         return ResponseParameters.builder()
                 .isEndSession(command.getIsEndSession())
-                .respPhrase(getEventsForDate(command, LocalDate.now().plusDays(1), exParam.getPersistentStorage()))
-                .sessionStorage(exParam.getSessionStorage())
+                .respPhrase(command.getMessagePositive())
                 .persistentStorage(exParam.getPersistentStorage())
                 .build();
     }

@@ -1,7 +1,6 @@
 package com.github.valentina810.weekplannerformarusia.action;
 
-import com.github.valentina810.weekplannerformarusia.action.handler.HandlerFactory;
-import com.github.valentina810.weekplannerformarusia.action.handler.composite.BaseExecutor;
+import com.github.valentina810.weekplannerformarusia.action.executor.HandlerFactory;
 import com.github.valentina810.weekplannerformarusia.dto.Command;
 import com.github.valentina810.weekplannerformarusia.dto.ExecutorParameter;
 import com.github.valentina810.weekplannerformarusia.dto.ResponseParameters;
@@ -23,9 +22,8 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
+import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static com.github.valentina810.weekplannerformarusia.action.TypeAction.UNKNOWN;
 
@@ -56,11 +54,8 @@ public class ActionExecutor {
                 .session_id(userRequest.getSession().getSession_id())
                 .message_id(userRequest.getSession().getMessage_id())
                 .build());
-        try {//#todo - вынести в отдельный метод
-            userResponse.setSession_state(respParam.getSessionStorage().getSession_state());
-        } catch (Exception e) {
-            userResponse.setSession_state(null);
-        }
+
+        setSession_state(userResponse, respParam);
 
         WeekStorage userStateUpdate = respParam.getPersistentStorage().getUser_state_update();
         userResponse.setUser_state_update(userStateUpdate);
@@ -70,6 +65,14 @@ public class ActionExecutor {
         log.info("Сформирован ответ {}", userResponse);
         log.info("---------------------------------------------------");
         return userResponse;
+    }
+
+    private static void setSession_state(UserResponse userResponse, ResponseParameters respParam) {
+        userResponse.setSession_state(
+                Optional.ofNullable(respParam.getSessionStorage())
+                        .map(SessionStorage::getSession_state)
+                        .orElse(null)
+        );
     }
 
     private ResponseParameters getResponseParameters(final UserRequest userRequest) {
@@ -86,17 +89,12 @@ public class ActionExecutor {
         log.info("Получить тип активности на основании actions={}, phrase={}, typeAction={}",
                 actions, phrase, typeAction);
 
-        BaseExecutor handler = getHandler(typeAction);
-        return handler
+        return handlerFactory.getHandler(typeAction)
                 .getResponseParameters(ExecutorParameter.builder()
                         .typeAction(typeAction)
                         .phrase(phrase)
                         .sessionStorage(sessionStorage)
                         .persistentStorage(persistentStorage).build());
-    }
-
-    private BaseExecutor getHandler(TypeAction typeAction) {
-        return handlerFactory.getHandler(typeAction);
     }
 
     /**
@@ -105,39 +103,47 @@ public class ActionExecutor {
      * @param phrase - фраза пользователя
      * @return код активности
      */
-    private TypeAction defineCommand(Actions actions, String phrase) {//#todo разбить не несколько методов
+    private TypeAction defineCommand(Actions actions, String phrase) {
         List<PrevAction> prevActions = actions.getPrevActions();
         List<Token> tokens = tokenLoader.getTokens();
-        if (!prevActions.isEmpty()) { //есть предыдущая активность, по ней определяем какая может быть следующей
-            //собираем все команды у которых prevOperation=предыдущей активности с максимальным номером из массива prevActions
-            PrevAction prevAction = prevActions.stream().max(Comparator.comparingInt(PrevAction::getNumber)).get();
-            //команды нужно перебрать рекусрсивно, так как текущая команда может быть вложенной
-            TypeAction operation = prevAction.getOperation();
-            List<Command> commandsByPrevOperation =
-                    CommandLoader.findCommandsByPrevOperation(operation);
-            if (commandsByPrevOperation.size() == 1) {//у предыдущей активности только одна дочерняя команда
-                return commandsByPrevOperation.get(0).getOperation();
-            } else {//дочерних команд несколько, нужно подключать поиск по фразе, но только для дочерних команд
-                Set<TypeAction> set = commandsByPrevOperation.stream().map(Command::getOperation).collect(Collectors.toSet());
-                List<Token> collect = tokens.stream().filter(e -> set.contains(e.getTypeAction())).toList();
-                Stream<Token> tokenStream = collect.stream()
-                        .filter(token -> token.getTokens().stream()
-                                .anyMatch(phraseTokens -> phraseTokens.getPhrase().stream()
-                                        .allMatch(e -> phrase.contains(e))));
-                Set<Token> collect1 = tokenStream.collect(Collectors.toSet());
-                if (!collect1.isEmpty()) {
-                    return collect1.stream().findFirst().get().getTypeAction();
-                } else return UNKNOWN;
-            }
-        } else { //ищем фразу по токенам
-            Stream<Token> tokenStream = tokens.stream()
-                    .filter(token -> token.getTokens().stream()
-                            .anyMatch(phraseTokens -> phraseTokens.getPhrase().stream()
-                                    .allMatch(e -> phrase.contains(e))));
-            Set<Token> collect = tokenStream.collect(Collectors.toSet());
-            if (!collect.isEmpty()) {
-                return collect.stream().findFirst().get().getTypeAction();
-            } else return UNKNOWN;
+        return prevActions.isEmpty() ?
+                determineCommandBasedOnPhrase(phrase, tokens) :
+                determineCommandBasedOnPrevActions(phrase, prevActions, tokens);
+    }
+
+    /**
+     * Определить команду на основе фразы
+     */
+    private static TypeAction determineCommandBasedOnPhrase(String phrase, List<Token> tokens) {
+        Optional<TypeAction> result = tokens.stream()
+                .filter(token -> token.getTokens().stream()
+                        .anyMatch(phraseTokens -> phraseTokens.getPhrase().stream()
+                                .allMatch(phrase::contains)))
+                .map(Token::getTypeAction)
+                .findFirst();
+
+        return result.orElse(UNKNOWN);
+    }
+
+    /**
+     * Определить команду на основе предыдущих активностей
+     */
+    private static TypeAction determineCommandBasedOnPrevActions(String phrase, List<PrevAction> prevActions, List<Token> tokens) {
+        TypeAction operation = prevActions.stream()
+                .max(Comparator.comparingInt(PrevAction::getNumber))
+                .get()
+                .getOperation();
+        List<Command> commandsByPrevOperation =
+                CommandLoader.findCommandsByPrevOperation(operation);
+        if (commandsByPrevOperation.size() == 1) {
+            return commandsByPrevOperation.get(0).getOperation();
+        } else {
+            return determineCommandBasedOnPhrase(phrase, tokens.stream()
+                    .filter(e -> commandsByPrevOperation.stream()
+                            .map(Command::getOperation)
+                            .collect(Collectors.toSet())
+                            .contains(e.getTypeAction()))
+                    .toList());
         }
     }
 }

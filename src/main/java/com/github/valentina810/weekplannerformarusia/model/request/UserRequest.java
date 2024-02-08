@@ -2,8 +2,8 @@ package com.github.valentina810.weekplannerformarusia.model.request;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.github.valentina810.weekplannerformarusia.model.JSONObjectSerializer;
 import com.github.valentina810.weekplannerformarusia.model.response.Session;
+import com.github.valentina810.weekplannerformarusia.util.JSONObjectSerializer;
 import com.google.gson.Gson;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

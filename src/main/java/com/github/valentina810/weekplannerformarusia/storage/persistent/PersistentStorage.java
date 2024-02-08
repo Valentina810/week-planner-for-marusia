@@ -1,5 +1,7 @@
 package com.github.valentina810.weekplannerformarusia.storage.persistent;
 
+import com.github.valentina810.weekplannerformarusia.util.Formatter;
+import com.github.valentina810.weekplannerformarusia.util.TimeConverter;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -8,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+
 
 /**
  * Хранилище, которое хранит данные в УЗ пользователя
@@ -27,7 +29,6 @@ import java.util.Optional;
 @Slf4j
 public class PersistentStorage {
 
-    //#todo тут могут храниться и другие данные, лучше сделать так, чтобы их не затирать
     @Getter
     private WeekStorage weekStorage;
 
@@ -39,18 +40,18 @@ public class PersistentStorage {
      * Получить из хранилища массив с данными, если он есть
      * если массива с данными нет, то записать пустой
      */
-    public void setWeekStorage(Object object) {//todo переписать  - пустое хранилище - не ошибка, просто нет событий, чтобы не хранить избыточную информацию
-        try {//но если события есть, добавить сортировку по ключам от ранней даты к поздней
+    public void setWeekStorage(Object object) {
+        try {
             JsonObject jsonObject = JsonParser.parseString(object.toString()).getAsJsonObject();
-            Week week = new Gson().fromJson(jsonObject.get("week"), Week.class);
-            if (week != null) {
-                setWeekStorage(week);
-                log.info("Получили данные о событиях на неделю из ответа");
-            } else {
-                log.info("Данные о событиях отсутствуют");
-            }
+            Optional.ofNullable(jsonObject.get("week"))
+                    .map(JsonObject.class::cast)
+                    .map(week -> new Gson().fromJson(week, Week.class))
+                    .ifPresentOrElse(
+                            this::setWeekStorage,
+                            () -> log.info("Данные о событиях отсутствуют")
+                    );
         } catch (IllegalStateException | NullPointerException e) {
-            log.info("В процессе получения данных о событиях из ответа возникла ошибка {}", e.getMessage());
+            log.info("В процессе получения данных о событиях из ответа возникла ошибка " + e.getMessage());
         }
     }
 
@@ -102,7 +103,7 @@ public class PersistentStorage {
         } catch (IllegalArgumentException e) {
             nextDate = LocalDate.now();
         }
-        return nextDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));//todo паттерн вынести
+        return Formatter.convertDateToString.apply(nextDate);
     }
 
     /**

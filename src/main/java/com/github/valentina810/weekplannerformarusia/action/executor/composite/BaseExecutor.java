@@ -1,4 +1,4 @@
-package com.github.valentina810.weekplannerformarusia.action.handler.composite;
+package com.github.valentina810.weekplannerformarusia.action.executor.composite;
 
 import com.github.valentina810.weekplannerformarusia.action.CommandLoader;
 import com.github.valentina810.weekplannerformarusia.action.TypeAction;
@@ -9,9 +9,9 @@ import com.github.valentina810.weekplannerformarusia.storage.persistent.Event;
 import com.github.valentina810.weekplannerformarusia.storage.persistent.PersistentStorage;
 import com.github.valentina810.weekplannerformarusia.storage.session.PrevAction;
 import com.github.valentina810.weekplannerformarusia.storage.session.SessionStorage;
+import com.github.valentina810.weekplannerformarusia.util.Formatter;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -32,23 +32,22 @@ public interface BaseExecutor {
     default String getEventsForDate(Command command, LocalDate date, PersistentStorage persistentStorage) {
         String defaultMessage = command.getMessageNegative();
         if (defaultMessage != null) {
-            List<Event> eventsByDay = getDaysEvents(date, persistentStorage);
-            return getMessage(command, eventsByDay, defaultMessage);
+            return getMessage(command.getMessagePositive(),
+                    persistentStorage.getEventsByDay(Formatter.convertDateToString.apply(date)),
+                    defaultMessage);
         } else {
             return "";
         }
     }
 
-    private String getMessage(Command command, List<Event> eventsByDay, String defaultMessage) {
+    /**
+     * Формирует список событий с разделителями
+     */
+    private String getMessage(String messagePositive, List<Event> eventsByDay, String defaultMessage) {
         return eventsByDay.isEmpty() ? defaultMessage :
-                command.getMessagePositive() + eventsByDay.stream()
+                messagePositive + eventsByDay.stream()
                         .map(event -> event.getTime() + " " + event.getName())
                         .collect(Collectors.joining(" "));
-    }
-
-    private static List<Event> getDaysEvents(LocalDate date, PersistentStorage persistentStorage) {
-        return persistentStorage
-                .getEventsByDay(date.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))); //#todo паттерн вынести в константу
     }
 
     /**
@@ -58,7 +57,7 @@ public interface BaseExecutor {
         SessionStorage sessionStorage = exParam.getSessionStorage();
         Optional<PrevAction> lastPrevAction = sessionStorage.getActions().getLastPrevAction();
         sessionStorage.addPrevAction(PrevAction.builder()
-                .prevOperation(lastPrevAction.isEmpty() ? null : lastPrevAction.get().getOperation())
+                .prevOperation(lastPrevAction.map(PrevAction::getOperation).orElse(null))
                 .operation(getType())
                 .valueAction(exParam.getPhrase()).build());
         Command command = getCommand(exParam.getTypeAction());
