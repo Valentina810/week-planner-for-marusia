@@ -1,18 +1,29 @@
 package com.github.valentina810.weekplannerformarusia.action;
 
-import com.github.valentina810.weekplannerformarusia.action.handler.HandlerFactory;
-import com.github.valentina810.weekplannerformarusia.action.handler.ParametersHandler;
-import com.github.valentina810.weekplannerformarusia.action.handler.template.SimpleHandler;
+import com.github.valentina810.weekplannerformarusia.action.executor.HandlerFactory;
+import com.github.valentina810.weekplannerformarusia.dto.Command;
+import com.github.valentina810.weekplannerformarusia.dto.ExecutorParameter;
+import com.github.valentina810.weekplannerformarusia.dto.ResponseParameters;
+import com.github.valentina810.weekplannerformarusia.dto.Token;
 import com.github.valentina810.weekplannerformarusia.model.request.UserRequest;
 import com.github.valentina810.weekplannerformarusia.model.response.Response;
 import com.github.valentina810.weekplannerformarusia.model.response.Session;
 import com.github.valentina810.weekplannerformarusia.model.response.UserResponse;
+import com.github.valentina810.weekplannerformarusia.storage.persistent.PersistentStorage;
+import com.github.valentina810.weekplannerformarusia.storage.persistent.WeekStorage;
+import com.github.valentina810.weekplannerformarusia.storage.session.Actions;
+import com.github.valentina810.weekplannerformarusia.storage.session.ActionsStorage;
 import com.github.valentina810.weekplannerformarusia.storage.session.PrevAction;
 import com.github.valentina810.weekplannerformarusia.storage.session.SessionStorage;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.github.valentina810.weekplannerformarusia.action.TypeAction.UNKNOWN;
 
@@ -20,21 +31,22 @@ import static com.github.valentina810.weekplannerformarusia.action.TypeAction.UN
 @Component
 @RequiredArgsConstructor
 public class ActionExecutor {
-    private final Loader loader;
     private final HandlerFactory handlerFactory;
-    @Getter
-    private final UserResponse userResponse;
+    private final TokenLoader tokenLoader;
 
     /**
      * Формирует ответ для пользователя в объекте userResponse
      */
-    public void createUserResponse(UserRequest userRequest) {
-        ParametersHandler parametersHandler = getParametersHandler(userRequest);
+    public UserResponse createUserResponse(UserRequest userRequest) {
+        log.info("Получен запрос {}", userRequest);
 
+        ResponseParameters respParam = getResponseParameters(userRequest);
+
+        UserResponse userResponse = new UserResponse();
         userResponse.setResponse(Response.builder()
-                .text(parametersHandler.getRespPhrase())
-                .tts(parametersHandler.getRespPhrase())
-                .end_session(parametersHandler.getIsEndSession())
+                .text(respParam.getRespPhrase())
+                .tts(respParam.getRespPhrase())
+                .end_session(respParam.getIsEndSession())
                 .build());
 
         userResponse.setSession(Session.builder()
@@ -43,69 +55,95 @@ public class ActionExecutor {
                 .message_id(userRequest.getSession().getMessage_id())
                 .build());
 
-        userResponse.setSession_state(parametersHandler.getSessionStorage().getSession_state());
+        setSession_state(userResponse, respParam);
 
-        userResponse.setUser_state_update(parametersHandler.getPersistentStorage().getUser_state_update());
+        WeekStorage userStateUpdate = respParam.getPersistentStorage().getUser_state_update();
+        userResponse.setUser_state_update(userStateUpdate);
 
         userResponse.setVersion(userRequest.getVersion());
+
+        log.info("Сформирован ответ {}", userResponse);
+        log.info("---------------------------------------------------");
+        return userResponse;
+    }
+
+    private static void setSession_state(UserResponse userResponse, ResponseParameters respParam) {
+        userResponse.setSession_state(
+                Optional.ofNullable(respParam.getSessionStorage())
+                        .map(SessionStorage::getSession_state)
+                        .orElse(null)
+        );
+    }
+
+    private ResponseParameters getResponseParameters(final UserRequest userRequest) {
+
+        SessionStorage sessionStorage = SessionStorage.builder().actionsStorage(ActionsStorage.builder().actions(Actions.builder().prevActions(new ArrayList<>()).build()).build()).build();
+        sessionStorage.setActionsInSessionState(userRequest.getState().getSession());
+
+        PersistentStorage persistentStorage = new PersistentStorage();
+        persistentStorage.setWeekStorage(userRequest.getState().getUser());
+
+        Actions actions = sessionStorage.getActions();
+        String phrase = userRequest.getRequest().getCommand();
+        TypeAction typeAction = defineCommand(actions, phrase);
+        log.info("Получить тип активности на основании actions={}, phrase={}, typeAction={}",
+                actions, phrase, typeAction);
+
+        return handlerFactory.getHandler(typeAction)
+                .getResponseParameters(ExecutorParameter.builder()
+                        .typeAction(typeAction)
+                        .phrase(phrase)
+                        .sessionStorage(sessionStorage)
+                        .persistentStorage(persistentStorage).build());
     }
 
     /**
-     * Получить ответ в формате набора параметров
+     * Получить из фразы, которую сказал пользователь, код активности
      *
-     * @param userRequest - запрос
-     * @return - набор параметров для ответа в виде модального объекта
+     * @param phrase - фраза пользователя
+     * @return код активности
      */
-    private ParametersHandler getParametersHandler(UserRequest userRequest) {
-        String phrase = getPhrase(userRequest.getRequest().getCommand());
-        SimpleHandler handler = getHandler(userRequest.getState().getSession(), phrase);
-        handler.getParametersHandler().setUserRequest(userRequest);
-        handler.execute();
-        return handler.getParametersHandler();
+    private TypeAction defineCommand(Actions actions, String phrase) {
+        List<PrevAction> prevActions = actions.getPrevActions();
+        List<Token> tokens = tokenLoader.getTokens();
+        return prevActions.isEmpty() ?
+                determineCommandBasedOnPhrase(phrase, tokens) :
+                determineCommandBasedOnPrevActions(phrase, prevActions, tokens);
     }
 
     /**
-     * Выбор обработчика в зависимости от наличия предыдущих команд
-     *
-     * @param requestSessionStorage - данные в хранилище сесии из запроса
-     * @param phrase                - фраза пользователя
-     * @return - обработчик, рассчитаный на основе входных параметров
+     * Определить команду на основе фразы
      */
-    private SimpleHandler getHandler(Object requestSessionStorage, String phrase) {
-        SessionStorage sessionStorage = new SessionStorage();
-        sessionStorage.calculatePrevActions(requestSessionStorage);
-        return sessionStorage.getLastPrevAction()
-                .map(prevAction -> getHandlerBasedOnPreviousActivity(prevAction, phrase))
-                .orElseGet(() -> getMainMenuCommandHandler(phrase));
-    }
+    private static TypeAction determineCommandBasedOnPhrase(String phrase, List<Token> tokens) {
+        Optional<TypeAction> result = tokens.stream()
+                .filter(token -> token.getTokens().stream()
+                        .anyMatch(phraseTokens -> phraseTokens.getPhrase().stream()
+                                .allMatch(phrase::contains)))
+                .map(Token::getTypeAction)
+                .findFirst();
 
-    private SimpleHandler getMainMenuCommandHandler(String phrase) {
-        LoadCommand loadCommand = loader.get(phrase);
-        SimpleHandler handler = handlerFactory.getHandler(loadCommand);
-        handler.getParametersHandler().setLoadCommand(loadCommand);
-        return handler;
-    }
-
-    private SimpleHandler getHandlerBasedOnPreviousActivity(PrevAction prevAction, String phrase) {
-        LoadCommand childLoadCommand = loader.get(prevAction.getOperation())
-                .getActions().stream()
-                .filter(e -> e.getPhrase().equals(phrase))
-                .findFirst().orElse(loader.get(UNKNOWN));
-        SimpleHandler handler = handlerFactory.getHandler(childLoadCommand);
-        handler.getParametersHandler().setLoadCommand(childLoadCommand);
-        return handler;
+        return result.orElse(UNKNOWN);
     }
 
     /**
-     * Получить из объекта фразу, которую сказал пользователь
-     * #todo - позже будет анализ по токенам
-     *
-     * @param message - объект
-     * @return - фраза
+     * Определить команду на основе предыдущих активностей
      */
-    private String getPhrase(String message) {
-        return message != null ?
-                message.replaceAll("[^а-яА-Я0-9\\s]", "")
-                        .toLowerCase() : "";
+    private static TypeAction determineCommandBasedOnPrevActions(String phrase, List<PrevAction> prevActions, List<Token> tokens) {
+        TypeAction operation = prevActions.stream()
+                .max(Comparator.comparingInt(PrevAction::getNumber))
+                .get()
+                .getOperation();
+        List<Command> commandsByPrevOperation =
+                CommandLoader.findCommandsByPrevOperation(operation);
+        if (commandsByPrevOperation.size() == 1) {
+            return commandsByPrevOperation.get(0).getOperation();
+        } else {
+            return determineCommandBasedOnPhrase(phrase, tokens.stream()
+                    .filter(e -> commandsByPrevOperation.stream()
+                            .map(Command::getOperation)
+                            .collect(Collectors.toSet())
+                            .contains(e.getTypeAction()))
+                    .toList());
+        }
     }
 }

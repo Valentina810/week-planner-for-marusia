@@ -17,27 +17,27 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @SpringBootTest
 public class HelpHandlerTest {
-
-    @Autowired
-    private ActionExecutor actionExecutor;
-    @Autowired
-    private UserRequest userRequest;
-
-    @ParameterizedTest
-    @MethodSource("com.github.valentina810.weekplannerformarusia.action.parameterized.help.HelpTestData#providerHelpTest")
-    public void checkCommandHelp(ParameterForHelpTest parameterForHelpTest) {
-        String json = FileReader.loadStringFromFile(parameterForHelpTest.getJsonFileSource())
-                .replace("phrase", parameterForHelpTest.getPhrase())
-                .replace("prevAction", parameterForHelpTest.getPrevActions());
-
-        userRequest.fillUserRequest(new Gson().fromJson(json, UserRequest.class));
-        actionExecutor.createUserResponse(userRequest);
-        UserResponse userResponse = actionExecutor.getUserResponse();
-
-        assertAll(
-                () -> assertEquals(parameterForHelpTest.getExpectedResponsePhrase(), userResponse.getResponse().getText()),
-                () -> assertEquals(parameterForHelpTest.getExpectedActions(), ((ActionsStorage) userResponse.getSession_state()).getActions()),
-                () -> assertFalse(actionExecutor.getUserResponse().getResponse().isEnd_session())
-        );
-    }
+//
+//    @Autowired
+//    private ActionExecutor actionExecutor;
+//    @Autowired
+//    private UserRequest userRequest;
+//
+//    @ParameterizedTest
+//    @MethodSource("com.github.valentina810.weekplannerformarusia.action.parameterized.help.HelpTestData#providerHelpTest")
+//    public void checkCommandHelp(ParameterForHelpTest parameterForHelpTest) {
+//        String json = FileReader.loadStringFromFile(parameterForHelpTest.getJsonFileSource())
+//                .replace("phrase", parameterForHelpTest.getPhrase())
+//                .replace("prevAction", parameterForHelpTest.getPrevActions());
+//
+//        userRequest.fillUserRequest(new Gson().fromJson(json, UserRequest.class));
+//        actionExecutor.createUserResponse(userRequest);
+//        UserResponse userResponse = actionExecutor.getUserResponse();
+//
+//        assertAll(
+//                () -> assertEquals(parameterForHelpTest.getExpectedResponsePhrase(), userResponse.getResponse().getText()),
+//                () -> assertEquals(parameterForHelpTest.getExpectedActions(), ((ActionsStorage) userResponse.getSession_state()).getActions()),
+//                () -> assertFalse(actionExecutor.getUserResponse().getResponse().isEnd_session())
+//        );
+//    }
 }

@@ -15,16 +15,15 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class WeekPlannerServiceImpl implements WeekPlannerService {
 
-    private UserRequest userRequest;
     private ActionExecutor actionExecutor;
 
     @Override
     public ResponseEntity<?> getResponse(Object object) {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/json");
+        UserRequest userRequest = new UserRequest();
         userRequest.fillUserRequest(object);
-        actionExecutor.createUserResponse(userRequest);
-        return new ResponseEntity<>(new Gson().toJson(actionExecutor.getUserResponse()),
+        return new ResponseEntity<>(new Gson().toJson(actionExecutor.createUserResponse(userRequest)),
                 headers, HttpStatus.OK);
     }
 }
