@@ -74,7 +74,7 @@ public class PersistentStorage {
      * Возвращает события за все дни
      */
     public Map<String, List<Event>> getEventsByWeek() {
-        return weekStorage.getWeek().getDays();
+        return weekStorage != null ? weekStorage.getWeek().getDays() : null;
     }
 
     /**

@@ -47,7 +47,7 @@ public interface BaseExecutor {
         return eventsByDay.isEmpty() ? defaultMessage :
                 messagePositive + eventsByDay.stream()
                         .map(event -> event.getTime() + " " + event.getName())
-                        .collect(Collectors.joining(" "));
+                        .collect(Collectors.joining(", "));
     }
 
     /**

@@ -36,9 +36,7 @@ public class WeeklyPlanExecutor implements BaseExecutor {
     }
 
     private String getResponsePhrase(ExecutorParameter exParam, Command command) {
-        return Optional.ofNullable(exParam.getPersistentStorage().getEventsByWeek())
-                .map(events -> events.isEmpty() ? command.getMessageNegative() : getPhraseWithNotEmptyEvents(command, events))
-                .orElse(command.getMessageNegative());
+        return Optional.ofNullable(exParam.getPersistentStorage().getEventsByWeek()).filter(events -> !events.isEmpty()).map(events -> getPhraseWithNotEmptyEvents(command, events)).orElse(command.getMessageNegative());
     }
 
     private String getPhraseWithNotEmptyEvents(Command command, Map<String, List<Event>> days) {
@@ -47,7 +45,7 @@ public class WeeklyPlanExecutor implements BaseExecutor {
                         e + days.get(e).stream()
                                 .map(a -> " " + a.getName() + " " + a.getTime())
                                 .collect(Collectors.joining(",")))
-                .collect(Collectors.joining(" "));
+                .collect(Collectors.joining(", "));
         return respPhrase;
     }
 }
