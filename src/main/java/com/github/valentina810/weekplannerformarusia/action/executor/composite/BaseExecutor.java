@@ -32,9 +32,10 @@ public interface BaseExecutor {
     default String getEventsForDate(Command command, LocalDate date, PersistentStorage persistentStorage) {
         String defaultMessage = command.getMessageNegative();
         if (defaultMessage != null) {
+            String soughtDate = Formatter.convertDateToString.apply(date);
             return getMessage(command.getMessagePositive(),
-                    persistentStorage.getEventsByDay(Formatter.convertDateToString.apply(date)),
-                    defaultMessage);
+                    persistentStorage.getEventsByDay(soughtDate),
+                    defaultMessage).replace("{date}", soughtDate);
         } else {
             return "";
         }

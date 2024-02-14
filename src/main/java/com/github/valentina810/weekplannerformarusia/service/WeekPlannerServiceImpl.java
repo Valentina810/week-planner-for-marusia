@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class WeekPlannerServiceImpl implements WeekPlannerService {
 
-    private ActionExecutor actionExecutor;
+    private final ActionExecutor actionExecutor;
 
     @Override
     public ResponseEntity<?> getResponse(Object object) {

@@ -35,7 +35,7 @@ public class EventsForDateTestData {
                         .phrase("план на сегодня")
                         .date(TODAY)
                         .todayEvents("{\"time\": \"12:00\", \"name\": \"Лекция\"}, {\"time\": \"16:00\", \"name\": \"Прогулка на берегу моря\"}")
-                        .expectedResult("Ваши события на сегодня " + TODAY + " 12:00 Лекция 16:00 Прогулка на берегу моря")
+                        .expectedResult("Ваши события на сегодня " + TODAY + " 12:00 Лекция, 16:00 Прогулка на берегу моря")
                         .build())
         );
     }
