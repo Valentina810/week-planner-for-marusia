@@ -1,4 +1,4 @@
-package com.github.valentina810.weekplannerformarusia.integration.action.parameterized.help;
+package com.github.valentina810.weekplannerformarusia.service.parameterized.help;
 
 import com.github.valentina810.weekplannerformarusia.storage.session.Actions;
 import lombok.Builder;

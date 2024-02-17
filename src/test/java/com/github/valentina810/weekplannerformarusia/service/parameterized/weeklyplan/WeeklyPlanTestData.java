@@ -1,4 +1,4 @@
-package com.github.valentina810.weekplannerformarusia.integration.action.parameterized.weeklyplan;
+package com.github.valentina810.weekplannerformarusia.service.parameterized.weeklyplan;
 
 import org.junit.jupiter.params.provider.Arguments;
 
@@ -14,21 +14,21 @@ public class WeeklyPlanTestData {
                 Arguments.of(ParameterForWeeklyPlanTest.builder()
                         .testName("getWeeklyPlan_whenWeeklyPlanContainsOneEvent_thenReturnOneEvent")
                         .jsonFileSource("action/weeklyplan/WeeklyPlanContainsOneEvent.json")
-                        .expectedResult("Ваши события 31-10-2023 12:00 Лекция").build()),
+                        .expectedResult("Ваши события 31-10-2023 Лекция 12:00").build()),
                 Arguments.of(ParameterForWeeklyPlanTest.builder()
                         .testName("getWeeklyPlan_whenWeeklyPlanContainsTwoEventsOnOneDay_thenReturnAllEvent")
                         .jsonFileSource("action/weeklyplan/WeeklyPlanContainsTwoEventsOnOneDay.json")
-                        .expectedResult("Ваши события 31-10-2023 12:00 Лекция 16:00 Свидание")
+                        .expectedResult("Ваши события 31-10-2023 Лекция 12:00, Свидание 16:00")
                         .build()),
                 Arguments.of(ParameterForWeeklyPlanTest.builder()
                         .testName("getWeeklyPlan_whenWeeklyPlanContainsTwoEventsOnDifferentDay_thenReturnAllEvent")
                         .jsonFileSource("action/weeklyplan/WeeklyPlanContainsTwoEventsOnDifferentDay.json")
-                        .expectedResult("Ваши события 31-10-2023 12:00 Лекция 03-11-2023 18:00 Ужин в ресторане")
+                        .expectedResult("Ваши события 31-10-2023 Лекция 12:00, 03-11-2023 Ужин в ресторане 18:00")
                         .build()),
                 Arguments.of(ParameterForWeeklyPlanTest.builder()
                         .testName("getWeeklyPlan_whenWeeklyPlanContainsTwoEventsTwoDays_thenReturnAllEvent")
                         .jsonFileSource("action/weeklyplan/WeeklyPlanContainsTwoEventsTwoDays.json")
-                        .expectedResult("Ваши события 31-10-2023 12:00 Лекция 16:00 Свидание 04-11-2023 10:00 Велотренировка 20:00 Поход за покупками")
+                        .expectedResult("Ваши события 31-10-2023 Лекция 12:00, Свидание 16:00, 04-11-2023 Велотренировка 10:00, Поход за покупками 20:00")
                         .build())
         );
     }

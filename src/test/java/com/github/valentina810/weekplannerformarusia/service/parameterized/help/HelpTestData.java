@@ -1,4 +1,4 @@
-package com.github.valentina810.weekplannerformarusia.integration.action.parameterized.help;
+package com.github.valentina810.weekplannerformarusia.service.parameterized.help;
 
 import com.github.valentina810.weekplannerformarusia.action.TypeAction;
 import com.github.valentina810.weekplannerformarusia.storage.session.Actions;
@@ -73,7 +73,9 @@ public class HelpTestData {
                         .phrase("вернуться в главное меню")
                         .prevActions(PREV_ACTIONS)
                         .expectedResponsePhrase("Выполнен выход в главное меню")
-                        .expectedActions(null)
+                        .expectedActions(Actions.builder()
+                                .prevActions(List.of())
+                                .build())
                         .build())
         );
     }

@@ -1,4 +1,4 @@
-package com.github.valentina810.weekplannerformarusia.integration.action.parameterized.dayplan;
+package com.github.valentina810.weekplannerformarusia.service.parameterized.dayplan;
 
 import org.junit.jupiter.params.provider.Arguments;
 
@@ -64,7 +64,7 @@ public class EventsForDateTestData {
                         .phrase("план на завтра")
                         .date(TOMORROW)
                         .todayEvents("{\"time\": \"12:00\", \"name\": \"Лекция\"}, {\"time\": \"16:00\", \"name\": \"Прогулка на берегу моря\"}")
-                        .expectedResult("Ваши события на завтра " + TOMORROW + " 12:00 Лекция 16:00 Прогулка на берегу моря")
+                        .expectedResult("Ваши события на завтра " + TOMORROW + " 12:00 Лекция, 16:00 Прогулка на берегу моря")
                         .build())
         );
     }

@@ -1,4 +1,4 @@
-package com.github.valentina810.weekplannerformarusia.integration.action.parameterized.unknown;
+package com.github.valentina810.weekplannerformarusia.service.parameterized.unknown;
 
 import lombok.Builder;
 import lombok.Getter;

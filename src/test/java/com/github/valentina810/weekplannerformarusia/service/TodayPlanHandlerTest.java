@@ -1,8 +1,7 @@
-package com.github.valentina810.weekplannerformarusia.integration.action;
+package com.github.valentina810.weekplannerformarusia.service;
 
-import com.github.valentina810.weekplannerformarusia.integration.action.parameterized.dayplan.ParameterForEventsForDateTest;
+import com.github.valentina810.weekplannerformarusia.service.parameterized.dayplan.ParameterForEventsForDateTest;
 import com.github.valentina810.weekplannerformarusia.model.request.UserRequest;
-import com.github.valentina810.weekplannerformarusia.service.WeekPlannerService;
 import com.github.valentina810.weekplannerformarusia.util.FileReader;
 import com.google.gson.Gson;
 import lombok.SneakyThrows;
@@ -22,7 +21,7 @@ public class TodayPlanHandlerTest {
 
     @SneakyThrows
     @ParameterizedTest
-    @MethodSource("com.github.valentina810.weekplannerformarusia.integration.action.parameterized.dayplan.EventsForDateTestData#providerTodayPlanHandlerTest")
+    @MethodSource("com.github.valentina810.weekplannerformarusia.service.parameterized.dayplan.EventsForDateTestData#providerTodayPlanHandlerTest")
     public void checkTodayPlan(ParameterForEventsForDateTest parameterForEventsForDateTest) {
         String json = FileReader.loadStringFromFile(parameterForEventsForDateTest.getJsonFileSource())
                 .replace("testDate", parameterForEventsForDateTest.getDate())
