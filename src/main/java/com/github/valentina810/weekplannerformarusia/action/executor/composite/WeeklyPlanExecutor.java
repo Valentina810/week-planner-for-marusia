@@ -5,6 +5,7 @@ import com.github.valentina810.weekplannerformarusia.dto.Command;
 import com.github.valentina810.weekplannerformarusia.dto.ExecutorParameter;
 import com.github.valentina810.weekplannerformarusia.dto.ResponseParameters;
 import com.github.valentina810.weekplannerformarusia.storage.persistent.Event;
+import com.github.valentina810.weekplannerformarusia.util.Formatter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -15,8 +16,6 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import static com.github.valentina810.weekplannerformarusia.action.TypeAction.WEEKLY_PLAN;
-import static com.github.valentina810.weekplannerformarusia.util.Formatter.convertDateToString;
-import static com.github.valentina810.weekplannerformarusia.util.Formatter.convertStringToDate;
 
 
 @Component
@@ -50,14 +49,14 @@ public class WeeklyPlanExecutor implements BaseExecutor {
         return command.getMessagePositive() +
                 days.entrySet().stream()
                         .collect(Collectors.toMap(
-                                dayDate -> convertStringToDate.apply(dayDate.getKey()),
+                                dayDate -> Formatter.convertStringToDate.apply(dayDate.getKey()),
                                 dayDate -> dayDate.getValue().stream()
                                         .map(event -> " " + event.getName() + " " + event.getTime())
                                         .collect(Collectors.joining(",")),
                                 (a, b) -> a,
                                 TreeMap::new))
                         .entrySet().stream()
-                        .map(dayDate -> convertDateToString.apply(dayDate.getKey()) + dayDate.getValue())
+                        .map(dayDate -> Formatter.convertDateToString.apply(dayDate.getKey()) + dayDate.getValue())
                         .collect(Collectors.joining(", "));
     }
 }
