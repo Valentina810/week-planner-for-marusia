@@ -11,9 +11,12 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import static com.github.valentina810.weekplannerformarusia.action.TypeAction.WEEKLY_PLAN;
+import static com.github.valentina810.weekplannerformarusia.util.Formatter.convertDateToString;
+import static com.github.valentina810.weekplannerformarusia.util.Formatter.convertStringToDate;
 
 
 @Component
@@ -36,16 +39,25 @@ public class WeeklyPlanExecutor implements BaseExecutor {
     }
 
     private String getResponsePhrase(ExecutorParameter exParam, Command command) {
-        return Optional.ofNullable(exParam.getPersistentStorage().getEventsByWeek()).filter(events -> !events.isEmpty()).map(events -> getPhraseWithNotEmptyEvents(command, events)).orElse(command.getMessageNegative());
+        return Optional.ofNullable(exParam.getPersistentStorage()
+                        .getEventsByWeek())
+                .filter(events -> !events.isEmpty())
+                .map(events -> getPhraseWithNotEmptyEvents(command, events))
+                .orElse(command.getMessageNegative());
     }
 
     private String getPhraseWithNotEmptyEvents(Command command, Map<String, List<Event>> days) {
-        String respPhrase;
-        respPhrase = command.getMessagePositive() + days.keySet().stream().map(e ->
-                        e + days.get(e).stream()
-                                .map(a -> " " + a.getName() + " " + a.getTime())
-                                .collect(Collectors.joining(",")))
-                .collect(Collectors.joining(", "));
-        return respPhrase;
+        return command.getMessagePositive() +
+                days.entrySet().stream()
+                        .collect(Collectors.toMap(
+                                dayDate -> convertStringToDate.apply(dayDate.getKey()),
+                                dayDate -> dayDate.getValue().stream()
+                                        .map(event -> " " + event.getName() + " " + event.getTime())
+                                        .collect(Collectors.joining(",")),
+                                (a, b) -> a,
+                                TreeMap::new))
+                        .entrySet().stream()
+                        .map(dayDate -> convertDateToString.apply(dayDate.getKey()) + dayDate.getValue())
+                        .collect(Collectors.joining(", "));
     }
 }
