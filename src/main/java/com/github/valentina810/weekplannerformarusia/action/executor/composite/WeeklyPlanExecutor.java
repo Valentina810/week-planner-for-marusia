@@ -9,6 +9,7 @@ import com.github.valentina810.weekplannerformarusia.util.Formatter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -51,6 +52,7 @@ public class WeeklyPlanExecutor implements BaseExecutor {
                         .collect(Collectors.toMap(
                                 dayDate -> Formatter.convertStringToDate.apply(dayDate.getKey()),
                                 dayDate -> dayDate.getValue().stream()
+                                        .sorted(Comparator.comparing(Event::getTime))
                                         .map(event -> " " + event.getName() + " " + event.getTime())
                                         .collect(Collectors.joining(",")),
                                 (a, b) -> a,
