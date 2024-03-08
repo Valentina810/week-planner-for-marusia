@@ -5,9 +5,12 @@ import com.github.valentina810.weekplannerformarusia.util.JsonFileReader;
 import com.google.gson.Gson;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -18,16 +21,27 @@ import java.util.stream.Collectors;
 @Getter
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class CommandLoader {
     private static Map<TypeAction, Command> loadCommands;
 
     @PostConstruct
     public void loadCommands() {
-        log.info("Загрузка комманд из файла commands.json");
-        loadCommands = JsonFileReader.readJsonArrayFromFile("src/main/resources/commands.json").asList()
-                .stream()
-                .map(json -> new Gson().fromJson(new Gson().toJson(json), Command.class))
-                .collect(Collectors.toMap(Command::getOperation, Function.identity()));
+        try {
+            log.info("Загрузка комманд из файла commands.json");
+            loadCommands = JsonFileReader.readJsonArrayFromFile("commands.json").asList()
+                    .stream()
+                    .map(json -> new Gson().fromJson(new Gson().toJson(json), Command.class))
+                    .collect(Collectors.toMap(Command::getOperation, Function.identity()));
+        } catch (Exception e) {
+            log.error(getStackTrace(e));
+        }
+    }
+
+    private static String getStackTrace(Throwable e) {
+        StringWriter sw = new StringWriter();
+        e.printStackTrace(new PrintWriter(sw));
+        return sw.toString();
     }
 
     public static Command get(TypeAction operation) {
