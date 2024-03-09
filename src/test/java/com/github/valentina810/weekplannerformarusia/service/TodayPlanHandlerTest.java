@@ -1,35 +1,35 @@
 package com.github.valentina810.weekplannerformarusia.service;
 
 import com.github.valentina810.weekplannerformarusia.service.parameterized.dayplan.ParameterForEventsForDateTest;
-import com.github.valentina810.weekplannerformarusia.model.request.UserRequest;
 import com.github.valentina810.weekplannerformarusia.util.FileReader;
-import com.google.gson.Gson;
 import lombok.SneakyThrows;
 import org.json.JSONObject;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-@SpringBootTest
-public class TodayPlanHandlerTest {
-
-    @Autowired
-    private WeekPlannerService weekPlannerService;
+public class TodayPlanHandlerTest extends BaseTest {
 
     @SneakyThrows
     @ParameterizedTest
     @MethodSource("com.github.valentina810.weekplannerformarusia.service.parameterized.dayplan.EventsForDateTestData#providerTodayPlanHandlerTest")
     public void checkTodayPlan(ParameterForEventsForDateTest parameterForEventsForDateTest) {
-        String json = FileReader.loadStringFromFile(parameterForEventsForDateTest.getJsonFileSource())
+        String request = FileReader.loadStringFromFile(parameterForEventsForDateTest.getJsonFileSource())
                 .replace("testDate", parameterForEventsForDateTest.getDate())
                 .replace("testEvents", parameterForEventsForDateTest.getTodayEvents())
                 .replace("phrase", parameterForEventsForDateTest.getPhrase());
-        Object response = weekPlannerService.getResponse(new Gson().fromJson(json, UserRequest.class)).getBody();
+        JSONObject response = getResponse.apply(request);
+        JSONObject objectResponse = getObjectResponse.apply(response);
 
-        assertEquals(parameterForEventsForDateTest.getExpectedResult(),
-                new JSONObject(String.valueOf(response)).getJSONObject("response").getString("text"));
+        assertAll(
+                () -> assertEquals(parameterForEventsForDateTest.getExpectedResult(), objectResponse.getString("text")),
+                () -> assertFalse(objectResponse.getBoolean("end_session")),
+                () -> assertEquals(getPersistentStorage(request), getPersistentStorage(response)),
+                () -> assertNull(getValue.apply(response, "session_state"))
+        );
     }
 }

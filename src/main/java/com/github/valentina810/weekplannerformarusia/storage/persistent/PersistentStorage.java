@@ -5,7 +5,9 @@ import com.github.valentina810.weekplannerformarusia.util.TimeConverter;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.DayOfWeek;
@@ -28,6 +30,8 @@ import java.util.Optional;
  */
 
 @Slf4j
+@ToString
+@EqualsAndHashCode
 public class PersistentStorage {
 
     @Getter
