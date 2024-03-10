@@ -21,7 +21,7 @@ public class SimpleExecutor implements BaseExecutor {
     }
 
     /**
-     * Обработка для "простого" обработчика, котрый:
+     * Обработка для "простого" обработчика, который:
      * - не меняет состояние sessionStorage
      * - не меняет состояние  persistentStorage
      * - не завершает сессию
