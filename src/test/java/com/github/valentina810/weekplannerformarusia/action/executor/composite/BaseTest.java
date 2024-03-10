@@ -1,5 +1,6 @@
-package com.github.valentina810.weekplannerformarusia.service;
+package com.github.valentina810.weekplannerformarusia.action.executor.composite;
 
+import com.github.valentina810.weekplannerformarusia.action.ActionExecutor;
 import com.github.valentina810.weekplannerformarusia.model.request.UserRequest;
 import com.github.valentina810.weekplannerformarusia.storage.persistent.PersistentStorage;
 import com.github.valentina810.weekplannerformarusia.storage.session.SessionStorage;
@@ -17,18 +18,17 @@ import java.util.function.Function;
 public class BaseTest {
 
     @Autowired
-    protected WeekPlannerService weekPlannerService;
+    protected ActionExecutor actionExecutor;
 
     /**
      * Получение ответа на запрос в формате String
      */
-    protected Function<String, JSONObject> getResponse = (responseInString) ->
+    protected Function<String, JSONObject> getResponse = (request) ->
     {
         try {
-            return new JSONObject(String.valueOf(weekPlannerService
-                    .getResponse(new Gson()
-                            .fromJson(responseInString, UserRequest.class))
-                    .getBody()));
+            UserRequest userRequest = new UserRequest();
+            userRequest.fillUserRequest(new Gson().fromJson(request, Object.class));
+            return new JSONObject(new Gson().toJson(actionExecutor.createUserResponse(userRequest)));
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }

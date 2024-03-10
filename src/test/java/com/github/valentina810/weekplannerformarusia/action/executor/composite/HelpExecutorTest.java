@@ -1,6 +1,6 @@
-package com.github.valentina810.weekplannerformarusia.service;
+package com.github.valentina810.weekplannerformarusia.action.executor.composite;
 
-import com.github.valentina810.weekplannerformarusia.service.parameterized.help.ParameterForHelpTest;
+import com.github.valentina810.weekplannerformarusia.action.executor.composite.parameterized.help.ParameterForHelpTest;
 import com.github.valentina810.weekplannerformarusia.util.FileReader;
 import lombok.SneakyThrows;
 import org.json.JSONObject;
@@ -11,11 +11,11 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-public class HelpHandlerTest extends BaseTest {
+public class HelpExecutorTest extends BaseTest {
 
     @SneakyThrows
     @ParameterizedTest
-    @MethodSource("com.github.valentina810.weekplannerformarusia.service.parameterized.help.HelpTestData#providerHelpTest")
+    @MethodSource("com.github.valentina810.weekplannerformarusia.action.executor.composite.parameterized.help.HelpTestData#providerHelpTest")
     public void checkCommandHelp(ParameterForHelpTest parameterForHelpTest) {
         String request = FileReader
                 .loadStringFromFile(parameterForHelpTest.getJsonFileSource())

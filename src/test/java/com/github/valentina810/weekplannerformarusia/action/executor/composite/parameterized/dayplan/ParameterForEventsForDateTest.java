@@ -1,4 +1,4 @@
-package com.github.valentina810.weekplannerformarusia.service.parameterized.dayplan;
+package com.github.valentina810.weekplannerformarusia.action.executor.composite.parameterized.dayplan;
 
 import lombok.Builder;
 import lombok.Getter;

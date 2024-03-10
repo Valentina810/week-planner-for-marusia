@@ -1,6 +1,6 @@
-package com.github.valentina810.weekplannerformarusia.service;
+package com.github.valentina810.weekplannerformarusia.action.executor.composite;
 
-import com.github.valentina810.weekplannerformarusia.service.parameterized.dayplan.ParameterForEventsForDateTest;
+import com.github.valentina810.weekplannerformarusia.action.executor.composite.parameterized.dayplan.ParameterForEventsForDateTest;
 import com.github.valentina810.weekplannerformarusia.util.FileReader;
 import lombok.SneakyThrows;
 import org.json.JSONObject;
@@ -12,12 +12,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class TodayPlanHandlerTest extends BaseTest {
+public class TomorrowPlanExecutorTest extends BaseTest {
 
     @SneakyThrows
     @ParameterizedTest
-    @MethodSource("com.github.valentina810.weekplannerformarusia.service.parameterized.dayplan.EventsForDateTestData#providerTodayPlanHandlerTest")
-    public void checkTodayPlan(ParameterForEventsForDateTest parameterForEventsForDateTest) {
+    @MethodSource("com.github.valentina810.weekplannerformarusia.action.executor.composite.parameterized.dayplan.EventsForDateTestData#providerTomorrowPlanExecutorTest")
+    public void checkTomorrowPlan(ParameterForEventsForDateTest parameterForEventsForDateTest) {
         String request = FileReader.loadStringFromFile(parameterForEventsForDateTest.getJsonFileSource())
                 .replace("testDate", parameterForEventsForDateTest.getDate())
                 .replace("testEvents", parameterForEventsForDateTest.getTodayEvents())

@@ -1,4 +1,4 @@
-package com.github.valentina810.weekplannerformarusia.service.parameterized.unknown;
+package com.github.valentina810.weekplannerformarusia.action.executor.composite.parameterized.unknown;
 
 import org.junit.jupiter.params.provider.Arguments;
 

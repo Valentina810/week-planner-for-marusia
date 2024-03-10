@@ -1,4 +1,4 @@
-package com.github.valentina810.weekplannerformarusia.service.parameterized.dayplan;
+package com.github.valentina810.weekplannerformarusia.action.executor.composite.parameterized.dayplan;
 
 import org.junit.jupiter.params.provider.Arguments;
 
@@ -11,7 +11,7 @@ public class EventsForDateTestData {
     private static final String TOMORROW = LocalDate.now().plusDays(1).format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
     private static final String TEMPLATE_JSON = "action/plantodate/PlanTemplate.json";
 
-    static Stream<Arguments> providerTodayPlanHandlerTest() {
+    static Stream<Arguments> providerTodayPlanExecutorTest() {
         return Stream.of(
                 Arguments.of(ParameterForEventsForDateTest.builder()
                         .testName("getPlanToday_whenPlanTodayEmpty_thenReturnEmpty")
@@ -48,7 +48,7 @@ public class EventsForDateTestData {
         );
     }
 
-    static Stream<Arguments> providerTomorrowPlanHandlerTest() {
+    static Stream<Arguments> providerTomorrowPlanExecutorTest() {
         return Stream.of(
                 Arguments.of(ParameterForEventsForDateTest.builder()
                         .testName("getPlanTomorrow_whenPlanTomorrowEmpty_thenReturnEmpty")

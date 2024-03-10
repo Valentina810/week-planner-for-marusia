@@ -1,6 +1,6 @@
 package com.github.valentina810.weekplannerformarusia.action;
 
-import com.github.valentina810.weekplannerformarusia.action.executor.HandlerFactory;
+import com.github.valentina810.weekplannerformarusia.action.executor.ExecutorFactory;
 import com.github.valentina810.weekplannerformarusia.dto.Command;
 import com.github.valentina810.weekplannerformarusia.dto.ExecutorParameter;
 import com.github.valentina810.weekplannerformarusia.dto.ResponseParameters;
@@ -31,7 +31,7 @@ import static com.github.valentina810.weekplannerformarusia.action.TypeAction.UN
 @Component
 @RequiredArgsConstructor
 public class ActionExecutor {
-    private final HandlerFactory handlerFactory;
+    private final ExecutorFactory executorFactory;
     private final TokenLoader tokenLoader;
 
     /**
@@ -89,7 +89,7 @@ public class ActionExecutor {
         log.info("Получить тип активности на основании actions={}, phrase={}, typeAction={}",
                 actions, phrase, typeAction);
 
-        return handlerFactory.getHandler(typeAction)
+        return executorFactory.getExecutor(typeAction)
                 .getResponseParameters(ExecutorParameter.builder()
                         .typeAction(typeAction)
                         .phrase(phrase)

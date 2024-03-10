@@ -1,4 +1,4 @@
-package com.github.valentina810.weekplannerformarusia.service;
+package com.github.valentina810.weekplannerformarusia.action.executor.composite;
 
 import com.github.valentina810.weekplannerformarusia.util.FileReader;
 import lombok.SneakyThrows;
@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class ExitHandlerTest extends BaseTest {
+public class ExitExecutorTest extends BaseTest {
 
     @Test
     @SneakyThrows

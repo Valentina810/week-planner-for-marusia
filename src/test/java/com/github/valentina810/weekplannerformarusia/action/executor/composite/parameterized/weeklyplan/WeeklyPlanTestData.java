@@ -1,11 +1,11 @@
-package com.github.valentina810.weekplannerformarusia.service.parameterized.weeklyplan;
+package com.github.valentina810.weekplannerformarusia.action.executor.composite.parameterized.weeklyplan;
 
 import org.junit.jupiter.params.provider.Arguments;
 
 import java.util.stream.Stream;
 
 public class WeeklyPlanTestData {
-    static Stream<Arguments> providerWeeklyPlanHandlerTest() {
+    static Stream<Arguments> providerWeeklyPlanExecutorTest() {
         return Stream.of(
                 Arguments.of(ParameterForWeeklyPlanTest.builder()
                         .testName("getWeeklyPlan_whenWeeklyPlanEmpty_thenReturnEmpty")
