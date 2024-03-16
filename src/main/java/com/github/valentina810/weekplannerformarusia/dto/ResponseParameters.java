@@ -12,6 +12,7 @@ public class ResponseParameters {
     @Setter
     private String respPhrase;
     private Boolean isEndSession;
+    @Setter
     private SessionStorage sessionStorage;
     private PersistentStorage persistentStorage;
 }
