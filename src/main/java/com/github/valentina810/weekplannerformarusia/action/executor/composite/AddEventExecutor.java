@@ -18,6 +18,6 @@ public class AddEventExecutor implements BaseExecutor {
 
     @Override
     public ResponseParameters getResponseParameters(ExecutorParameter exParam) {
-        return getResponseParametersForChainCommand(exParam);
+        return getResponseParametersForIntermediateCommand(exParam);
     }
 }

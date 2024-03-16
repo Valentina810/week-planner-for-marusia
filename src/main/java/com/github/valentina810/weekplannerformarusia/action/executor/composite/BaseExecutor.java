@@ -54,7 +54,7 @@ public interface BaseExecutor {
     /**
      * Обработка команды из цепочки + к стандартной обработке дозаписать предыдыщее событие в sessionStorage
      */
-    default ResponseParameters getResponseParametersForChainCommand(ExecutorParameter exParam) {
+    default ResponseParameters getResponseParametersForIntermediateCommand(ExecutorParameter exParam) {
         SessionStorage sessionStorage = exParam.getSessionStorage();
         Optional<PrevAction> lastPrevAction = sessionStorage.getActions().getLastPrevAction();
         sessionStorage.addPrevAction(PrevAction.builder()

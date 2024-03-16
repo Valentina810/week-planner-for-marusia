@@ -60,7 +60,7 @@ public class BaseTest {
      */
     @SneakyThrows
     protected SessionStorage getSessionStorage(Object response) {
-        SessionStorage sessionStorage = SessionStorage.builder().build();
+        SessionStorage sessionStorage = new SessionStorage();
         sessionStorage.setActionsInSessionState(getValue.apply(new JSONObject(String.valueOf(response)), "session_state"));
         return sessionStorage;
     }

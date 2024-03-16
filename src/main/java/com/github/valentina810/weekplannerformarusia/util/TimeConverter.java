@@ -19,6 +19,7 @@ public class TimeConverter {
         numbers.put("ноль", 0);
         numbers.put("один", 1);
         numbers.put("два", 2);
+        numbers.put("две", 2);
         numbers.put("три", 3);
         numbers.put("четыре", 4);
         numbers.put("пять", 5);

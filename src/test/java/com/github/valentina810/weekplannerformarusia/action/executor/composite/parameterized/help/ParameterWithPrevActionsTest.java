@@ -8,7 +8,7 @@ import lombok.ToString;
 @Getter
 @Builder
 @ToString
-public class ParameterForHelpTest {
+public class ParameterWithPrevActionsTest {
     private String testName;
     private String jsonFileSource;
     private String phrase;

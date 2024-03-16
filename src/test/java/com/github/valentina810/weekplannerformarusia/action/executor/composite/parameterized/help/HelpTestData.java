@@ -35,7 +35,7 @@ public class HelpTestData {
     static Stream<Arguments> providerHelpTest() {
 
         return Stream.of(
-                Arguments.of(ParameterForHelpTest.builder()
+                Arguments.of(ParameterWithPrevActionsTest.builder()
                         .testName("writeCommandInStateSessionActions_whenReceivedParentalCommand_thenReturnParentalCommandMessagePositive")
                         .jsonFileSource(JSON_FILE_SOURCE_WITH_PREV_ACTION)
                         .phrase("справка")
@@ -43,7 +43,7 @@ public class HelpTestData {
                         .expectedResponsePhrase("Выберите раздел: команды, добавить событие, об авторе, вернуться в главное меню")
                         .expectedActions(EXPECTED_ACTIONS)
                         .build()),
-                Arguments.of(ParameterForHelpTest.builder()
+                Arguments.of(ParameterWithPrevActionsTest.builder()
                         .testName("getNestedCommandCommands_whenNestedCommandExists_thenReturnNestedCommandMessagePositive")
                         .jsonFileSource(JSON_FILE_SOURCE_WITH_PREV_ACTION)
                         .phrase("команды")
@@ -51,7 +51,7 @@ public class HelpTestData {
                         .expectedResponsePhrase("Вот какие у меня есть команды: план на неделю, план на сегодня, план на завтра")
                         .expectedActions(EXPECTED_ACTIONS)
                         .build()),
-                Arguments.of(ParameterForHelpTest.builder()
+                Arguments.of(ParameterWithPrevActionsTest.builder()
                         .testName("getNestedCommandHowAddEvent_whenNestedCommandExists_thenReturnNestedCommandMessagePositive")
                         .jsonFileSource(JSON_FILE_SOURCE_WITH_PREV_ACTION)
                         .phrase("как добавить")
@@ -59,7 +59,7 @@ public class HelpTestData {
                         .expectedResponsePhrase("Для того чтобы добавить событие скажите: добавь событие")
                         .expectedActions(EXPECTED_ACTIONS)
                         .build()),
-                Arguments.of(ParameterForHelpTest.builder()
+                Arguments.of(ParameterWithPrevActionsTest.builder()
                         .testName("getNestedCommandAuthor_whenNestedCommandExists_thenReturnNestedCommandMessagePositive")
                         .jsonFileSource(JSON_FILE_SOURCE_WITH_PREV_ACTION)
                         .phrase("об авторе")
@@ -67,7 +67,7 @@ public class HelpTestData {
                         .expectedResponsePhrase("Имя автора Валентина")
                         .expectedActions(EXPECTED_ACTIONS)
                         .build()),
-                Arguments.of(ParameterForHelpTest.builder()
+                Arguments.of(ParameterWithPrevActionsTest.builder()
                         .testName("getNestedCommandExitMainMenu_whenNestedCommandExists_thenReturnNestedCommandMessagePositive")
                         .jsonFileSource(JSON_FILE_SOURCE_WITH_PREV_ACTION)
                         .phrase("вернуться в главное меню")
