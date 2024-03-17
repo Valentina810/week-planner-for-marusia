@@ -23,7 +23,7 @@ https://miro.com/app/board/uXjVMBAr0bg=/?share_link_id=84728232957
 - [X] Добавить обработку Help https://github.com/Valentina810/week-planner-for-marusia/pull/40
 - [X] Добавить юнит-тесты на Help https://github.com/Valentina810/week-planner-for-marusia/pull/43 🥳🥳🥳
 - [X] Добавить обработку AddEvent https://github.com/Valentina810/week-planner-for-marusia/pull/46 🤠
-- [ ] Добавить юнит-тесты на AddEvent https://github.com/Valentina810/week-planner-for-marusia/pull/48
+- [X] Добавить юнит-тесты на AddEvent https://github.com/Valentina810/week-planner-for-marusia/pull/48
 - [ ] Добавить подробное логирование и сохранение логов в файл
 
 После написания всех тестов:

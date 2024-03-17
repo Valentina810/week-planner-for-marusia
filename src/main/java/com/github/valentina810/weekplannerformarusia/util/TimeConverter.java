@@ -18,6 +18,7 @@ public class TimeConverter {
     static {
         numbers.put("ноль", 0);
         numbers.put("один", 1);
+        numbers.put("одна", 1);
         numbers.put("два", 2);
         numbers.put("две", 2);
         numbers.put("три", 3);
