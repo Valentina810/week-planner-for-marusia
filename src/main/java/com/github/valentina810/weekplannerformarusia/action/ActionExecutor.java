@@ -1,6 +1,6 @@
 package com.github.valentina810.weekplannerformarusia.action;
 
-import com.github.valentina810.weekplannerformarusia.action.executor.HandlerFactory;
+import com.github.valentina810.weekplannerformarusia.action.executor.ExecutorFactory;
 import com.github.valentina810.weekplannerformarusia.dto.Command;
 import com.github.valentina810.weekplannerformarusia.dto.ExecutorParameter;
 import com.github.valentina810.weekplannerformarusia.dto.ResponseParameters;
@@ -12,26 +12,24 @@ import com.github.valentina810.weekplannerformarusia.model.response.UserResponse
 import com.github.valentina810.weekplannerformarusia.storage.persistent.PersistentStorage;
 import com.github.valentina810.weekplannerformarusia.storage.persistent.WeekStorage;
 import com.github.valentina810.weekplannerformarusia.storage.session.Actions;
-import com.github.valentina810.weekplannerformarusia.storage.session.ActionsStorage;
 import com.github.valentina810.weekplannerformarusia.storage.session.PrevAction;
 import com.github.valentina810.weekplannerformarusia.storage.session.SessionStorage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static com.github.valentina810.weekplannerformarusia.action.TypeAction.UNKNOWN;
+import static java.util.Comparator.comparingInt;
+import static java.util.stream.Collectors.toSet;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class ActionExecutor {
-    private final HandlerFactory handlerFactory;
+    private final ExecutorFactory executorFactory;
     private final TokenLoader tokenLoader;
 
     /**
@@ -77,7 +75,7 @@ public class ActionExecutor {
 
     private ResponseParameters getResponseParameters(final UserRequest userRequest) {
 
-        SessionStorage sessionStorage = SessionStorage.builder().actionsStorage(ActionsStorage.builder().actions(Actions.builder().prevActions(new ArrayList<>()).build()).build()).build();
+        SessionStorage sessionStorage = new SessionStorage();
         sessionStorage.setActionsInSessionState(userRequest.getState().getSession());
 
         PersistentStorage persistentStorage = new PersistentStorage();
@@ -89,7 +87,7 @@ public class ActionExecutor {
         log.info("Получить тип активности на основании actions={}, phrase={}, typeAction={}",
                 actions, phrase, typeAction);
 
-        return handlerFactory.getHandler(typeAction)
+        return executorFactory.getExecutor(typeAction)
                 .getResponseParameters(ExecutorParameter.builder()
                         .typeAction(typeAction)
                         .phrase(phrase)
@@ -130,7 +128,7 @@ public class ActionExecutor {
      */
     private static TypeAction determineCommandBasedOnPrevActions(String phrase, List<PrevAction> prevActions, List<Token> tokens) {
         TypeAction operation = prevActions.stream()
-                .max(Comparator.comparingInt(PrevAction::getNumber))
+                .max(comparingInt(PrevAction::getNumber))
                 .get()
                 .getOperation();
         List<Command> commandsByPrevOperation =
@@ -141,7 +139,7 @@ public class ActionExecutor {
             return determineCommandBasedOnPhrase(phrase, tokens.stream()
                     .filter(e -> commandsByPrevOperation.stream()
                             .map(Command::getOperation)
-                            .collect(Collectors.toSet())
+                            .collect(toSet())
                             .contains(e.getTypeAction()))
                     .toList());
         }

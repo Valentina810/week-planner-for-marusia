@@ -13,15 +13,15 @@ import java.util.stream.Collectors;
 import static com.github.valentina810.weekplannerformarusia.action.TypeAction.SIMPLE;
 
 @Component
-public class HandlerFactory {
+public class ExecutorFactory {
     private final Map<TypeAction, BaseExecutor> baseExecutors;
 
-    public HandlerFactory(List<BaseExecutor> baseExecutors) {
+    public ExecutorFactory(List<BaseExecutor> baseExecutors) {
         this.baseExecutors = baseExecutors.stream()
                 .collect(Collectors.toMap(BaseExecutor::getType, Function.identity()));
     }
 
-    public BaseExecutor getHandler(TypeAction typeAction) {
+    public BaseExecutor getExecutor(TypeAction typeAction) {
         return Optional.ofNullable(baseExecutors.get(typeAction))
                 .orElseGet(() -> baseExecutors.get(SIMPLE));
     }

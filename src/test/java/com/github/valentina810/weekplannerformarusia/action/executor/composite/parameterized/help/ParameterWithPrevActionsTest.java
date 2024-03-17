@@ -1,4 +1,4 @@
-package com.github.valentina810.weekplannerformarusia.action.parameterized.help;
+package com.github.valentina810.weekplannerformarusia.action.executor.composite.parameterized.help;
 
 import com.github.valentina810.weekplannerformarusia.storage.session.Actions;
 import lombok.Builder;
@@ -8,7 +8,7 @@ import lombok.ToString;
 @Getter
 @Builder
 @ToString
-public class ParameterForHelpTest {
+public class ParameterWithPrevActionsTest {
     private String testName;
     private String jsonFileSource;
     private String phrase;

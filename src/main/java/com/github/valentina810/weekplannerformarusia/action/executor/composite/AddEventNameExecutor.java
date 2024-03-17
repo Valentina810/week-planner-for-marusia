@@ -51,11 +51,12 @@ public class AddEventNameExecutor implements BaseExecutor, TerminalExecutor {
     @Override
     public ResponseParameters getResponseParameters(ExecutorParameter exParam,
                                                     BiFunction<SessionStorage, PersistentStorage, String> getMessageInfo) {
-        ResponseParameters responseParameters = getResponseParametersForChainCommand(exParam);
+        ResponseParameters responseParameters = getResponseParametersForIntermediateCommand(exParam);
         responseParameters.setRespPhrase(responseParameters.getRespPhrase()
                 .replace("{messageInfo}",
                         getMessageInfo.apply(exParam.getSessionStorage(),
                                 exParam.getPersistentStorage())));
+        responseParameters.setSessionStorage(null);
         return responseParameters;
     }
 }

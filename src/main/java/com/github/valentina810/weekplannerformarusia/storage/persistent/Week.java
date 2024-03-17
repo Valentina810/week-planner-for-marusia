@@ -1,6 +1,7 @@
 package com.github.valentina810.weekplannerformarusia.storage.persistent;
 
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.Map;
 
 @Builder
 @ToString
+@EqualsAndHashCode
 public class Week {
     private Map<String, List<Event>> days;//ключ - дата в формате  dd-MM-yyyy
 

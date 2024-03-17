@@ -5,18 +5,22 @@ import com.github.valentina810.weekplannerformarusia.util.TimeConverter;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.TextStyle;
-import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+
+import static java.time.temporal.TemporalAdjusters.nextOrSame;
+import static java.util.Comparator.comparing;
 
 
 /**
@@ -27,6 +31,8 @@ import java.util.Optional;
  */
 
 @Slf4j
+@ToString
+@EqualsAndHashCode
 public class PersistentStorage {
 
     @Getter
@@ -67,14 +73,17 @@ public class PersistentStorage {
                 .map(WeekStorage::getWeek)
                 .map(Week::getDays)
                 .map(days -> days.get(date))
-                .orElse(new ArrayList<>());
+                .orElse(new ArrayList<>())
+                .stream()
+                .sorted(comparing(Event::getTime))
+                .toList();
     }
 
     /**
      * Возвращает события за все дни
      */
     public Map<String, List<Event>> getEventsByWeek() {
-        return weekStorage.getWeek().getDays();
+        return weekStorage != null ? weekStorage.getWeek().getDays() : null;
     }
 
     /**
@@ -99,7 +108,7 @@ public class PersistentStorage {
     private String getDateEvent(String day) {
         LocalDate nextDate;
         try {
-            nextDate = LocalDate.now().with(TemporalAdjusters.nextOrSame(parseDayOfWeek(day)));
+            nextDate = LocalDate.now().with(nextOrSame(parseDayOfWeek(day)));
         } catch (IllegalArgumentException e) {
             nextDate = LocalDate.now();
         }

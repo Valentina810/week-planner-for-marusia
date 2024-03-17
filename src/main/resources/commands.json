@@ -10,7 +10,7 @@
   {
     "operation": "TODAY_PLAN",
     "isSimple": false,
-    "messagePositive": "Ваши события на сегодня ",
+    "messagePositive": "Ваши события на сегодня {date} ",
     "messageNegative": "У вас пока нет событий на сегодня",
     "isEndSession": false,
     "actions": []
@@ -18,7 +18,7 @@
   {
     "operation": "TOMORROW_PLAN",
     "isSimple": false,
-    "messagePositive": "Ваши события на завтра ",
+    "messagePositive": "Ваши события на завтра {date} ",
     "messageNegative": "У вас пока нет событий на завтра",
     "isEndSession": false,
     "actions": []

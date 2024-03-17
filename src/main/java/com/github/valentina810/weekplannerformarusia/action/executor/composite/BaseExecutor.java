@@ -32,9 +32,10 @@ public interface BaseExecutor {
     default String getEventsForDate(Command command, LocalDate date, PersistentStorage persistentStorage) {
         String defaultMessage = command.getMessageNegative();
         if (defaultMessage != null) {
+            String soughtDate = Formatter.convertDateToString.apply(date);
             return getMessage(command.getMessagePositive(),
-                    persistentStorage.getEventsByDay(Formatter.convertDateToString.apply(date)),
-                    defaultMessage);
+                    persistentStorage.getEventsByDay(soughtDate),
+                    defaultMessage).replace("{date}", soughtDate);
         } else {
             return "";
         }
@@ -47,13 +48,13 @@ public interface BaseExecutor {
         return eventsByDay.isEmpty() ? defaultMessage :
                 messagePositive + eventsByDay.stream()
                         .map(event -> event.getTime() + " " + event.getName())
-                        .collect(Collectors.joining(" "));
+                        .collect(Collectors.joining(", "));
     }
 
     /**
      * Обработка команды из цепочки + к стандартной обработке дозаписать предыдыщее событие в sessionStorage
      */
-    default ResponseParameters getResponseParametersForChainCommand(ExecutorParameter exParam) {
+    default ResponseParameters getResponseParametersForIntermediateCommand(ExecutorParameter exParam) {
         SessionStorage sessionStorage = exParam.getSessionStorage();
         Optional<PrevAction> lastPrevAction = sessionStorage.getActions().getLastPrevAction();
         sessionStorage.addPrevAction(PrevAction.builder()

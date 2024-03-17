@@ -5,12 +5,15 @@ import com.github.valentina810.weekplannerformarusia.dto.Command;
 import com.github.valentina810.weekplannerformarusia.dto.ExecutorParameter;
 import com.github.valentina810.weekplannerformarusia.dto.ResponseParameters;
 import com.github.valentina810.weekplannerformarusia.storage.persistent.Event;
+import com.github.valentina810.weekplannerformarusia.util.Formatter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import static com.github.valentina810.weekplannerformarusia.action.TypeAction.WEEKLY_PLAN;
@@ -36,18 +39,26 @@ public class WeeklyPlanExecutor implements BaseExecutor {
     }
 
     private String getResponsePhrase(ExecutorParameter exParam, Command command) {
-        return Optional.ofNullable(exParam.getPersistentStorage().getEventsByWeek())
-                .map(events -> events.isEmpty() ? command.getMessageNegative() : getPhraseWithNotEmptyEvents(command, events))
+        return Optional.ofNullable(exParam.getPersistentStorage()
+                        .getEventsByWeek())
+                .filter(events -> !events.isEmpty())
+                .map(events -> getPhraseWithNotEmptyEvents(command, events))
                 .orElse(command.getMessageNegative());
     }
 
     private String getPhraseWithNotEmptyEvents(Command command, Map<String, List<Event>> days) {
-        String respPhrase;
-        respPhrase = command.getMessagePositive() + days.keySet().stream().map(e ->
-                        e + days.get(e).stream()
-                                .map(a -> " " + a.getName() + " " + a.getTime())
-                                .collect(Collectors.joining(",")))
-                .collect(Collectors.joining(" "));
-        return respPhrase;
+        return command.getMessagePositive() +
+                days.entrySet().stream()
+                        .collect(Collectors.toMap(
+                                dayDate -> Formatter.convertStringToDate.apply(dayDate.getKey()),
+                                dayDate -> dayDate.getValue().stream()
+                                        .sorted(Comparator.comparing(Event::getTime))
+                                        .map(event -> " " + event.getName() + " " + event.getTime())
+                                        .collect(Collectors.joining(",")),
+                                (a, b) -> a,
+                                TreeMap::new))
+                        .entrySet().stream()
+                        .map(dayDate -> Formatter.convertDateToString.apply(dayDate.getKey()) + dayDate.getValue())
+                        .collect(Collectors.joining(", "));
     }
 }

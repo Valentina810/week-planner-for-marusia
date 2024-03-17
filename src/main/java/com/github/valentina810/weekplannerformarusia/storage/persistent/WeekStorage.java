@@ -1,11 +1,15 @@
 package com.github.valentina810.weekplannerformarusia.storage.persistent;
 
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.Optional;
 
 @Builder
+@EqualsAndHashCode
+@ToString
 public class WeekStorage {
     @Getter
     private Week week;
