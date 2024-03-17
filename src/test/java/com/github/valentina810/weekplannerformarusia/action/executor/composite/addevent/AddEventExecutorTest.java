@@ -25,10 +25,7 @@ class AddEventExecutorTest extends BaseTest {
     @ParameterizedTest
     @MethodSource("com.github.valentina810.weekplannerformarusia.action.executor.composite.parameterized.addevent.AddEventData#providerIntermediateCommandAddEventTest")
     public void checkIntermediateCommandAddEvent(ParameterWithPrevActionsTest parameterWithPrevActionsTest) {
-        String request = FileReader
-                .loadStringFromFile(parameterWithPrevActionsTest.getJsonFileSource())
-                .replace("phrase", parameterWithPrevActionsTest.getPhrase())
-                .replace("prevAction", parameterWithPrevActionsTest.getPrevActions());
+        String request = getRequestFromFile(parameterWithPrevActionsTest);
         JSONObject response = getResponse.apply(request);
         JSONObject objectResponse = getObjectResponse.apply(response);
 
@@ -44,10 +41,7 @@ class AddEventExecutorTest extends BaseTest {
     @ParameterizedTest
     @MethodSource("com.github.valentina810.weekplannerformarusia.action.executor.composite.parameterized.addevent.AddEventData#providerTerminalCommandAddEventTest")
     public void checkTerminalCommandAddEvent(ParameterWithPrevActionsTest parameterWithPrevActionsTest) {
-        String request = FileReader
-                .loadStringFromFile(parameterWithPrevActionsTest.getJsonFileSource())
-                .replace("phrase", parameterWithPrevActionsTest.getPhrase())
-                .replace("prevAction", parameterWithPrevActionsTest.getPrevActions());
+        String request = getRequestFromFile(parameterWithPrevActionsTest);
         JSONObject response = getResponse.apply(request);
         JSONObject objectResponse = getObjectResponse.apply(response);
 

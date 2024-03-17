@@ -1,7 +1,6 @@
 package com.github.valentina810.weekplannerformarusia.action.executor.composite;
 
 import com.github.valentina810.weekplannerformarusia.action.executor.composite.parameterized.dayplan.ParameterForEventsForDateTest;
-import com.github.valentina810.weekplannerformarusia.util.FileReader;
 import lombok.SneakyThrows;
 import org.json.JSONObject;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -18,10 +17,7 @@ public class TodayPlanExecutorTest extends BaseTest {
     @ParameterizedTest
     @MethodSource("com.github.valentina810.weekplannerformarusia.action.executor.composite.parameterized.dayplan.EventsForDateTestData#providerTodayPlanExecutorTest")
     public void checkTodayPlan(ParameterForEventsForDateTest parameterForEventsForDateTest) {
-        String request = FileReader.loadStringFromFile(parameterForEventsForDateTest.getJsonFileSource())
-                .replace("testDate", parameterForEventsForDateTest.getDate())
-                .replace("testEvents", parameterForEventsForDateTest.getTodayEvents())
-                .replace("phrase", parameterForEventsForDateTest.getPhrase());
+        String request = getRequestFromFile(parameterForEventsForDateTest);
         JSONObject response = getResponse.apply(request);
         JSONObject objectResponse = getObjectResponse.apply(response);
 

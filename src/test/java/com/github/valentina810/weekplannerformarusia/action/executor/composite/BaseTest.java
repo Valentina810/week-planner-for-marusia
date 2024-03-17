@@ -1,9 +1,12 @@
 package com.github.valentina810.weekplannerformarusia.action.executor.composite;
 
 import com.github.valentina810.weekplannerformarusia.action.ActionExecutor;
+import com.github.valentina810.weekplannerformarusia.action.executor.composite.parameterized.dayplan.ParameterForEventsForDateTest;
+import com.github.valentina810.weekplannerformarusia.action.executor.composite.parameterized.help.ParameterWithPrevActionsTest;
 import com.github.valentina810.weekplannerformarusia.model.request.UserRequest;
 import com.github.valentina810.weekplannerformarusia.storage.persistent.PersistentStorage;
 import com.github.valentina810.weekplannerformarusia.storage.session.SessionStorage;
+import com.github.valentina810.weekplannerformarusia.util.FileReader;
 import com.google.gson.Gson;
 import lombok.SneakyThrows;
 import org.json.JSONException;
@@ -91,5 +94,25 @@ public class BaseTest {
                 .apply(getValue
                         .apply(new JSONObject(request), "state"), "user"));
         return persistentStorage;
+    }
+
+    /**
+     * Получение "тела" запроса из файла
+     */
+    protected static String getRequestFromFile(ParameterWithPrevActionsTest parameterWithPrevActionsTest) {
+        return FileReader
+                .loadStringFromFile(parameterWithPrevActionsTest.getJsonFileSource())
+                .replace("phrase", parameterWithPrevActionsTest.getPhrase())
+                .replace("prevAction", parameterWithPrevActionsTest.getPrevActions());
+    }
+
+    /**
+     * Получение "тела" запроса из файла
+     */
+    protected static String getRequestFromFile(ParameterForEventsForDateTest parameterForEventsForDateTest) {
+        return FileReader.loadStringFromFile(parameterForEventsForDateTest.getJsonFileSource())
+                .replace("testDate", parameterForEventsForDateTest.getDate())
+                .replace("testEvents", parameterForEventsForDateTest.getTodayEvents())
+                .replace("phrase", parameterForEventsForDateTest.getPhrase());
     }
 }
