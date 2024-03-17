@@ -1,16 +1,27 @@
 package com.github.valentina810.weekplannerformarusia.storage.persistent;
 
+import com.github.valentina810.weekplannerformarusia.util.Formatter;
+import com.github.valentina810.weekplannerformarusia.util.TimeConverter;
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
-import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.IntStream;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
+
+import static java.time.temporal.TemporalAdjusters.nextOrSame;
+import static java.util.Comparator.comparing;
+
 
 /**
  * Хранилище, которое хранит данные в УЗ пользователя
@@ -20,59 +31,99 @@ import java.util.stream.IntStream;
  */
 
 @Slf4j
-@Component
-@RequiredArgsConstructor
+@ToString
+@EqualsAndHashCode
 public class PersistentStorage {
 
-    //#todo тут могут храниться и другие данные, лучше сделать так, чтобы их не затирать
     @Getter
-    private Object user_state_update;
+    private WeekStorage weekStorage;
 
-    /**
-     * Возвращает user_state_update в виде объекта WeekStorage
-     */
-    public WeekStorage getWeekStorage() {
-        return new Gson().fromJson(new Gson().toJson(user_state_update), WeekStorage.class);
+    public void setWeekStorage(Week week) {
+        weekStorage = WeekStorage.builder().week(week).build();
     }
 
     /**
      * Получить из хранилища массив с данными, если он есть
      * если массива с данными нет, то записать пустой
      */
-    public void getWeekEvents(final Object object) {
+    public void setWeekStorage(Object object) {
         try {
-            JsonElement jsonElement = new Gson()
-                    .fromJson(new Gson().toJson(object), JsonElement.class);
-            Week week = new Gson()
-                    .fromJson(new Gson().toJson(jsonElement.getAsJsonObject()
-                            .getAsJsonObject("week")), Week.class);
-            if (week != null) {
-                user_state_update = WeekStorage.builder().week(week).build();
-                log.info("Получили данные о событиях на неделю из ответа");
-            } else {
-                user_state_update = generateEmptyWeeklyStorage();
-                log.info("Данные о событиях отсутствуют, записали пустую структуру");
-            }
+            JsonObject jsonObject = JsonParser.parseString(object.toString()).getAsJsonObject();
+            Optional.ofNullable(jsonObject.get("week"))
+                    .map(JsonObject.class::cast)
+                    .map(week -> new Gson().fromJson(week, Week.class))
+                    .ifPresentOrElse(
+                            this::setWeekStorage,
+                            () -> log.info("Данные о событиях отсутствуют")
+                    );
         } catch (IllegalStateException | NullPointerException e) {
-            log.info("В процессе получения данных о событиях из ответа возникла ошибка {}", e.getMessage());
-            user_state_update = generateEmptyWeeklyStorage();
-            log.info("Данные о событиях отсутствуют, записали пустую структуру");
+            log.info("В процессе получения данных о событиях из ответа возникла ошибка " + e.getMessage());
         }
     }
 
+    public WeekStorage getUser_state_update() {
+        return weekStorage;
+    }
+
     /**
-     * Заполнение хранилища пустой структурой с данными
-     *
-     * @return - объект-хранилище
+     * Возвращает события за определённый день
      */
-    private WeekStorage generateEmptyWeeklyStorage() {
-        int dayInMilliseconds = 86400000;
-        return WeekStorage.builder().week(Week.builder()
-                .days(List.of(IntStream.range(0, 7)
-                        .mapToObj(i -> {
-                            return Day.builder()
-                                    .date(new SimpleDateFormat("dd-MM-yyyy").format(System.currentTimeMillis() + (long) i * dayInMilliseconds))
-                                    .events(new ArrayList<>()).build();
-                        }).toArray(Day[]::new))).build()).build();
+    public List<Event> getEventsByDay(String date) {
+        return Optional.ofNullable(getWeekStorage())
+                .map(WeekStorage::getWeek)
+                .map(Week::getDays)
+                .map(days -> days.get(date))
+                .orElse(new ArrayList<>())
+                .stream()
+                .sorted(comparing(Event::getTime))
+                .toList();
+    }
+
+    /**
+     * Возвращает события за все дни
+     */
+    public Map<String, List<Event>> getEventsByWeek() {
+        return weekStorage != null ? weekStorage.getWeek().getDays() : null;
+    }
+
+    /**
+     * Добавление события в коллекцию
+     */
+    public String addEvent(String day, String time, String eventName) {
+        if (weekStorage == null) {
+            weekStorage = WeekStorage.builder().build();
+        }
+        String eventDate = getDateEvent(day);
+        String eventTime = TimeConverter.getTime(time);
+        weekStorage.addEvent(eventDate, Event.builder().time(eventTime).name(eventName).build());
+        return eventDate + " " + eventTime + " " + eventName;
+    }
+
+    /**
+     * Получить дату ближаишего дня недели day
+     *
+     * @param day - день недели
+     * @return - дата в формате dd-MM-yyyy
+     */
+    private String getDateEvent(String day) {
+        LocalDate nextDate;
+        try {
+            nextDate = LocalDate.now().with(nextOrSame(parseDayOfWeek(day)));
+        } catch (IllegalArgumentException e) {
+            nextDate = LocalDate.now();
+        }
+        return Formatter.convertDateToString.apply(nextDate);
+    }
+
+    /**
+     * Метод для парсинга названия дня недели на русском
+     */
+    private static DayOfWeek parseDayOfWeek(String dayOfWeek) {
+        for (DayOfWeek dow : DayOfWeek.values()) {
+            if (dow.getDisplayName(TextStyle.FULL, Locale.forLanguageTag("ru")).equalsIgnoreCase(dayOfWeek)) {
+                return dow;
+            }
+        }
+        throw new IllegalArgumentException("Недопустимое название дня недели: " + dayOfWeek);
     }
 }

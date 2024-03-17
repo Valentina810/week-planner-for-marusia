@@ -1,26 +1,41 @@
 package com.github.valentina810.weekplannerformarusia.model.request;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.github.valentina810.weekplannerformarusia.model.response.Session;
+import com.github.valentina810.weekplannerformarusia.util.JSONObjectSerializer;
 import com.google.gson.Gson;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.springframework.stereotype.Component;
 
 /**
  * Сущность, которая представляет запрос, который пришел от пользователя
  */
 @Slf4j
 @Getter
-@Component
 @RequiredArgsConstructor
 public class UserRequest {
     private Request request;
     private Session session;
     private State state;
     private String version;
+
+    @Override
+    public String toString() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        SimpleModule module = new SimpleModule();
+        module.addSerializer(JSONObject.class, new JSONObjectSerializer());
+        objectMapper.registerModule(module);
+        try {
+            return objectMapper.writeValueAsString(this);
+        } catch (Exception e) {
+            log.error("Возникла ошибка при попытке преобразовать UserRequest в строку json " + e.getMessage());
+            return "{}";
+        }
+    }
 
     public void fillUserRequest(Object object) {
         try {

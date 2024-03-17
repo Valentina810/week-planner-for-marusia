@@ -1,0 +1,125 @@
+[
+  {
+    "operation": "WEEKLY_PLAN",
+    "isSimple": false,
+    "messagePositive": "Ваши события ",
+    "messageNegative": "У вас пока нет событий на этой неделе",
+    "isEndSession": false,
+    "actions": []
+  },
+  {
+    "operation": "TODAY_PLAN",
+    "isSimple": false,
+    "messagePositive": "Ваши события на сегодня {date} ",
+    "messageNegative": "У вас пока нет событий на сегодня",
+    "isEndSession": false,
+    "actions": []
+  },
+  {
+    "operation": "TOMORROW_PLAN",
+    "isSimple": false,
+    "messagePositive": "Ваши события на завтра {date} ",
+    "messageNegative": "У вас пока нет событий на завтра",
+    "isEndSession": false,
+    "actions": []
+  },
+  {
+    "operation": "ADD_EVENT",
+    "isSimple": false,
+    "messagePositive": "Назовите день, например, среда ",
+    "messageNegative": "Не удалось добавить событие",
+    "isEndSession": false,
+    "actions": [
+      {
+        "operation": "ADD_DAY",
+        "isSimple": false,
+        "messagePositive": "Назовите время, например, 12 часов 30 минут ",
+        "messageNegative": "Не удалось добавить событие",
+        "prevOperation": "ADD_EVENT",
+        "isEndSession": false,
+        "isTerminal": false,
+        "actions": [
+          {
+            "operation": "ADD_TIME",
+            "isSimple": false,
+            "prevOperation": "ADD_DAY",
+            "messagePositive": "Назовите название события ",
+            "messageNegative": "Не удалось добавить событие",
+            "isEndSession": false,
+            "isTerminal": false,
+            "actions": [
+              {
+                "operation": "ADD_NAME",
+                "isSimple": false,
+                "prevOperation": "ADD_TIME",
+                "messagePositive": "Событие успешно добавлено на {messageInfo}! Выполнен выход в главное меню ",
+                "messageNegative": "Не удалось добавить событие",
+                "isEndSession": false,
+                "isTerminal": true,
+                "actions": []
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "operation": "HELP",
+    "isSimple": false,
+    "messagePositive": "Выберите раздел: команды, добавить событие, об авторе, вернуться в главное меню",
+    "isEndSession": false,
+    "actions": [
+      {
+        "operation": "COMMANDS",
+        "isSimple": true,
+        "prevOperation": "HELP",
+        "messagePositive": "Вот какие у меня есть команды: план на неделю, план на сегодня, план на завтра",
+        "isEndSession": false,
+        "isTerminal": false,
+        "actions": []
+      },
+      {
+        "operation": "HOW_ADD_EVENT",
+        "isSimple": true,
+        "prevOperation": "HELP",
+        "messagePositive": "Для того чтобы добавить событие скажите: добавь событие",
+        "isEndSession": false,
+        "isTerminal": false,
+        "actions": []
+      },
+      {
+        "operation": "AUTHOR",
+        "isSimple": true,
+        "prevOperation": "HELP",
+        "messagePositive": "Имя автора Валентина",
+        "isEndSession": false,
+        "isTerminal": false,
+        "actions": []
+      },
+      {
+        "operation": "EXIT_MAIN_MENU",
+        "isSimple": false,
+        "prevOperation": "HELP",
+        "messagePositive": "Выполнен выход в главное меню",
+        "isEndSession": false,
+        "isTerminal": false,
+        "actions": []
+      }
+    ]
+  },
+  {
+    "operation": "EXIT",
+    "isSimple": false,
+    "messagePositive": "До свидания!",
+    "isEndSession": true,
+    "actions": []
+  },
+  {
+    "operation": "UNKNOWN",
+    "isSimple": true,
+    "messagePositive": "Получена неизвестная команда! Используйте команду справка для того чтобы узнать мои команды",
+    "isEndSession": false,
+    "actions": []
+  }
+]

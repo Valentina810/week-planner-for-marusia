@@ -14,9 +14,7 @@
     "type": "SimpleUtterance",
     "nlu": {
       "tokens": [
-        "план",
-        "на",
-        "сегодня"
+        "phrase"
       ],
       "entities": []
     }
@@ -38,40 +36,7 @@
   },
   "state": {
     "session": {},
-    "user": {
-      "week": {
-        "days": [
-          {
-            "date": "31-10-2023",
-            "events": []
-          },
-          {
-            "date": "01-11-2023",
-            "events": []
-          },
-          {
-            "date": "todayDate",
-            "events": []
-          },
-          {
-            "date": "03-11-2023",
-            "events": []
-          },
-          {
-            "date": "04-11-2023",
-            "events": []
-          },
-          {
-            "date": "05-11-2023",
-            "events": []
-          },
-          {
-            "date": "06-11-2023",
-            "events": []
-          }
-        ]
-      }
-    }
+    "user": {}
   },
   "version": "1.0"
 }
