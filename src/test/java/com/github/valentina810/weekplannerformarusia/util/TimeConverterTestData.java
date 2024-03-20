@@ -39,6 +39,7 @@ public class TimeConverterTestData {
                 Arguments.of("двадцать три часа пятьдесят минут", "23:50"),
                 Arguments.of("двадцать три часа пятьдесят три минуты", "23:53"),
                 Arguments.of("ноль часов", "00:00"),
+                Arguments.of("ноль", "00:00"),
                 Arguments.of("ноль часов пять", "00:05"),
                 Arguments.of("ноль часов ноль минут", "00:00"),
                 Arguments.of("ноль ноль часов ноль ноль минут", "00:00"),

@@ -1,12 +1,10 @@
 package com.github.valentina810.weekplannerformarusia.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.valentina810.weekplannerformarusia.model.response.Response;
-import com.github.valentina810.weekplannerformarusia.model.response.Session;
+import com.github.valentina810.weekplannerformarusia.BaseGeneratorUserResponse;
+import com.github.valentina810.weekplannerformarusia.model.request.UserRequest;
 import com.github.valentina810.weekplannerformarusia.model.response.UserResponse;
 import com.github.valentina810.weekplannerformarusia.service.WeekPlannerService;
-import com.github.valentina810.weekplannerformarusia.storage.persistent.PersistentStorage;
-import com.github.valentina810.weekplannerformarusia.storage.session.SessionStorage;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = WeekPlannerController.class)
-class WeekPlannerControllerTest {
+class WeekPlannerControllerTest implements BaseGeneratorUserResponse {
 
     @MockBean
     private WeekPlannerService weekPlannerService;
@@ -66,7 +64,7 @@ class WeekPlannerControllerTest {
         when(weekPlannerService.getResponse(any())).thenReturn(responseEntity);
 
         mvc.perform(post(URL_WEBHOOK)
-                        .content(mapper.writeValueAsString(userResponse))
+                        .content(mapper.writeValueAsString(new UserRequest()))
                         .headers(createJsonHeaders()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.response.text", is(userResponse.getResponse().getText())))
@@ -89,7 +87,7 @@ class WeekPlannerControllerTest {
         when(weekPlannerService.getResponse(any())).thenReturn(responseEntity);
 
         mvc.perform(post(URL_WEBHOOK)
-                        .content(ERROR_BODY)
+                        .content(mapper.writeValueAsString(new UserRequest()))
                         .headers(createJsonHeaders()))
                 .andExpect(status().isInternalServerError())
                 .andExpect(jsonPath("$.timestamp", notNullValue()))
@@ -98,23 +96,5 @@ class WeekPlannerControllerTest {
                 .andExpect(jsonPath("$.path", notNullValue()));
 
         verify(weekPlannerService, times(1)).getResponse(any());
-    }
-
-    private UserResponse createUserResponse() {
-        UserResponse userResponse = new UserResponse();
-        userResponse.setResponse(Response.builder()
-                .text("text")
-                .tts("tts")
-                .end_session(false)
-                .build());
-        userResponse.setSession(Session.builder()
-                .user_id("1")
-                .session_id("1")
-                .message_id(1)
-                .build());
-        userResponse.setVersion("1.0");
-        userResponse.setUser_state_update(new PersistentStorage());
-        userResponse.setSession_state(new SessionStorage());
-        return userResponse;
     }
 }
