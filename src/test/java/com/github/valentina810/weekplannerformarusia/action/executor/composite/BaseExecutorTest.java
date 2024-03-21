@@ -8,19 +8,29 @@ import com.github.valentina810.weekplannerformarusia.storage.persistent.Event;
 import com.github.valentina810.weekplannerformarusia.storage.persistent.PersistentStorage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.openMocks;
 
+@ExtendWith(MockitoExtension.class)
 public class BaseExecutorTest {
 
-    private static final String DATE_FORMATTED = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+    private static final LocalDate date = LocalDate.now();
+
+    private static final String DATE_FORMATTED = date.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
 
     private BaseExecutor baseExecutor;
 
@@ -30,10 +40,8 @@ public class BaseExecutorTest {
     @Mock
     private PersistentStorage mockPersistentStorage;
 
-
     @BeforeEach
     void setUp() {
-        openMocks(this);
         baseExecutor = new BaseExecutor() {
             @Override
             public TypeAction getType() {
@@ -48,8 +56,7 @@ public class BaseExecutorTest {
     }
 
     @Test
-    void getEventsForDate_whenNotEmptyEvents_thenReturnPositiveMessageAndEvents() {
-        LocalDate date = LocalDate.now();
+    void getEventsForDate_whenEventsInTheList_thenReturnPositiveMessageAndListOfEvents() {
         when(mockCommand.getMessageNegative()).thenReturn("У вас пока нет событий на {date}");
         when(mockCommand.getMessagePositive()).thenReturn("Ваши события на {date}: ");
         when(mockPersistentStorage.getEventsByDay(DATE_FORMATTED))
@@ -61,26 +68,49 @@ public class BaseExecutorTest {
         String result = baseExecutor.getEventsForDate(mockCommand, date, mockPersistentStorage);
 
         assertEquals("Ваши события на " + DATE_FORMATTED + ": 10:00 Прогулка", result);
+        checkSuccessfulCallMethods();
+    }
+
+    private void checkSuccessfulCallMethods() {
+        InOrder inOrder = inOrder(mockCommand, mockPersistentStorage);
+        inOrder.verify(mockCommand, times(1)).getMessageNegative();
+        inOrder.verify(mockCommand, times(1)).getMessagePositive();
+        inOrder.verify(mockPersistentStorage, times(1)).getEventsByDay(DATE_FORMATTED);
+        verifyNoMoreInteractions(mockPersistentStorage, mockCommand);
     }
 
     @Test
-    void getEventsForDate_whenEmptyEvents_thenReturnDefaultMessage() {
-        LocalDate date = LocalDate.now();
+    void getEventsForDate_whenNoEventsInWeekStorage_thenReturnNegativeMessage() {
         when(mockCommand.getMessageNegative()).thenReturn("У вас пока нет событий на {date}");
         when(mockPersistentStorage.getEventsByDay(DATE_FORMATTED)).thenReturn(Collections.emptyList());
 
         String result = baseExecutor.getEventsForDate(mockCommand, date, mockPersistentStorage);
 
         assertEquals("У вас пока нет событий на " + DATE_FORMATTED, result);
+        checkSuccessfulCallMethods();
     }
 
     @Test
-    void getEventsForDate_whenNullDefaultMessage_thenReturnEmptyString() {
-        LocalDate date = LocalDate.now();
+    void getEventsForDate_whenCommandIsNotSetNegativeMessage_theReturnEmptyString() {
         when(mockCommand.getMessageNegative()).thenReturn(null);
 
         String result = baseExecutor.getEventsForDate(mockCommand, date, mockPersistentStorage);
 
         assertEquals("", result);
+        checkUnsuccessfulCallMethods();
+    }
+
+    private void checkUnsuccessfulCallMethods() {
+        verify(mockCommand, times(1)).getMessageNegative();
+        verify(mockCommand, never()).getMessagePositive();
+        verify(mockPersistentStorage, never()).getEventsByDay(DATE_FORMATTED);
+    }
+
+    @Test
+    void getEventsForDate_whenWeekStorageIsEmpty_returnEmptyString() {
+        String result = baseExecutor.getEventsForDate(mockCommand, date, null);
+
+        assertEquals("", result);
+        checkUnsuccessfulCallMethods();
     }
 }
