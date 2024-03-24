@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -42,10 +43,11 @@ class WeekPlannerServiceImplTest implements BaseGeneratorUserResponse {
         when(actionExecutor.createUserResponse(any())).thenReturn(createUserResponse());
         ResponseEntity<?> response = weekPlannerService.getResponse(new UserRequest());
 
-        assertTrue(response.getStatusCode().is2xxSuccessful());
-        assertEquals(HEADER_KEY, response.getHeaders().get(HEADER_VALUE).get(0));
-        assertEquals(BASE_USER_RESPONSE, response.getBody().toString());
-
+        assertAll(
+                () -> assertTrue(response.getStatusCode().is2xxSuccessful()),
+                () -> assertEquals(HEADER_KEY, response.getHeaders().get(HEADER_VALUE).get(0)),
+                () -> assertEquals(BASE_USER_RESPONSE, response.getBody().toString())
+        );
         verify(actionExecutor, times(1)).createUserResponse(any());
     }
 }

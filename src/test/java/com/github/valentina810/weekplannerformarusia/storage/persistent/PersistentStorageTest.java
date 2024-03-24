@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -53,8 +54,10 @@ public class PersistentStorageTest {
 
         persistentStorage.setWeekStorage(json);
 
-        assertNotNull(persistentStorage.getWeekStorage());
-        assertEquals(week, persistentStorage.getWeekStorage().getWeek());
+        assertAll(
+                () -> assertNotNull(persistentStorage.getWeekStorage()),
+                () -> assertEquals(week, persistentStorage.getWeekStorage().getWeek())
+        );
     }
 
     @Test
@@ -90,8 +93,10 @@ public class PersistentStorageTest {
 
         Map<String, List<Event>> eventsByWeek = persistentStorage.getEventsByWeek();
 
-        assertTrue(eventsByWeek.containsKey(EVENT_DATE));
-        assertEquals(event, eventsByWeek.get(EVENT_DATE).get(0));
+        assertAll(
+                () -> assertTrue(eventsByWeek.containsKey(EVENT_DATE)),
+                () -> assertEquals(event, eventsByWeek.get(EVENT_DATE).get(0))
+        );
 
     }
 
@@ -102,23 +107,29 @@ public class PersistentStorageTest {
 
         Map<String, List<Event>> eventsByWeek = persistentStorage.getEventsByWeek();
 
-        assertTrue(eventsByWeek.containsKey(EVENT_DATE));
-        assertEquals(event, eventsByWeek.get(EVENT_DATE).get(0));
+        assertAll(
+                () -> assertTrue(eventsByWeek.containsKey(EVENT_DATE)),
+                () -> assertEquals(event, eventsByWeek.get(EVENT_DATE).get(0))
+        );
     }
 
     @Test
     void setWeekStorage_whenInvalidJson_thenNotSetWeekStorage() {
         String invalidJson = "{invalidJson}";
 
-        assertThrows(JsonSyntaxException.class, () -> persistentStorage.setWeekStorage(invalidJson));
-        assertNull(persistentStorage.getWeekStorage());
+        assertAll(
+                () -> assertThrows(JsonSyntaxException.class, () -> persistentStorage.setWeekStorage(invalidJson)),
+                () -> assertNull(persistentStorage.getWeekStorage())
+        );
     }
 
     @Test
     void addEvent_whenWeekStorageNotInitialization_thenInitializeWeekStorageAndAddEvent() {
         String event = persistentStorage.addEvent(EVENT_DATE, EVENT_TIME_FOR_STRING, EVENT_NAME);
 
-        assertEquals(EVENT_DATE + " " + EVENT_TIME_FOR_TIME + " " + EVENT_NAME, event);
-        assertNotNull(persistentStorage);
+        assertAll(
+                () -> assertEquals(EVENT_DATE + " " + EVENT_TIME_FOR_TIME + " " + EVENT_NAME, event),
+                () -> assertNotNull(persistentStorage)
+        );
     }
 }
