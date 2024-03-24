@@ -9,6 +9,7 @@ import com.github.valentina810.weekplannerformarusia.util.Formatter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -17,8 +18,8 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import static com.github.valentina810.weekplannerformarusia.action.TypeAction.WEEKLY_PLAN;
-import static java.util.Comparator.comparing;
 
+import static java.util.Comparator.comparing;
 
 @Component
 @RequiredArgsConstructor
