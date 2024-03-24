@@ -35,7 +35,9 @@ public class ActionExecutor {
     /**
      * Формирует ответ для пользователя в объекте userResponse
      */
-    public UserResponse createUserResponse(UserRequest userRequest) {
+    public UserResponse createUserResponse(Object object) {
+        UserRequest userRequest = new UserRequest();
+        userRequest.fillUserRequest(object);
         log.info("Получен запрос {}", userRequest);
 
         ResponseParameters respParam = getResponseParameters(userRequest);
