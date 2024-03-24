@@ -3,7 +3,6 @@ package com.github.valentina810.weekplannerformarusia.action.executor.composite;
 import com.github.valentina810.weekplannerformarusia.action.ActionExecutor;
 import com.github.valentina810.weekplannerformarusia.action.executor.composite.parameterized.dayplan.ParameterForEventsForDateTest;
 import com.github.valentina810.weekplannerformarusia.action.executor.composite.parameterized.help.ParameterWithPrevActionsTest;
-import com.github.valentina810.weekplannerformarusia.model.request.UserRequest;
 import com.github.valentina810.weekplannerformarusia.storage.persistent.PersistentStorage;
 import com.github.valentina810.weekplannerformarusia.storage.session.SessionStorage;
 import com.github.valentina810.weekplannerformarusia.util.FileReader;
@@ -29,9 +28,7 @@ public class BaseTest {
     protected Function<String, JSONObject> getResponse = (request) ->
     {
         try {
-            UserRequest userRequest = new UserRequest();
-            userRequest.fillUserRequest(new Gson().fromJson(request, Object.class));
-            return new JSONObject(new Gson().toJson(actionExecutor.createUserResponse(userRequest)));
+            return new JSONObject(new Gson().toJson(actionExecutor.createUserResponse(new Gson().fromJson(request, Object.class))));
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }

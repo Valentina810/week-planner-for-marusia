@@ -26,6 +26,11 @@ public class WeeklyPlanTestData {
                         .expectedResult("Ваши события 31-10-2023 Лекция 12:00, 03-11-2023 Ужин в ресторане 18:00")
                         .build()),
                 Arguments.of(ParameterForWeeklyPlanTest.builder()
+                        .testName("getWeeklyPlan_whenWeeklyPlanContainsTwoEventsOnOneDayAndDuplicateDate_thenReturnLastDateEvents")
+                        .jsonFileSource("action/weeklyplan/WeeklyPlanContainsTwoEventsOnOneDayAndDuplicateDate.json")
+                        .expectedResult("Ваши события 31-10-2023 Ужин в ресторане 18:00")
+                        .build()),
+                Arguments.of(ParameterForWeeklyPlanTest.builder()
                         .testName("getWeeklyPlan_whenWeeklyPlanContainsTwoEventsTwoDays_thenReturnAllEvent")
                         .jsonFileSource("action/weeklyplan/WeeklyPlanContainsTwoEventsTwoDays.json")
                         .expectedResult("Ваши события 31-10-2023 Лекция 12:00, Свидание 16:00, 04-11-2023 Велотренировка 10:00, Поход за покупками 20:00")

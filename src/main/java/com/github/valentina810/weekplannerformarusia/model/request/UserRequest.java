@@ -51,7 +51,7 @@ public class UserRequest {
                     .build();
             version = jsonObject.getString("version");
         } catch (JSONException e) {
-            log.info("Возникла ошибка {} при получении атрибутов из входящего запроса", e.getMessage());
+            throw new RuntimeException("Возникла ошибка при получении атрибутов из входящего запроса: " + e.getMessage());
         }
     }
 }

@@ -9,7 +9,8 @@ import com.github.valentina810.weekplannerformarusia.util.Formatter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.Comparator;
+
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 
 import static com.github.valentina810.weekplannerformarusia.action.TypeAction.WEEKLY_PLAN;
 
+import static java.util.Comparator.comparing;
 
 @Component
 @RequiredArgsConstructor
@@ -47,18 +49,21 @@ public class WeeklyPlanExecutor implements BaseExecutor {
     }
 
     private String getPhraseWithNotEmptyEvents(Command command, Map<String, List<Event>> days) {
-        return command.getMessagePositive() +
+        TreeMap<LocalDate, String> sortedDays = new TreeMap<>(
                 days.entrySet().stream()
                         .collect(Collectors.toMap(
                                 dayDate -> Formatter.convertStringToDate.apply(dayDate.getKey()),
                                 dayDate -> dayDate.getValue().stream()
-                                        .sorted(Comparator.comparing(Event::getTime))
+                                        .sorted(comparing(Event::getTime))
                                         .map(event -> " " + event.getName() + " " + event.getTime())
-                                        .collect(Collectors.joining(",")),
-                                (a, b) -> a,
-                                TreeMap::new))
-                        .entrySet().stream()
-                        .map(dayDate -> Formatter.convertDateToString.apply(dayDate.getKey()) + dayDate.getValue())
-                        .collect(Collectors.joining(", "));
+                                        .collect(Collectors.joining(","))
+                        ))
+        );
+
+        String eventsString = sortedDays.entrySet().stream()
+                .map(dayDate -> Formatter.convertDateToString.apply(dayDate.getKey()) + dayDate.getValue())
+                .collect(Collectors.joining(", "));
+
+        return command.getMessagePositive() + eventsString;
     }
 }

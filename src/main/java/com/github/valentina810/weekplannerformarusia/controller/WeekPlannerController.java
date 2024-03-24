@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,10 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @ResponseStatus(HttpStatus.OK)
+@RequestMapping(path = "/webhook")
 public class WeekPlannerController {
     private final WeekPlannerService weekPlannerService;
 
-    @PostMapping("/webhook")
+    @PostMapping
     @CrossOrigin(origins = {"https://skill-debugger.marusia.mail.ru"})
     public ResponseEntity<?> createResponse(@RequestBody Object object) {
         log.info("---------------------------------------------------");
