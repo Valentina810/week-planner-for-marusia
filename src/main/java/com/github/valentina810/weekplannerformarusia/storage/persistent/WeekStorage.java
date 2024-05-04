@@ -19,4 +19,8 @@ public class WeekStorage {
                 .orElseGet(() -> Week.builder().build());
         week.addEvent(date, event);
     }
+
+    public void removeObsoleteEvents() {
+        week.removeObsoleteEvents();
+    }
 }

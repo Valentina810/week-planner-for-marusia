@@ -12,15 +12,16 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
+import static java.time.format.TextStyle.FULL;
 import static java.time.temporal.TemporalAdjusters.nextOrSame;
+import static java.util.Arrays.stream;
 import static java.util.Comparator.comparing;
+import static java.util.Locale.forLanguageTag;
 
 
 /**
@@ -119,11 +120,17 @@ public class PersistentStorage {
      * Метод для парсинга названия дня недели на русском
      */
     private static DayOfWeek parseDayOfWeek(String dayOfWeek) {
-        for (DayOfWeek dow : DayOfWeek.values()) {
-            if (dow.getDisplayName(TextStyle.FULL, Locale.forLanguageTag("ru")).equalsIgnoreCase(dayOfWeek)) {
-                return dow;
-            }
-        }
-        throw new IllegalArgumentException("Недопустимое название дня недели: " + dayOfWeek);
+        return stream(DayOfWeek.values())
+                .filter(dow -> dow.getDisplayName(FULL, forLanguageTag("ru"))
+                        .equalsIgnoreCase(dayOfWeek))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Недопустимое название дня недели: " + dayOfWeek));
+    }
+
+    /**
+     * Удалить из храниища все события, с датой, менее текущей
+     */
+    public void removeObsoleteEvents() {
+        weekStorage.removeObsoleteEvents();
     }
 }
