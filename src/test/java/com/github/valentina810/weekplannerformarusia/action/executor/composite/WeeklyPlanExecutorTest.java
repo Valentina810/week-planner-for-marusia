@@ -29,4 +29,19 @@ public class WeeklyPlanExecutorTest extends BaseTest {
                 () -> assertNull(getValue.apply(response, "session_state"))
         );
     }
+
+    @SneakyThrows
+    @ParameterizedTest
+    @MethodSource("com.github.valentina810.weekplannerformarusia.action.executor.composite.parameterized.weeklyplan.WeeklyPlanTestData#providerWeeklyPlanExecutorWithMessageId0Test")
+    public void checkWeeklyPlanWithMessageId0(ParameterForWeeklyPlanTest parameterForWeeklyPlanTest) {
+        String request = parameterForWeeklyPlanTest.getJsonFileSource();
+        JSONObject response = getResponse.apply(request);
+        JSONObject objectResponse = getObjectResponse.apply(response);
+
+        assertAll(
+                () -> assertEquals(parameterForWeeklyPlanTest.getExpectedResult(), objectResponse.getString("text")),
+                () -> assertFalse(objectResponse.getBoolean("end_session")),
+                () -> assertNull(getValue.apply(response, "session_state"))
+        );
+    }
 }
