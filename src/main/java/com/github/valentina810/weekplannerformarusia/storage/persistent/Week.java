@@ -1,13 +1,16 @@
 package com.github.valentina810.weekplannerformarusia.storage.persistent;
 
+import com.github.valentina810.weekplannerformarusia.util.Formatter;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Builder
 @ToString
@@ -34,5 +37,12 @@ public class Week {
             v.add(event);
             return v;
         });
+    }
+
+    public void removeObsoleteEvents() {
+        days = days.entrySet().stream()
+                .filter(entry -> Formatter.convertStringToDate
+                        .apply(entry.getKey()).isAfter(LocalDate.now().minusDays(1)))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 }

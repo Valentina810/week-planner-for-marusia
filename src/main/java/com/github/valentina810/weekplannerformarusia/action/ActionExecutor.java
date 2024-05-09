@@ -82,6 +82,9 @@ public class ActionExecutor {
 
         PersistentStorage persistentStorage = new PersistentStorage();
         persistentStorage.setWeekStorage(userRequest.getState().getUser());
+        if (userRequest.getSession().getMessage_id() == 0) {
+            persistentStorage.removeObsoleteEvents();
+        }
 
         Actions actions = sessionStorage.getActions();
         String phrase = userRequest.getRequest().getCommand();
