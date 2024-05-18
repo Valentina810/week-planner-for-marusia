@@ -104,6 +104,16 @@ public class WeeklyPlanTestData {
                         .testName("getWeeklyPlan_whenWeeklyPlanIsEmpty_thenReturnTheEmptyWeeklyPlan")
                         .jsonFileSource(getJsonBody(EVENTS_EMPTY))
                         .expectedResult("У вас пока нет событий на этой неделе")
+                        .build()),
+                Arguments.of(ParameterForWeeklyPlanTest.builder()
+                        .testName("getWeeklyPlan_whenWeekIsEmpty_thenReturnTheEmptyWeeklyPlan")
+                        .jsonFileSource(FileReader.loadStringFromFile("action/weeklyplan/WeeklyPlanWithMessageId0WithoutWeek.json"))
+                        .expectedResult("У вас пока нет событий на этой неделе")
+                        .build()),
+                Arguments.of(ParameterForWeeklyPlanTest.builder()
+                        .testName("getWeeklyPlan_whenDaysIsEmpty_thenReturnTheEmptyWeeklyPlan")
+                        .jsonFileSource(FileReader.loadStringFromFile("action/weeklyplan/WeeklyPlanWithMessageId0WithoutDays.json"))
+                        .expectedResult("У вас пока нет событий на этой неделе")
                         .build()));
     }
 

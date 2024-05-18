@@ -131,6 +131,8 @@ public class PersistentStorage {
      * Удалить из храниища все события, с датой, менее текущей
      */
     public void removeObsoleteEvents() {
-        weekStorage.removeObsoleteEvents();
+        if (weekStorage != null) {
+            weekStorage.removeObsoleteEvents();
+        }
     }
 }

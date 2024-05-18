@@ -21,6 +21,8 @@ public class WeekStorage {
     }
 
     public void removeObsoleteEvents() {
-        week.removeObsoleteEvents();
+        if (week != null) {
+            week.removeObsoleteEvents();
+        }
     }
 }
