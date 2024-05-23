@@ -32,10 +32,9 @@ public class WeeklyPlanExecutorTest extends BaseTest {
 
     @SneakyThrows
     @ParameterizedTest
-    @MethodSource("com.github.valentina810.weekplannerformarusia.action.executor.composite.parameterized.weeklyplan.WeeklyPlanTestData#providerWeeklyPlanExecutorWithMessageId0Test")
-    public void checkWeeklyPlanWithMessageId0(ParameterForWeeklyPlanTest parameterForWeeklyPlanTest) {
-        String request = parameterForWeeklyPlanTest.getJsonFileSource();
-        JSONObject response = getResponse.apply(request);
+    @MethodSource("com.github.valentina810.weekplannerformarusia.action.executor.composite.parameterized.weeklyplan.WeeklyPlanTestData#providerDeletionOfObsoleteEventsInTheWeeklyPlanTest")
+    public void checkTheDeletionOfObsoleteEventsInTheWeeklyPlan(ParameterForWeeklyPlanTest parameterForWeeklyPlanTest) {
+        JSONObject response = getResponse.apply(parameterForWeeklyPlanTest.getJsonFileSource());
         JSONObject objectResponse = getObjectResponse.apply(response);
 
         assertAll(

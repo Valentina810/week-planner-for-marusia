@@ -38,13 +38,8 @@
   },
   "state": {
     "session": {},
-    "user": {
-      "week": {
-        "days": {
-          events
-        }
-      }
-    }
+    "user":
+    week
   },
   "version": "1.0"
 }
