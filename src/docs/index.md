@@ -101,6 +101,3 @@
 ### Команда "Добавь событие"
 При выборе данной команды запускается цепочка команд-запросов для получения необходимых данных для добавления события:
 [cхема](https://github.com/Valentina810/week-planner-for-marusia/blob/main/src/docs/picture/add_event.png)
-
-
-
