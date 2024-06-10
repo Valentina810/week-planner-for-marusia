@@ -25,7 +25,7 @@ https://miro.com/app/board/uXjVMBAr0bg=/?share_link_id=84728232957
 - [X] Добавить юнит-тесты на AddEvent https://github.com/Valentina810/week-planner-for-marusia/pull/48
 - [X] Добавить подробное логирование и сохранение логов в файл https://github.com/Valentina810/week-planner-for-marusia/pull/56
 
-После написания всех тестов:
+После написания всех тестов :
 
 - [ ] При получении неизвестной команды озвучивать список основных команд, если находимся внутри пункта - проговорить какого и как из него выйти
 - [X] При первом обращении к навыку (session.new: true и session.message_id: 0) выполнять обновление расписания: все ключи с прошедшими датами удалить https://github.com/Valentina810/week-planner-for-marusia/pull/54
