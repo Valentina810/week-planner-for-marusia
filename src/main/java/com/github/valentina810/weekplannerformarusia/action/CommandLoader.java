@@ -24,7 +24,7 @@ public class CommandLoader {
     @PostConstruct
     public void loadCommands() {
         log.info("Загрузка комманд из файла commands.json");
-        loadCommands = JsonFileReader.readJsonArrayFromFile("src/main/resources/commands.json").asList()
+        loadCommands = JsonFileReader.readJsonArrayFromFile("commands.json").asList()
                 .stream()
                 .map(json -> new Gson().fromJson(new Gson().toJson(json), Command.class))
                 .collect(Collectors.toMap(Command::getOperation, Function.identity()));
