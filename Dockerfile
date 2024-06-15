@@ -8,5 +8,5 @@ WORKDIR /app
 COPY --from=builder /app/target/*.jar /app/*.jar
 COPY tokens.json /app
 COPY commands.json /app
-EXPOSE 8080
+EXPOSE 443
 ENTRYPOINT ["java", "-jar", "/app/*.jar"]
