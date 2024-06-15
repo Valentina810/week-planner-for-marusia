@@ -1,0 +1,5 @@
+server:
+  port: 443
+  ssl:
+    certificate: classpath:keypair/searchyourbestjob-com.crt
+    certificate-private-key: classpath:keypair/searchyourbestjob-com.key
