@@ -1,0 +1,11 @@
+@startuml
+participant ADD_EVENT as Foo
+participant ADD_DAY as Foo1
+participant ADD_TIME       as Foo2
+participant ADD_NAME    as Foo3
+entity      user.week      as Foo4
+Foo -> Foo1 : Назовите день, например, среда
+Foo1 -> Foo2 : Назовите время, например, 12 часов 30 минут
+Foo2 -> Foo3 : Назовите название события
+Foo3 -> Foo4 : Событие успешно добавлено на <дату>! Выполнен выход в главное меню
+@enduml

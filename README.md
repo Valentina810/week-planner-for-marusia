@@ -1,6 +1,6 @@
-# Схема диалога
+# Планировщик недели
 
-https://miro.com/app/board/uXjVMBAr0bg=/?share_link_id=84728232957
+[Документация](https://github.com/Valentina810/week-planner-for-marusia/blob/main/src/docs/index.md)
 
 <img width="1041" alt="Снимок экрана 2023-10-10 в 21 29 15" src="https://github.com/Valentina810/week-planner-for-marusia/assets/83814517/2bf6457f-0112-4607-8e0f-6a2f8b71c447">
 
@@ -30,11 +30,9 @@ https://miro.com/app/board/uXjVMBAr0bg=/?share_link_id=84728232957
 
 После написания всех тестов :
 
-- [ ] При получении неизвестной команды озвучивать список основных команд, если находимся внутри пункта - проговорить
-  какого и как из него выйти
-- [X] При первом обращении к навыку (session.new: true и session.message_id: 0) выполнять обновление расписания: все
-  ключи с прошедшими датами удалить https://github.com/Valentina810/week-planner-for-marusia/pull/54
-- [ ] Сделать документацию в ASCII doc для тестировщика, настроить автогенерацию в HTML
+- [ ] При получении неизвестной команды озвучивать список основных команд, если находимся внутри пункта - проговорить какого и как из него выйти
+- [X] При первом обращении к навыку (session.new: true и session.message_id: 0) выполнять обновление расписания: все ключи с прошедшими датами удалить https://github.com/Valentina810/week-planner-for-marusia/pull/54
+- [ ] Написать документацию 
 
 # Фичи на развитие:
 
