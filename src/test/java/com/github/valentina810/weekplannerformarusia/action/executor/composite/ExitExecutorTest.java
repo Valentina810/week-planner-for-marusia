@@ -21,7 +21,7 @@ public class ExitExecutorTest extends BaseTest {
         JSONObject objectResponse = getObjectResponse.apply(response);
 
         assertAll(
-                () -> assertEquals("До свидания!", objectResponse.getString("text")),
+                () -> assertEquals("Планировщик недели прощается с вами! До свидания!", objectResponse.getString("text")),
                 () -> assertTrue(objectResponse.getBoolean("end_session")),
                 () -> assertNull(getValue.apply(response, "user_state_update")),
                 () -> assertNull(getValue.apply(response, "session_state"))
