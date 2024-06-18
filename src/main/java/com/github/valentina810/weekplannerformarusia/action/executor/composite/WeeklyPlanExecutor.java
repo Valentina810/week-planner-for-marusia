@@ -55,7 +55,7 @@ public class WeeklyPlanExecutor implements BaseExecutor {
                                 dayDate -> Formatter.convertStringToDate.apply(dayDate.getKey()),
                                 dayDate -> dayDate.getValue().stream()
                                         .sorted(comparing(Event::getTime))
-                                        .map(event -> " " + event.getName() + " " + event.getTime())
+                                        .map(event -> " " + event.getTime()+" " + event.getName())
                                         .collect(Collectors.joining(","))
                         ))
         );
