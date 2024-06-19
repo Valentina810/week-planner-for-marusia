@@ -9,6 +9,6 @@ import lombok.ToString;
 @ToString
 public class ParameterForWeeklyPlanTest {
     private String testName;
-    private String jsonFileSource;
+    private String jsonBody;
     private String expectedResult;
 }

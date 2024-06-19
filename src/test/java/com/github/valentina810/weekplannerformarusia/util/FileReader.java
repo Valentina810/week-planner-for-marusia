@@ -2,6 +2,7 @@ package com.github.valentina810.weekplannerformarusia.util;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.datasource.embedded.DataSourceFactory;
 
@@ -10,6 +11,7 @@ import java.io.InputStreamReader;
 import java.util.Objects;
 
 @Slf4j
+@UtilityClass
 public class FileReader {
 
     /**

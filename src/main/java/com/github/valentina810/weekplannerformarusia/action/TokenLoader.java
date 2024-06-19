@@ -22,7 +22,7 @@ public class TokenLoader {
     @PostConstruct
     public void loadTokens() {
         log.info("Загрузка токенов из файла tokens.json");
-        tokens = JsonFileReader.readJsonArrayFromFile("src/main/resources/tokens.json").asList()
+        tokens = JsonFileReader.readJsonArrayFromFile("tokens.json").asList()
                 .stream()
                 .map(json -> new Gson().fromJson(new Gson().toJson(json), Token.class))
                 .collect(toList());

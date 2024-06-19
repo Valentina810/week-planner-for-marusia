@@ -3,12 +3,6 @@
 
     <property name="LOGS" value="./logs" />
 
-    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
-        </encoder>
-    </appender>
-
     <appender name="FILE-ARCHIVED" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOGS}/app.log</file>
         <encoder>
@@ -24,7 +18,6 @@
     </appender>
 
     <root level="info">
-        <appender-ref ref="CONSOLE" />
         <appender-ref ref="FILE-ARCHIVED" />
     </root>
 </configuration>

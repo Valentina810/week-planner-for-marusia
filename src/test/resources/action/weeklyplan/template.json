@@ -26,7 +26,7 @@
     "user_id": "878",
     "skill_id": "524",
     "new": false,
-    "message_id": 8,
+    "message_id": messageId,
     "application": {
       "application_id": "8783",
       "application_type": "web"
@@ -38,7 +38,8 @@
   },
   "state": {
     "session": {},
-    "user": {}
+    "user":
+    week
   },
   "version": "1.0"
 }

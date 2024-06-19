@@ -1,5 +1,12 @@
 [
   {
+    "operation": "HELLO",
+    "isSimple": true,
+    "messagePositive": "Вас приветствует навык Планировщик недели! У меня есть команды: план на неделю, план на сегодня, план на завтра, добавь событие и справка",
+    "isEndSession": false,
+    "actions": []
+  },
+  {
     "operation": "WEEKLY_PLAN",
     "isSimple": false,
     "messagePositive": "Ваши события ",
@@ -66,52 +73,14 @@
   },
   {
     "operation": "HELP",
-    "isSimple": false,
-    "messagePositive": "Выберите раздел: команды, добавить событие, об авторе, вернуться в главное меню",
-    "isEndSession": false,
-    "actions": [
-      {
-        "operation": "COMMANDS",
-        "isSimple": true,
-        "prevOperation": "HELP",
-        "messagePositive": "Вот какие у меня есть команды: план на неделю, план на сегодня, план на завтра",
-        "isEndSession": false,
-        "isTerminal": false,
-        "actions": []
-      },
-      {
-        "operation": "HOW_ADD_EVENT",
-        "isSimple": true,
-        "prevOperation": "HELP",
-        "messagePositive": "Для того чтобы добавить событие скажите: добавь событие",
-        "isEndSession": false,
-        "isTerminal": false,
-        "actions": []
-      },
-      {
-        "operation": "AUTHOR",
-        "isSimple": true,
-        "prevOperation": "HELP",
-        "messagePositive": "Имя автора Валентина",
-        "isEndSession": false,
-        "isTerminal": false,
-        "actions": []
-      },
-      {
-        "operation": "EXIT_MAIN_MENU",
-        "isSimple": false,
-        "prevOperation": "HELP",
-        "messagePositive": "Выполнен выход в главное меню",
-        "isEndSession": false,
-        "isTerminal": false,
-        "actions": []
-      }
-    ]
+    "isSimple": true,
+    "messagePositive": "Мои команды: план на неделю, план на сегодня, план на завтра, добавь событие. Мой автор - Валентина.",
+    "isEndSession": false
   },
   {
     "operation": "EXIT",
     "isSimple": false,
-    "messagePositive": "До свидания!",
+    "messagePositive": "Планировщик недели прощается с вами! До свидания!",
     "isEndSession": true,
     "actions": []
   },
