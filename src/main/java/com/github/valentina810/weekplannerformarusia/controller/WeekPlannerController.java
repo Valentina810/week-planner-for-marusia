@@ -23,8 +23,6 @@ public class WeekPlannerController {
     @PostMapping
     @CrossOrigin(origins = {"*"})
     public ResponseEntity<?> createResponse(@RequestBody Object object) {
-        log.info("---------------------------------------------------");
-        log.info("Тело входного запроса {}", object.toString());
         return weekPlannerService.getResponse(object);
     }
 }
