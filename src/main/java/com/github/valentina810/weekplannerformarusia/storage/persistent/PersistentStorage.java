@@ -22,6 +22,7 @@ import static java.time.temporal.TemporalAdjusters.nextOrSame;
 import static java.util.Arrays.stream;
 import static java.util.Comparator.comparing;
 import static java.util.Locale.forLanguageTag;
+import static java.util.Objects.requireNonNull;
 
 
 /**
@@ -110,7 +111,7 @@ public class PersistentStorage {
         LocalDate nextDate;
         try {
             nextDate = LocalDate.now().with(nextOrSame(parseDayOfWeek(day)));
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException | NullPointerException e) {
             nextDate = LocalDate.now();
         }
         return Formatter.convertDateToString.apply(nextDate);
@@ -120,9 +121,9 @@ public class PersistentStorage {
      * Метод для парсинга названия дня недели на русском
      */
     private static DayOfWeek parseDayOfWeek(String dayOfWeek) {
+        requireNonNull(dayOfWeek, "dayOfWeek не может быть null");
         return stream(DayOfWeek.values())
-                .filter(dow -> dow.getDisplayName(FULL, forLanguageTag("ru"))
-                        .equalsIgnoreCase(dayOfWeek))
+                .filter(dow -> dayOfWeek.contains(dow.getDisplayName(FULL, forLanguageTag("ru")).toLowerCase()))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Недопустимое название дня недели: " + dayOfWeek));
     }

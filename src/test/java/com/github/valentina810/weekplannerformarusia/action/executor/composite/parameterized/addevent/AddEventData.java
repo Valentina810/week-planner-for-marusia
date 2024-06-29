@@ -11,12 +11,13 @@ import java.util.stream.Stream;
 import static com.github.valentina810.weekplannerformarusia.action.TypeAction.ADD_DAY;
 import static com.github.valentina810.weekplannerformarusia.action.TypeAction.ADD_EVENT;
 import static com.github.valentina810.weekplannerformarusia.action.TypeAction.ADD_TIME;
+import static org.junit.jupiter.params.provider.Arguments.of;
 
 public class AddEventData {
     private static final String JSON_FILE_SOURCE_WITH_PREV_ACTION = "action/help/PlanWithPrevAction.json";
 
-    private static String EVENT_TIME = "двадцать три часа тридцать две минуты";
-    private static String EVENT_NAME = "Оповестить всех о ярмарке";
+    private static final String EVENT_TIME = "двадцать три часа тридцать две минуты";
+    private static final String EVENT_NAME = "Оповестить всех о ярмарке";
 
     private static final String PREV_ACTIONS_ADD_EVENT = "\"actions\":{" +
             "\"prevActions\":[" +
@@ -72,6 +73,18 @@ public class AddEventData {
             .valueAction("добавь событие")
             .build();
 
+    private static final PrevAction PREV_ACTION_ADD_AN_EVENT_FOR_TOMORROW= PrevAction.builder()
+            .number(0)
+            .operation(ADD_EVENT)
+            .valueAction("добавить событие на завтра")
+            .build();
+
+    private static final PrevAction PREV_ACTION_ADD_AN_EVENT_FOR_TODAY= PrevAction.builder()
+            .number(0)
+            .operation(ADD_EVENT)
+            .valueAction("добавить событие на сегодня")
+            .build();
+
     private static final PrevAction PREV_ACTION_ADD_DAY = PrevAction.builder()
             .number(1)
             .operation(ADD_DAY)
@@ -89,7 +102,7 @@ public class AddEventData {
     static Stream<Arguments> providerIntermediateCommandAddEventTest() {
 
         return Stream.of(
-                Arguments.of(ParameterWithPrevActionsTest.builder()
+                of(ParameterWithPrevActionsTest.builder()
                         .testName("writeCommandAddEventInStateSessionActions_whenSendCommandAddEvent_thenReturnCommandMessagePositiveWithRequestData")
                         .jsonFileSource(JSON_FILE_SOURCE_WITH_PREV_ACTION)
                         .phrase("добавь событие")
@@ -99,7 +112,27 @@ public class AddEventData {
                                 .prevActions(List.of(PREV_ACTION_ADD_EVENT))
                                 .build())
                         .build()),
-                Arguments.of(ParameterWithPrevActionsTest.builder()
+                of(ParameterWithPrevActionsTest.builder()
+                        .testName("writeCommandAddEventInStateSessionActions_whenSendCommandAddEventWithOtherWords1_thenReturnCommandMessagePositiveWithRequestData")
+                        .jsonFileSource(JSON_FILE_SOURCE_WITH_PREV_ACTION)
+                        .phrase("добавить событие на завтра")
+                        .prevActions("")
+                        .expectedResponsePhrase("Назовите день, например, среда ")
+                        .expectedActions(Actions.builder()
+                                .prevActions(List.of(PREV_ACTION_ADD_AN_EVENT_FOR_TOMORROW))
+                                .build())
+                        .build()),
+                of(ParameterWithPrevActionsTest.builder()
+                        .testName("writeCommandAddEventInStateSessionActions_whenSendCommandAddEventWithOtherWords2_thenReturnCommandMessagePositiveWithRequestData")
+                        .jsonFileSource(JSON_FILE_SOURCE_WITH_PREV_ACTION)
+                        .phrase("добавить событие на сегодня")
+                        .prevActions("")
+                        .expectedResponsePhrase("Назовите день, например, среда ")
+                        .expectedActions(Actions.builder()
+                                .prevActions(List.of(PREV_ACTION_ADD_AN_EVENT_FOR_TODAY))
+                                .build())
+                        .build()),
+                of(ParameterWithPrevActionsTest.builder()
                         .testName("writeCommandAddDayInStateSessionActions_whenSendCommandAddDay_thenReturnCommandMessagePositiveWithRequestData")
                         .jsonFileSource(JSON_FILE_SOURCE_WITH_PREV_ACTION)
                         .phrase("среда")
@@ -109,7 +142,7 @@ public class AddEventData {
                                 .prevActions(List.of(PREV_ACTION_ADD_EVENT, PREV_ACTION_ADD_DAY))
                                 .build())
                         .build()),
-                Arguments.of(ParameterWithPrevActionsTest.builder()
+                of(ParameterWithPrevActionsTest.builder()
                         .testName("writeCommandAddTimeInStateSessionActions_whenSendCommandAddTime_thenReturnCommandMessagePositiveWithRequestData")
                         .jsonFileSource(JSON_FILE_SOURCE_WITH_PREV_ACTION)
                         .phrase(EVENT_TIME)
@@ -125,7 +158,7 @@ public class AddEventData {
     static Stream<Arguments> providerTerminalCommandAddEventTest() {
 
         return Stream.of(
-                Arguments.of(ParameterWithPrevActionsTest.builder()
+                of(ParameterWithPrevActionsTest.builder()
                         .testName("writeNewEventInPersistentStorage_whenSendCommandAddNameEvent_thenReturnAddNewEventMessagePositive")
                         .jsonFileSource(JSON_FILE_SOURCE_WITH_PREV_ACTION)
                         .phrase(EVENT_NAME)
