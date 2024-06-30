@@ -4,13 +4,15 @@ import org.junit.jupiter.params.provider.Arguments;
 
 import java.util.stream.Stream;
 
+import static org.junit.jupiter.params.provider.Arguments.of;
+
 public class HelpTestData {
     private static final String TEMPLATE_JSON = "action/plantodate/PlanEmpty.json";
 
     static Stream<Arguments> providerHelpTest() {
 
         return Stream.of(
-                Arguments.of(ParameterWithPrevActionsTest.builder()
+                of(ParameterWithPrevActionsTest.builder()
                         .testName("getHelpMessage_whenCallCommandHelp_thenReturnHelpMessage")
                         .jsonFileSource(TEMPLATE_JSON)
                         .phrase("справка")

@@ -17,16 +17,16 @@ public class UnknownExecutorTest extends BaseTest {
     @SneakyThrows
     @ParameterizedTest
     @MethodSource("com.github.valentina810.weekplannerformarusia.action.executor.composite.parameterized.unknown.UnknownTestData#providerUnknownTest")
-    public void checkUnknown(ParameterForUnknownTest parameterForUnknownTest) {
-        String request = FileReader.loadStringFromFile(parameterForUnknownTest.getJsonFileSource())
-                .replace("testDate", parameterForUnknownTest.getTestDate())
-                .replace("testEvents", parameterForUnknownTest.getTestEvents())
-                .replace("phrase", parameterForUnknownTest.getPhrase());
+    public void checkUnknown(ParameterForUnknownTest parameter) {
+        String request = FileReader.loadStringFromFile(parameter.getJsonFileSource())
+                .replace("testDate", parameter.getTestDate())
+                .replace("testEvents", "")
+                .replace("phrase", parameter.getPhrase());
         JSONObject response = getResponse.apply(request);
         JSONObject objectResponse = getObjectResponse.apply(response);
 
         assertAll(
-                () -> assertEquals(parameterForUnknownTest.getExpectedResult(), objectResponse.getString("text")),
+                () -> assertEquals(parameter.getExpectedResult(), objectResponse.getString("text")),
                 () -> assertFalse(objectResponse.getBoolean("end_session")),
                 () -> assertEquals(getPersistentStorage(request), getPersistentStorage(response)),
                 () -> assertNull(getValue.apply(response, "session_state"))
