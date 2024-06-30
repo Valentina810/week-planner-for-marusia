@@ -4,13 +4,15 @@ import org.junit.jupiter.params.provider.Arguments;
 
 import java.util.stream.Stream;
 
+import static org.junit.jupiter.params.provider.Arguments.of;
+
 public class HelloTestData {
     private static final String TEMPLATE_JSON = "action/plantodate/PlanEmpty.json";
 
     static Stream<Arguments> providerHelloTest() {
 
         return Stream.of(
-                Arguments.of(
+                of(
                         ParameterHelloTestDataTest.builder()
                                 .testName("getHelloMessage_whenCallActivationPhrase1_thenReturnHelloMessage")
                                 .phrase("планировщик")
@@ -19,7 +21,7 @@ public class HelloTestData {
                                 .isEndSession(false)
                                 .build()
                 ),
-                Arguments.of(
+                of(
                         ParameterHelloTestDataTest.builder()
                                 .testName("getHelloMessage_whenCallActivationPhrase2_thenReturnHelloMessage")
                                 .phrase("планировщик недели")
