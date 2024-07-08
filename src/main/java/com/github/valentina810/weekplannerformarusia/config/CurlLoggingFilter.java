@@ -14,10 +14,8 @@ import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
 import java.io.IOException;
+import java.util.Optional;
 import java.util.function.Predicate;
-
-import static jakarta.servlet.http.HttpServletResponse.SC_METHOD_NOT_ALLOWED;
-import static java.util.Optional.of;
 
 @Slf4j
 public class CurlLoggingFilter implements Filter {
@@ -29,24 +27,19 @@ public class CurlLoggingFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) {
         HttpServletRequest httpRequest = (HttpServletRequest) servletRequest;
         HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;
-        log.info(CurlCommandBuilder.buildCurlCommandRequest(new ContentCachingRequestWrapper(httpRequest)));
 
         Predicate<HttpServletRequest> isPostMethod = req -> "POST".equalsIgnoreCase(req.getMethod());
         Predicate<HttpServletRequest> hasAllowedUserAgent = req -> ALLOWED_USER_AGENT.equals(req.getHeader(USER_AGENT_HEADER));
 
-        of(httpRequest)
-                .filter(isPostMethod.and(hasAllowedUserAgent))
-                .ifPresentOrElse(req ->
-                                processSuccessfully(filterChain, req, httpResponse),
-                        () -> returnErrorMethodNotSupported(httpResponse));
-    }
+        Optional<HttpServletRequest> optionalRequest = Optional.of(httpRequest)
+                .filter(isPostMethod.and(hasAllowedUserAgent));
 
-    private static void returnErrorMethodNotSupported(HttpServletResponse httpResponse) {
-        try {
-            httpResponse.sendError(SC_METHOD_NOT_ALLOWED, "Method Not Allowed");
-        } catch (IOException e) {
-            log.error("Возникла ошибка при отправке сообщения о неподдерживаемом методе: ", e);
-        }
+        log.info("------------------------------------------------------------------------------------------------------");
+        optionalRequest.ifPresentOrElse(
+                req -> processSuccessfully(filterChain, req, httpResponse),
+                () -> returnErrorMethodNotSupported(httpResponse, httpRequest)
+        );
+        log.info("------------------------------------------------------------------------------------------------------");
     }
 
     private void processSuccessfully(FilterChain filterChain, HttpServletRequest req, HttpServletResponse httpResponse) {
@@ -54,10 +47,25 @@ public class CurlLoggingFilter implements Filter {
             ContentCachingRequestWrapper cachedRequest = new ContentCachingRequestWrapper(req);
             ContentCachingResponseWrapper cachedResponse = new ContentCachingResponseWrapper(httpResponse);
             filterChain.doFilter(cachedRequest, cachedResponse);
-            log.info(CurlCommandBuilder.buildCurlCommandResponse(cachedResponse));
+            logRequestResponseAsCurl(cachedRequest, cachedResponse);
             cachedResponse.copyBodyToResponse();
         } catch (IOException | ServletException e) {
             log.error("Возникла ошибка при логировании curl запроса/ответа: ", e);
         }
+    }
+
+    private static void returnErrorMethodNotSupported(HttpServletResponse httpResponse, HttpServletRequest httpRequest) {
+        try {
+            httpResponse.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, "Method Not Allowed");
+            log.info(CurlCommandBuilder.buildCurlCommandRequest(new ContentCachingRequestWrapper(httpRequest)));
+            log.info("405 Method Not Allowed");
+        } catch (IOException e) {
+            log.error("Возникла ошибка при отправке сообщения о неподдерживаемом методе: ", e);
+        }
+    }
+
+    private void logRequestResponseAsCurl(ContentCachingRequestWrapper request, ContentCachingResponseWrapper response) {
+        log.info(CurlCommandBuilder.buildCurlCommandRequest(request));
+        log.info(CurlCommandBuilder.buildCurlCommandResponse(response));
     }
 }
