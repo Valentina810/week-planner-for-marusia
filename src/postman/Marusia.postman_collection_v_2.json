@@ -7,6 +7,32 @@
 	},
 	"item": [
 		{
+			"name": "0. запуск",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Access-Control-Allow-Origin",
+						"value": "https://debugger-web-client.marusia.mail.ru"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"request\": {\n        \"original_utterance\": null,\n        \"command\": \"запусти skill планировщик недели\"\n    },\n    \"session\": {\n        \"user_id\": \"b4fde534\",\n        \"session_id\": \"ffb392fd-4c2c-4043-9f91-bb366ae883a2\",\n        \"message_id\": 0\n    },\n    \"state\": {\n        \"session\": {},\n        \"user\": {\n            \"week\": {\n                \"days\": {\n                    \"08-07-2024\": [\n                        {\n                            \"name\": \"напомнить папе купить домик в солнечногорске\",\n                            \"time\": \"18:00\"\n                        }\n                    ]\n                }\n            }\n        }\n    },\n    \"version\": \"1.0\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{stand}}webhook"
+			},
+			"response": []
+		},
+		{
 			"name": "1. ADD_EVENT",
 			"event": [
 				{
@@ -3579,7 +3605,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"request\": {\n        \"original_utterance\": null,\n        \"command\": \"тест событие 1\"\n    },\n    \"session\": {\n        \"user_id\": \"06325314\",\n        \"session_id\": \"4ef31ea8-6ec0-4a20-ae83-d43d8560aea0\",\n        \"message_id\": 3\n    },\n    \"state\": {\n        \"session\": {\n            \"actions\": {\n                \"prevActions\": [\n                    {\n                        \"number\": 0,\n                        \"valueAction\": \"добавь событие\",\n                        \"operation\": \"ADD_EVENT\"\n                    },\n                    {\n                        \"number\": 1,\n                        \"prevOperation\": \"ADD_EVENT\",\n                        \"valueAction\": \"воскресенье\",\n                        \"operation\": \"ADD_DAY\"\n                    },\n                    {\n                        \"number\": 2,\n                        \"prevOperation\": \"ADD_DAY\",\n                        \"valueAction\": \"минут\",\n                        \"operation\": \"ADD_TIME\"\n                    }\n                ]\n            }\n        },\n        \"user\": {}\n    },\n    \"version\": \"1.0\"\n}",
+					"raw": "{\n    \"request\": {\n        \"original_utterance\": null,\n        \"command\": \"тест событие 1\"\n    },\n    \"session\": {\n        \"user_id\": \"06325314\",\n        \"session_id\": \"4ef31ea8-6ec0-4a20-ae83-d43d8560aea0\",\n        \"message_id\": 3\n    },\n    \"state\": {\n        \"session\": {\n            \"actions\": {\n                \"prevActions\": [\n                    {\n                        \"number\": 0,\n                        \"valueAction\": \"добавь событие\",\n                        \"operation\": \"ADD_EVENT\"\n                    },\n                    {\n                        \"number\": 1,\n                        \"prevOperation\": \"ADD_EVENT\",\n                        \"valueAction\": \"воскресенье\",\n                        \"operation\": \"ADD_DAY\"\n                    },\n                    {\n                        \"number\": 2,\n                        \"prevOperation\": \"ADD_DAY\",\n                        \"valueAction\": \"минута\",\n                        \"operation\": \"ADD_TIME\"\n                    }\n                ]\n            }\n        },\n        \"user\": {}\n    },\n    \"version\": \"1.0\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -3605,7 +3631,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"request\": {\n        \"original_utterance\": null,\n        \"command\": \"тест событие 1\"\n    },\n    \"session\": {\n        \"user_id\": \"06325314\",\n        \"session_id\": \"4ef31ea8-6ec0-4a20-ae83-d43d8560aea0\",\n        \"message_id\": 3\n    },\n    \"state\": {\n        \"session\": {\n            \"actions\": {\n                \"prevActions\": [\n                    {\n                        \"number\": 0,\n                        \"valueAction\": \"добавь событие\",\n                        \"operation\": \"ADD_EVENT\"\n                    },\n                    {\n                        \"number\": 1,\n                        \"prevOperation\": \"ADD_EVENT\",\n                        \"valueAction\": \"воскресенье\",\n                        \"operation\": \"ADD_DAY\"\n                    },\n                    {\n                        \"number\": 2,\n                        \"prevOperation\": \"ADD_DAY\",\n                        \"valueAction\": \"часа\",\n                        \"operation\": \"ADD_TIME\"\n                    }\n                ]\n            }\n        },\n        \"user\": {}\n    },\n    \"version\": \"1.0\"\n}",
+					"raw": "{\n    \"request\": {\n        \"original_utterance\": null,\n        \"command\": \"тест событие 1\"\n    },\n    \"session\": {\n        \"user_id\": \"06325314\",\n        \"session_id\": \"4ef31ea8-6ec0-4a20-ae83-d43d8560aea0\",\n        \"message_id\": 3\n    },\n    \"state\": {\n        \"session\": {\n            \"actions\": {\n                \"prevActions\": [\n                    {\n                        \"number\": 0,\n                        \"valueAction\": \"добавь событие\",\n                        \"operation\": \"ADD_EVENT\"\n                    },\n                    {\n                        \"number\": 1,\n                        \"prevOperation\": \"ADD_EVENT\",\n                        \"valueAction\": \"воскресенье\",\n                        \"operation\": \"ADD_DAY\"\n                    },\n                    {\n                        \"number\": 2,\n                        \"prevOperation\": \"ADD_DAY\",\n                        \"valueAction\": \"час\",\n                        \"operation\": \"ADD_TIME\"\n                    }\n                ]\n            }\n        },\n        \"user\": {}\n    },\n    \"version\": \"1.0\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -3929,7 +3955,7 @@
 			"response": []
 		},
 		{
-			"name": "2. 48 PLAN_time 20h Copy",
+			"name": "2. 48 PLAN_time десять дня",
 			"request": {
 				"auth": {
 					"type": "noauth"
@@ -3955,7 +3981,7 @@
 			"response": []
 		},
 		{
-			"name": "2. 48 PLAN_time 20h Copy 2",
+			"name": "2. 49 PLAN_time десять вечера",
 			"request": {
 				"auth": {
 					"type": "noauth"
@@ -3969,7 +3995,59 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"request\": {\n        \"original_utterance\": null,\n        \"command\": \"запусти skill планировщик недели\"\n    },\n    \"session\": {\n        \"user_id\": \"b4fde534e63d06409133bdcd91805a549c9e984319a641b06364c588a2e76caa\",\n        \"session_id\": \"ffb392fd-4c2c-4043-9f91-bb366ae883a2\",\n        \"message_id\": 0\n    },\n    \"state\": {\n        \"session\": {},\n        \"user\": {\n            \"week\": {\n                \"days\": {\n                    \"08-07-2024\": [\n                        {\n                            \"name\": \"напомнить папе купить домик в солнечногорске\",\n                            \"time\": \"18:00\"\n                        }\n                    ]\n                }\n            }\n        }\n    },\n    \"version\": \"1.0\"\n}",
+					"raw": "{\n    \"request\": {\n        \"original_utterance\": null,\n        \"command\": \"тест событие 1\"\n    },\n    \"session\": {\n        \"user_id\": \"06325314\",\n        \"session_id\": \"4ef31ea8-6ec0-4a20-ae83-d43d8560aea0\",\n        \"message_id\": 3\n    },\n    \"state\": {\n        \"session\": {\n            \"actions\": {\n                \"prevActions\": [\n                    {\n                        \"number\": 0,\n                        \"valueAction\": \"добавь событие\",\n                        \"operation\": \"ADD_EVENT\"\n                    },\n                    {\n                        \"number\": 1,\n                        \"prevOperation\": \"ADD_EVENT\",\n                        \"valueAction\": \"воскресенье\",\n                        \"operation\": \"ADD_DAY\"\n                    },\n                    {\n                        \"number\": 2,\n                        \"prevOperation\": \"ADD_DAY\",\n                        \"valueAction\": \"десять дня\",\n                        \"operation\": \"ADD_TIME\"\n                    }\n                ]\n            }\n        },\n        \"user\": {}\n    },\n    \"version\": \"1.0\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{stand}}webhook"
+			},
+			"response": []
+		},
+		{
+			"name": "2. 50 PLAN_time час",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Access-Control-Allow-Origin",
+						"value": "https://debugger-web-client.marusia.mail.ru"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"request\": {\n        \"original_utterance\": null,\n        \"command\": \"тест событие 1\"\n    },\n    \"session\": {\n        \"user_id\": \"06325314\",\n        \"session_id\": \"4ef31ea8-6ec0-4a20-ae83-d43d8560aea0\",\n        \"message_id\": 3\n    },\n    \"state\": {\n        \"session\": {\n            \"actions\": {\n                \"prevActions\": [\n                    {\n                        \"number\": 0,\n                        \"valueAction\": \"добавь событие\",\n                        \"operation\": \"ADD_EVENT\"\n                    },\n                    {\n                        \"number\": 1,\n                        \"prevOperation\": \"ADD_EVENT\",\n                        \"valueAction\": \"воскресенье\",\n                        \"operation\": \"ADD_DAY\"\n                    },\n                    {\n                        \"number\": 2,\n                        \"prevOperation\": \"ADD_DAY\",\n                        \"valueAction\": \"час\",\n                        \"operation\": \"ADD_TIME\"\n                    }\n                ]\n            }\n        },\n        \"user\": {}\n    },\n    \"version\": \"1.0\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{stand}}webhook"
+			},
+			"response": []
+		},
+		{
+			"name": "2. 50 PLAN_time час минута",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Access-Control-Allow-Origin",
+						"value": "https://debugger-web-client.marusia.mail.ru"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"request\": {\n        \"original_utterance\": null,\n        \"command\": \"тест событие 1\"\n    },\n    \"session\": {\n        \"user_id\": \"06325314\",\n        \"session_id\": \"4ef31ea8-6ec0-4a20-ae83-d43d8560aea0\",\n        \"message_id\": 3\n    },\n    \"state\": {\n        \"session\": {\n            \"actions\": {\n                \"prevActions\": [\n                    {\n                        \"number\": 0,\n                        \"valueAction\": \"добавь событие\",\n                        \"operation\": \"ADD_EVENT\"\n                    },\n                    {\n                        \"number\": 1,\n                        \"prevOperation\": \"ADD_EVENT\",\n                        \"valueAction\": \"воскресенье\",\n                        \"operation\": \"ADD_DAY\"\n                    },\n                    {\n                        \"number\": 2,\n                        \"prevOperation\": \"ADD_DAY\",\n                        \"valueAction\": \"час минута\",\n                        \"operation\": \"ADD_TIME\"\n                    }\n                ]\n            }\n        },\n        \"user\": {}\n    },\n    \"version\": \"1.0\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
