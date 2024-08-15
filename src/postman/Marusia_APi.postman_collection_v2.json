@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "327fbffb-56a8-4d7b-a15e-2bc54d7f1d4d",
-		"name": "Marusia_APi",
+		"name": "Marusia_API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
 		"_exporter_id": "6122415"
 	},
@@ -14214,6 +14214,287 @@
 						"body": {
 							"mode": "raw",
 							"raw": "{\n    \"request\": {\n        \"original_utterance\": \"план на неделю\",\n        \"nlu\": {\n            \"entities\": [],\n            \"tokens\": [\n                \"план\",\n                \"на\",\n                \"неделю\"\n            ]\n        },\n        \"type\": \"SimpleUtterance\",\n        \"command\": \"план на неделю\"\n    },\n    \"meta\": {\n        \"interfaces\": {\n            \"screen\": {}\n        },\n        \"timezone\": \"Europe\\/Moscow\",\n        \"_city_ru\": \"Краснодар\",\n        \"locale\": \"ru_RU\",\n        \"client_id\": \"MailRu-VC\\/1.0\"\n    },\n    \"session\": {\n        \"new\": false,\n        \"application\": {\n            \"application_type\": \"web\",\n            \"application_id\": \"87837\"\n        },\n        \"user_id\": \"{{user_id}}\",\n        \"session_id\": \"{{session_id}}\",\t\n        \"skill_id\": \"52401ef1\",\n        \"message_id\": 1,\n        \"auth_token\": \"636\",\n        \"user\": {\n            \"user_id\": \"9fc847e3\"\n        }\n    },\n    \"state\": {\n        \"session\": {},\n        \"user\": {}\n    },\n    \"version\": \"1.0\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{stand}}webhook"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "6. Выход",
+			"item": [
+				{
+					"name": "6.1 Выйти",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"1. Проверка text\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    \r",
+									"    // Проверка наличия объекта\r",
+									"    pm.expect(jsonData).to.have.property('response');\r",
+									"    \r",
+									"    // Проверка, что объект_тест является объектом\r",
+									"    pm.expect(jsonData.response).to.be.an('object');\r",
+									"    \r",
+									"    // Проверка наличия ключа внутри объекта\r",
+									"    pm.expect(jsonData.response).to.have.property('text');\r",
+									"    pm.expect(jsonData.response).to.have.property('end_session');\r",
+									"    \r",
+									"    // Проверка значения ключа внутри объекта\r",
+									"    pm.expect(jsonData.response.text).to.eql('Планировщик недели прощается с вами! До свидания!');\r",
+									"    pm.expect(jsonData.response.end_session).to.eql(true);\r",
+									"    });\r",
+									"//-------------------------------------------------------------------------------\r",
+									"    pm.test(\"2. Значение ключа 'message_id' внутри 'session' равно 0\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    \r",
+									"    // Проверяем наличие объекта 'session' в ответе\r",
+									"    pm.expect(jsonData).to.have.property('session');\r",
+									"    \r",
+									"    // Проверяем наличие ключа 'message_id' внутри 'session'\r",
+									"    pm.expect(jsonData.session).to.have.property('message_id');\r",
+									"    \r",
+									"    // Проверяем, что значение 'message_id' равно 0\r",
+									"    pm.expect(jsonData.session.message_id).to.equal(0); \r",
+									"\r",
+									"});\r",
+									"//-------------------------------------------------------------------------------\r",
+									"pm.test(\"3. Проверка'days' {}\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    \r",
+									"    // Проверяем наличие user_state_update в ответе\r",
+									"    pm.expect(jsonData).to.have.property('user_state_update');\r",
+									"    pm.expect(jsonData.user_state_update).to.be.an('object');\r",
+									"\r",
+									"    // Проверяем наличие week внутри user_state_update\r",
+									"    pm.expect(jsonData.user_state_update).to.have.property('week');\r",
+									"    pm.expect(jsonData.user_state_update.week).to.be.an('object');\r",
+									"\r",
+									"    // Проверяем наличие days внутри week\r",
+									"    pm.expect(jsonData.user_state_update.week).to.have.property('days');\r",
+									"\r",
+									"    // Проверяем, что days является пустым объектом\r",
+									"    pm.expect(jsonData.user_state_update.week.days).to.be.an('object').that.is.empty;   \r",
+									"   \r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"request\": {\n        \"original_utterance\": null,\n        \"command\": \"выйти\"\n    },\n    \"session\": {\n        \"user_id\": \"{{user_id}}\",\n        \"session_id\": \"{{session_id}}\",\n        \"message_id\": 0\n    },\n    \"state\": {\n        \"session\": {},\n        \"user\": {\n            \"week\": {\n                \"days\": {\n                    \"08-07-2024\": [\n                        {\n                            \"name\": \"тестовое событие для тестирования голосового навыка\",\n                            \"time\": \"18:00\"\n                        }\n                    ]\n                }\n            }\n        }\n    },\n    \"version\": \"1.0\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{stand}}webhook"
+					},
+					"response": []
+				},
+				{
+					"name": "6.2 Пока",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"1. Проверка text\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    \r",
+									"    // Проверка наличия объекта\r",
+									"    pm.expect(jsonData).to.have.property('response');\r",
+									"    \r",
+									"    // Проверка, что объект_тест является объектом\r",
+									"    pm.expect(jsonData.response).to.be.an('object');\r",
+									"    \r",
+									"    // Проверка наличия ключа внутри объекта\r",
+									"    pm.expect(jsonData.response).to.have.property('text');\r",
+									"    pm.expect(jsonData.response).to.have.property('end_session');\r",
+									"    \r",
+									"    // Проверка значения ключа внутри объекта\r",
+									"    pm.expect(jsonData.response.text).to.eql('Планировщик недели прощается с вами! До свидания!');\r",
+									"    pm.expect(jsonData.response.end_session).to.eql(true);\r",
+									"    });\r",
+									"//-------------------------------------------------------------------------------\r",
+									"    pm.test(\"2. Значение ключа 'message_id' внутри 'session' равно 0\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    \r",
+									"    // Проверяем наличие объекта 'session' в ответе\r",
+									"    pm.expect(jsonData).to.have.property('session');\r",
+									"    \r",
+									"    // Проверяем наличие ключа 'message_id' внутри 'session'\r",
+									"    pm.expect(jsonData.session).to.have.property('message_id');\r",
+									"    \r",
+									"    // Проверяем, что значение 'message_id' равно 0\r",
+									"    pm.expect(jsonData.session.message_id).to.equal(0); \r",
+									"\r",
+									"});\r",
+									"//-------------------------------------------------------------------------------\r",
+									"pm.test(\"3. Проверка'days' {}\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    \r",
+									"    // Проверяем наличие user_state_update в ответе\r",
+									"    pm.expect(jsonData).to.have.property('user_state_update');\r",
+									"    pm.expect(jsonData.user_state_update).to.be.an('object');\r",
+									"\r",
+									"    // Проверяем наличие week внутри user_state_update\r",
+									"    pm.expect(jsonData.user_state_update).to.have.property('week');\r",
+									"    pm.expect(jsonData.user_state_update.week).to.be.an('object');\r",
+									"\r",
+									"    // Проверяем наличие days внутри week\r",
+									"    pm.expect(jsonData.user_state_update.week).to.have.property('days');\r",
+									"\r",
+									"    // Проверяем, что days является пустым объектом\r",
+									"    pm.expect(jsonData.user_state_update.week.days).to.be.an('object').that.is.empty;   \r",
+									"   \r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"request\": {\n        \"original_utterance\": null,\n        \"command\": \"выйти\"\n    },\n    \"session\": {\n        \"user_id\": \"{{user_id}}\",\n        \"session_id\": \"{{session_id}}\",\n        \"message_id\": 0\n    },\n    \"state\": {\n        \"session\": {},\n        \"user\": {\n            \"week\": {\n                \"days\": {\n                    \"08-07-2024\": [\n                        {\n                            \"name\": \"тестовое событие для тестирования голосового навыка\",\n                            \"time\": \"18:00\"\n                        }\n                    ]\n                }\n            }\n        }\n    },\n    \"version\": \"1.0\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{stand}}webhook"
+					},
+					"response": []
+				},
+				{
+					"name": "6.3 Хватит",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"1. Проверка text\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    \r",
+									"    // Проверка наличия объекта\r",
+									"    pm.expect(jsonData).to.have.property('response');\r",
+									"    \r",
+									"    // Проверка, что объект_тест является объектом\r",
+									"    pm.expect(jsonData.response).to.be.an('object');\r",
+									"    \r",
+									"    // Проверка наличия ключа внутри объекта\r",
+									"    pm.expect(jsonData.response).to.have.property('text');\r",
+									"    pm.expect(jsonData.response).to.have.property('end_session');\r",
+									"    \r",
+									"    // Проверка значения ключа внутри объекта\r",
+									"    pm.expect(jsonData.response.text).to.eql('Планировщик недели прощается с вами! До свидания!');\r",
+									"    pm.expect(jsonData.response.end_session).to.eql(true);\r",
+									"    });\r",
+									"//-------------------------------------------------------------------------------\r",
+									"    pm.test(\"2. Значение ключа 'message_id' внутри 'session' равно 0\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    \r",
+									"    // Проверяем наличие объекта 'session' в ответе\r",
+									"    pm.expect(jsonData).to.have.property('session');\r",
+									"    \r",
+									"    // Проверяем наличие ключа 'message_id' внутри 'session'\r",
+									"    pm.expect(jsonData.session).to.have.property('message_id');\r",
+									"    \r",
+									"    // Проверяем, что значение 'message_id' равно 0\r",
+									"    pm.expect(jsonData.session.message_id).to.equal(0); \r",
+									"\r",
+									"});\r",
+									"//-------------------------------------------------------------------------------\r",
+									"pm.test(\"3. Проверка'days' {}\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    \r",
+									"    // Проверяем наличие user_state_update в ответе\r",
+									"    pm.expect(jsonData).to.have.property('user_state_update');\r",
+									"    pm.expect(jsonData.user_state_update).to.be.an('object');\r",
+									"\r",
+									"    // Проверяем наличие week внутри user_state_update\r",
+									"    pm.expect(jsonData.user_state_update).to.have.property('week');\r",
+									"    pm.expect(jsonData.user_state_update.week).to.be.an('object');\r",
+									"\r",
+									"    // Проверяем наличие days внутри week\r",
+									"    pm.expect(jsonData.user_state_update.week).to.have.property('days');\r",
+									"\r",
+									"    // Проверяем, что days является пустым объектом\r",
+									"    pm.expect(jsonData.user_state_update.week.days).to.be.an('object').that.is.empty;   \r",
+									"   \r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"request\": {\n        \"original_utterance\": null,\n        \"command\": \"выйти\"\n    },\n    \"session\": {\n        \"user_id\": \"{{user_id}}\",\n        \"session_id\": \"{{session_id}}\",\n        \"message_id\": 0\n    },\n    \"state\": {\n        \"session\": {},\n        \"user\": {\n            \"week\": {\n                \"days\": {\n                    \"08-07-2024\": [\n                        {\n                            \"name\": \"тестовое событие для тестирования голосового навыка\",\n                            \"time\": \"18:00\"\n                        }\n                    ]\n                }\n            }\n        }\n    },\n    \"version\": \"1.0\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
