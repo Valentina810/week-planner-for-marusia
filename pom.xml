@@ -19,12 +19,28 @@
         <maven.compiler.release>${java.version}</maven.compiler.release>
         <com.google.code.gson.version>2.10.1</com.google.code.gson.version>
         <org.json.version>20231013</org.json.version>
-        <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
         <lombok.version>1.18.30</lombok.version>
-        <mapstruct-lombok.version>0.2.0</mapstruct-lombok.version>
         <org.springframework.version>6.0.11</org.springframework.version>
         <org.springdoc.version>2.2.0</org.springdoc.version>
+        <http-request-converter-to-curl.version>1.0.0</http-request-converter-to-curl.version>
     </properties>
+    <repositories>
+        <repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/valentina810/http-request-converter-to-curl</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>maven_central</id>
+            <name>Maven Central</name>
+            <url>https://repo.maven.apache.org/maven2/</url>
+        </repository>
+    </repositories>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -52,6 +68,11 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
+            <version>${org.springframework.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>${com.google.code.gson.version}</version>
@@ -67,9 +88,9 @@
             <version>${lombok.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-tx</artifactId>
-            <version>${org.springframework.version}</version>
+            <groupId>com.github.valentina810</groupId>
+            <artifactId>http-request-converter-to-curl</artifactId>
+            <version>${http-request-converter-to-curl.version}</version>
         </dependency>
     </dependencies>
 
