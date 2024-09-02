@@ -2,8 +2,6 @@
 
 [Документация](https://github.com/Valentina810/week-planner-for-marusia/blob/main/src/docs/index.md)
 
-<img width="1041" alt="Снимок экрана 2023-10-10 в 21 29 15" src="https://github.com/Valentina810/week-planner-for-marusia/assets/83814517/2bf6457f-0112-4607-8e0f-6a2f8b71c447">
-
 # Бэклог MVP
 
 - [X] Добавить обработку WeeklyPlan https://github.com/Valentina810/week-planner-for-marusia/pull/8
