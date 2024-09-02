@@ -1,28 +1,22 @@
 package com.github.valentina810.weekplannerformarusia.action.executor.composite.parameterized.help;
 
-import com.github.valentina810.weekplannerformarusia.storage.session.Actions;
 import org.junit.jupiter.params.provider.Arguments;
 
-import java.util.List;
 import java.util.stream.Stream;
 
-public class HelpTestData {
-    private static final String JSON_FILE_SOURCE_WITH_PREV_ACTION = "action/help/PlanWithPrevAction.json";
+import static org.junit.jupiter.params.provider.Arguments.of;
 
-    private static final Actions EXPECTED_ACTIONS = Actions.builder()
-            .prevActions(List.of())
-            .build();
+public class HelpTestData {
+    private static final String TEMPLATE_JSON = "action/plantodate/PlanEmpty.json";
 
     static Stream<Arguments> providerHelpTest() {
 
         return Stream.of(
-                Arguments.of(ParameterWithPrevActionsTest.builder()
+                of(ParameterWithPrevActionsTest.builder()
                         .testName("getHelpMessage_whenCallCommandHelp_thenReturnHelpMessage")
-                        .jsonFileSource(JSON_FILE_SOURCE_WITH_PREV_ACTION)
+                        .jsonFileSource(TEMPLATE_JSON)
                         .phrase("справка")
-                        .prevActions("")
-                        .expectedResponsePhrase("Мои команды: план на неделю, план на сегодня, план на завтра, добавь событие. Мой автор - Валентина.")
-                        .expectedActions(EXPECTED_ACTIONS)
+                        .expectedResponsePhrase("Мои команды: план на неделю, план на сегодня, план на завтра, добавь событие и справка. Чтобы выйти из навыка скажите выход.")
                         .build())
 
         );

@@ -93,6 +93,12 @@ public class BaseTest {
         return persistentStorage;
     }
 
+    protected static String getRequestFromFile(String jsonFileSource,String phrase) {
+        return FileReader
+                .loadStringFromFile(jsonFileSource)
+                .replace("phrase", phrase);
+    }
+
     /**
      * Получение "тела" запроса из файла
      */

@@ -2,33 +2,62 @@ package com.github.valentina810.weekplannerformarusia.action.executor.composite.
 
 import org.junit.jupiter.params.provider.Arguments;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.stream.Stream;
 
+import static org.junit.jupiter.params.provider.Arguments.of;
+
 public class UnknownTestData {
-    private static final String EXPECTED_RESULT = "Получена неизвестная команда! Используйте команду справка для того чтобы узнать мои команды";
-    private static final String NOW = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-    private static final String JSON_FILE_SOURCE_EMPTY = "action/plantodate/PlanEmpty.json";
 
     static Stream<Arguments> providerUnknownTest() {
 
         return Stream.of(
-                Arguments.of(ParameterForUnknownTest.builder()
-                        .testName("getWeeklyPlan_whenWeeklyPlanEmpty_thenReturnEmpty")
-                        .jsonFileSource(JSON_FILE_SOURCE_EMPTY)
-                        .testDate(NOW)
-                        .testEvents("")
+                of(ParameterForUnknownTest.builder()
                         .phrase("PhraseUnknown")
-                        .expectedResult(EXPECTED_RESULT)
                         .build()),
-                Arguments.of(ParameterForUnknownTest.builder()
-                        .testName("getPhraseUnknownCommand_whenCommandEmpty_thenReturnMessage")
-                        .jsonFileSource(JSON_FILE_SOURCE_EMPTY)
-                        .testDate(NOW)
-                        .testEvents("")
+                of(ParameterForUnknownTest.builder()
                         .phrase("")
-                        .expectedResult(EXPECTED_RESULT)
+                        .build()),
+                of(ParameterForUnknownTest.builder()
+                        .phrase("сегодня")
+                        .build()),
+                of(ParameterForUnknownTest.builder()
+                        .phrase("завтра")
+                        .build()),
+                of(ParameterForUnknownTest.builder()
+                        .phrase("план")
+                        .build()),
+                of(ParameterForUnknownTest.builder()
+                        .phrase("понедельник")
+                        .build()),
+                of(ParameterForUnknownTest.builder()
+                        .phrase("вторник")
+                        .build()),
+                of(ParameterForUnknownTest.builder()
+                        .phrase("среда")
+                        .build()),
+                of(ParameterForUnknownTest.builder()
+                        .phrase("четверг")
+                        .build()),
+                of(ParameterForUnknownTest.builder()
+                        .phrase("пятница")
+                        .build()),
+                of(ParameterForUnknownTest.builder()
+                        .phrase("суббота")
+                        .build()),
+                of(ParameterForUnknownTest.builder()
+                        .phrase("воскресенье")
+                        .build()),
+                of(ParameterForUnknownTest.builder()
+                        .phrase("часов")
+                        .build()),
+                of(ParameterForUnknownTest.builder()
+                        .phrase("минут")
+                        .build()),
+                of(ParameterForUnknownTest.builder()
+                        .phrase("часов минут")
+                        .build()),
+                of(ParameterForUnknownTest.builder()
+                        .phrase("понедельник вторник")
                         .build())
         );
     }
