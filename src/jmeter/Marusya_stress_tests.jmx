@@ -1,0 +1,880 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.6.3">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Test Plan">
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+        <collectionProp name="Arguments.arguments"/>
+      </elementProp>
+    </TestPlan>
+    <hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group">
+        <intProp name="ThreadGroup.num_threads">2000</intProp>
+        <intProp name="ThreadGroup.ramp_time">1</intProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller">
+          <stringProp name="LoopController.loops">1</stringProp>
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+        </elementProp>
+      </ThreadGroup>
+      <hashTree>
+        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <collectionProp name="HeaderManager.headers">
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">Cache-Control</stringProp>
+              <stringProp name="Header.value">no-cache</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">Content-Type</stringProp>
+              <stringProp name="Header.value">application/json</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">Accept</stringProp>
+              <stringProp name="Header.value">*/*</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">Accept-Encoding</stringProp>
+              <stringProp name="Header.value">gzip, deflate, br</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">Connection</stringProp>
+              <stringProp name="Header.value">keep-alive</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">Access-Control-Allow-Origin</stringProp>
+              <stringProp name="Header.value">https://debugger-web-client.marusia.mail.ru</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">user-agent</stringProp>
+              <stringProp name="Header.value">MailRu-VC/1.0</stringProp>
+            </elementProp>
+          </collectionProp>
+        </HeaderManager>
+        <hashTree/>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="1. ADD_EVENT">
+          <stringProp name="HTTPSampler.domain">searchyourbestjob.com</stringProp>
+          <stringProp name="HTTPSampler.port">443</stringProp>
+          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.path">webhook</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&#xd;
+    &quot;request&quot;: {&#xd;
+        &quot;original_utterance&quot;: null,&#xd;
+        &quot;command&quot;: &quot;добавь событие&quot;&#xd;
+    },&#xd;
+    &quot;session&quot;: {&#xd;
+        &quot;user_id&quot;: &quot;06325314&quot;,&#xd;
+        &quot;session_id&quot;: &quot;29f257e4-af62-4f90-a0f3-4056f0885736&quot;,&#xd;
+        &quot;message_id&quot;: 8&#xd;
+    },&#xd;
+    &quot;state&quot;: {&#xd;
+        &quot;session&quot;: {},&#xd;
+        &quot;user&quot;: {&#xd;
+            &quot;week&quot;: {&#xd;
+                &quot;days&quot;: {&#xd;
+                    &quot;01-07-2024&quot;: [&#xd;
+                        {&#xd;
+                            &quot;name&quot;: &quot;событие1&quot;,&#xd;
+                            &quot;time&quot;: &quot;01:00&quot;&#xd;
+                        },&#xd;
+                        {&#xd;
+                            &quot;name&quot;: &quot;план на неделю&quot;,&#xd;
+                            &quot;time&quot;: &quot;01:00&quot;&#xd;
+                        },&#xd;
+                        {&#xd;
+                            &quot;name&quot;: &quot;добавь событие&quot;,&#xd;
+                            &quot;time&quot;: &quot;01:00&quot;&#xd;
+                        }&#xd;
+                    ]&#xd;
+                }&#xd;
+            }&#xd;
+        }&#xd;
+    },&#xd;
+    &quot;version&quot;: &quot;1.0&quot;&#xd;
+}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="49586">200</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.custom_message"></stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">8</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="2. HELP" enabled="true">
+          <stringProp name="HTTPSampler.domain">searchyourbestjob.com</stringProp>
+          <stringProp name="HTTPSampler.port">443</stringProp>
+          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.path">webhook</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&#xd;
+    &quot;request&quot;: {&#xd;
+        &quot;original_utterance&quot;: &quot;справка&quot;,&#xd;
+        &quot;nlu&quot;: {&#xd;
+            &quot;entities&quot;: [],&#xd;
+            &quot;tokens&quot;: [&#xd;
+                &quot;справка&quot;&#xd;
+            ]&#xd;
+        },&#xd;
+        &quot;type&quot;: &quot;SimpleUtterance&quot;,&#xd;
+        &quot;command&quot;: &quot;справка&quot;&#xd;
+    },&#xd;
+    &quot;meta&quot;: {&#xd;
+        &quot;interfaces&quot;: {&#xd;
+            &quot;screen&quot;: {}&#xd;
+        },&#xd;
+        &quot;timezone&quot;: &quot;Europe\/Moscow&quot;,&#xd;
+        &quot;_city_ru&quot;: &quot;Краснодар&quot;,&#xd;
+        &quot;locale&quot;: &quot;ru_RU&quot;,&#xd;
+        &quot;client_id&quot;: &quot;MailRu-VC\/1.0&quot;&#xd;
+    },&#xd;
+    &quot;session&quot;: {&#xd;
+        &quot;new&quot;: false,&#xd;
+        &quot;application&quot;: {&#xd;
+            &quot;application_type&quot;: &quot;web&quot;,&#xd;
+            &quot;application_id&quot;: &quot;87837&quot;&#xd;
+        },&#xd;
+        &quot;user_id&quot;: &quot;87837&quot;,&#xd;
+        &quot;session_id&quot;: &quot;b6dc6eee&quot;,&#xd;
+        &quot;skill_id&quot;: &quot;52401ef1&quot;,&#xd;
+        &quot;message_id&quot;: 1,&#xd;
+        &quot;auth_token&quot;: &quot;636&quot;,&#xd;
+        &quot;user&quot;: {&#xd;
+            &quot;user_id&quot;: &quot;9fc847e3&quot;&#xd;
+        }&#xd;
+    },&#xd;
+    &quot;state&quot;: {&#xd;
+        &quot;session&quot;: {},&#xd;
+        &quot;user&quot;: {}&#xd;
+    },&#xd;
+    &quot;version&quot;: &quot;1.0&quot;&#xd;
+}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="49586">200</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.custom_message"></stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">8</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="3. HELP-&gt;COMMANDS" enabled="true">
+          <stringProp name="HTTPSampler.domain">searchyourbestjob.com</stringProp>
+          <stringProp name="HTTPSampler.port">443</stringProp>
+          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.path">webhook</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&#xd;
+    &quot;request&quot;: {&#xd;
+        &quot;original_utterance&quot;: &quot;справка&quot;,&#xd;
+        &quot;nlu&quot;: {&#xd;
+            &quot;entities&quot;: [],&#xd;
+            &quot;tokens&quot;: [&#xd;
+                &quot;справка&quot;&#xd;
+            ]&#xd;
+        },&#xd;
+        &quot;type&quot;: &quot;SimpleUtterance&quot;,&#xd;
+        &quot;command&quot;: &quot;привет&quot;&#xd;
+    },&#xd;
+    &quot;meta&quot;: {&#xd;
+        &quot;interfaces&quot;: {&#xd;
+            &quot;screen&quot;: {}&#xd;
+        },&#xd;
+        &quot;timezone&quot;: &quot;Europe\/Moscow&quot;,&#xd;
+        &quot;_city_ru&quot;: &quot;Краснодар&quot;,&#xd;
+        &quot;locale&quot;: &quot;ru_RU&quot;,&#xd;
+        &quot;client_id&quot;: &quot;MailRu-VC\/1.0&quot;&#xd;
+    },&#xd;
+    &quot;session&quot;: {&#xd;
+        &quot;new&quot;: false,&#xd;
+        &quot;application&quot;: {&#xd;
+            &quot;application_type&quot;: &quot;web&quot;,&#xd;
+            &quot;application_id&quot;: &quot;87837&quot;&#xd;
+        },&#xd;
+        &quot;user_id&quot;: &quot;87837&quot;,&#xd;
+        &quot;session_id&quot;: &quot;b6dc6eee&quot;,&#xd;
+        &quot;skill_id&quot;: &quot;52401ef1&quot;,&#xd;
+        &quot;message_id&quot;: 1,&#xd;
+        &quot;auth_token&quot;: &quot;636&quot;,&#xd;
+        &quot;user&quot;: {&#xd;
+            &quot;user_id&quot;: &quot;9fc847e3&quot;&#xd;
+        }&#xd;
+    },&#xd;
+    &quot;state&quot;: {&#xd;
+        &quot;session&quot;: {},&#xd;
+        &quot;user&quot;: {}&#xd;
+    },&#xd;
+    &quot;version&quot;: &quot;1.0&quot;&#xd;
+}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="49586">200</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.custom_message"></stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">8</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="4. TODAY_PLAN_not_empty" enabled="true">
+          <stringProp name="HTTPSampler.domain">searchyourbestjob.com</stringProp>
+          <stringProp name="HTTPSampler.port">443</stringProp>
+          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.path">webhook</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&#xd;
+    &quot;request&quot;: {&#xd;
+        &quot;original_utterance&quot;: &quot;сегодня&quot;,&#xd;
+        &quot;nlu&quot;: {&#xd;
+            &quot;entities&quot;: [],&#xd;
+            &quot;tokens&quot;: [&#xd;
+                &quot;сегодня&quot;&#xd;
+            ]&#xd;
+        },&#xd;
+        &quot;type&quot;: &quot;SimpleUtterance&quot;,&#xd;
+        &quot;command&quot;: &quot;план сегодня&quot;&#xd;
+    },&#xd;
+    &quot;meta&quot;: {&#xd;
+        &quot;interfaces&quot;: {&#xd;
+            &quot;screen&quot;: {}&#xd;
+        },&#xd;
+        &quot;timezone&quot;: &quot;Europe\/Moscow&quot;,&#xd;
+        &quot;_city_ru&quot;: &quot;Краснодар&quot;,&#xd;
+        &quot;locale&quot;: &quot;ru_RU&quot;,&#xd;
+        &quot;client_id&quot;: &quot;MailRu-VC\/1.0&quot;&#xd;
+    },&#xd;
+    &quot;session&quot;: {&#xd;
+        &quot;new&quot;: false,&#xd;
+        &quot;application&quot;: {&#xd;
+            &quot;application_type&quot;: &quot;web&quot;,&#xd;
+            &quot;application_id&quot;: &quot;87837&quot;&#xd;
+        },&#xd;
+        &quot;user_id&quot;: &quot;87837&quot;,&#xd;
+        &quot;session_id&quot;: &quot;b6dc6eee&quot;,&#xd;
+        &quot;skill_id&quot;: &quot;52401ef1&quot;,&#xd;
+        &quot;message_id&quot;: 1,&#xd;
+        &quot;auth_token&quot;: &quot;636&quot;,&#xd;
+        &quot;user&quot;: {&#xd;
+            &quot;user_id&quot;: &quot;9fc847e3&quot;&#xd;
+        }&#xd;
+    },&#xd;
+    &quot;state&quot;: {&#xd;
+        &quot;session&quot;: {},&#xd;
+        &quot;user&quot;: {&#xd;
+            &quot;week&quot;: {&#xd;
+                &quot;days&quot;: {&#xd;
+                    &quot;{{currentDate}}&quot;: [&#xd;
+                        {&#xd;
+                            &quot;time&quot;: &quot;12:00&quot;,&#xd;
+                            &quot;name&quot;: &quot;Прогулка на берегу моря&quot;&#xd;
+                        },&#xd;
+                        {&#xd;
+                            &quot;time&quot;: &quot;14:00&quot;,&#xd;
+                            &quot;name&quot;: &quot;Поздний обед&quot;&#xd;
+                        }&#xd;
+                    ],&#xd;
+                    &quot;{{pastDate}}&quot;: [&#xd;
+                        {&#xd;
+                            &quot;time&quot;: &quot;12:00&quot;,&#xd;
+                            &quot;name&quot;: &quot;Прогулка на берегу моря&quot;&#xd;
+                        },&#xd;
+                        {&#xd;
+                            &quot;time&quot;: &quot;14:00&quot;,&#xd;
+                            &quot;name&quot;: &quot;Поздний обед&quot;&#xd;
+                        }&#xd;
+                    ]&#xd;
+                }&#xd;
+            }&#xd;
+        }&#xd;
+    },&#xd;
+    &quot;version&quot;: &quot;1.0&quot;&#xd;
+}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="49586">200</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.custom_message"></stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">8</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="5. TODAY_PLAN_empty" enabled="true">
+          <stringProp name="HTTPSampler.domain">searchyourbestjob.com</stringProp>
+          <stringProp name="HTTPSampler.port">443</stringProp>
+          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.path">webhook</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&#xd;
+    &quot;request&quot;: {&#xd;
+        &quot;original_utterance&quot;: &quot;сегодня&quot;,&#xd;
+        &quot;nlu&quot;: {&#xd;
+            &quot;entities&quot;: [],&#xd;
+            &quot;tokens&quot;: [&#xd;
+                &quot;сегодня&quot;&#xd;
+            ]&#xd;
+        },&#xd;
+        &quot;type&quot;: &quot;SimpleUtterance&quot;,&#xd;
+        &quot;command&quot;: &quot;план сегодня&quot;&#xd;
+    },&#xd;
+    &quot;meta&quot;: {&#xd;
+        &quot;interfaces&quot;: {&#xd;
+            &quot;screen&quot;: {}&#xd;
+        },&#xd;
+        &quot;timezone&quot;: &quot;Europe\/Moscow&quot;,&#xd;
+        &quot;_city_ru&quot;: &quot;Краснодар&quot;,&#xd;
+        &quot;locale&quot;: &quot;ru_RU&quot;,&#xd;
+        &quot;client_id&quot;: &quot;MailRu-VC\/1.0&quot;&#xd;
+    },&#xd;
+    &quot;session&quot;: {&#xd;
+        &quot;new&quot;: false,&#xd;
+        &quot;application&quot;: {&#xd;
+            &quot;application_type&quot;: &quot;web&quot;,&#xd;
+            &quot;application_id&quot;: &quot;87837&quot;&#xd;
+        },&#xd;
+        &quot;user_id&quot;: &quot;87837&quot;,&#xd;
+        &quot;session_id&quot;: &quot;b6dc6eee&quot;,&#xd;
+        &quot;skill_id&quot;: &quot;52401ef1&quot;,&#xd;
+        &quot;message_id&quot;: 1,&#xd;
+        &quot;auth_token&quot;: &quot;636&quot;,&#xd;
+        &quot;user&quot;: {&#xd;
+            &quot;user_id&quot;: &quot;9fc847e3&quot;&#xd;
+        }&#xd;
+    },&#xd;
+    &quot;state&quot;: {&#xd;
+        &quot;session&quot;: {},&#xd;
+        &quot;user&quot;: {&#xd;
+            &quot;week&quot;: {&#xd;
+                &quot;days&quot;: {&#xd;
+                    &quot;{{pastDate}}&quot;: [&#xd;
+                        {&#xd;
+                            &quot;time&quot;: &quot;12:00&quot;,&#xd;
+                            &quot;name&quot;: &quot;Прогулка на берегу моря&quot;&#xd;
+                        },&#xd;
+                        {&#xd;
+                            &quot;time&quot;: &quot;14:00&quot;,&#xd;
+                            &quot;name&quot;: &quot;Поздний обед&quot;&#xd;
+                        }&#xd;
+                    ],&#xd;
+                    &quot;{{futureDate}}&quot;: [&#xd;
+                        {&#xd;
+                            &quot;time&quot;: &quot;12:00&quot;,&#xd;
+                            &quot;name&quot;: &quot;Прогулка на берегу моря&quot;&#xd;
+                        },&#xd;
+                        {&#xd;
+                            &quot;time&quot;: &quot;14:00&quot;,&#xd;
+                            &quot;name&quot;: &quot;Поздний обед&quot;&#xd;
+                        }&#xd;
+                    ]&#xd;
+                }&#xd;
+            }&#xd;
+        }&#xd;
+    },&#xd;
+    &quot;version&quot;: &quot;1.0&quot;&#xd;
+}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="49586">200</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.custom_message"></stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">8</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="6. WEEKLY_PLAN_not_empty" enabled="true">
+          <stringProp name="HTTPSampler.domain">searchyourbestjob.com</stringProp>
+          <stringProp name="HTTPSampler.port">443</stringProp>
+          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.path">webhook</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&#xd;
+    &quot;request&quot;: {&#xd;
+        &quot;original_utterance&quot;: &quot;план на неделю&quot;,&#xd;
+        &quot;nlu&quot;: {&#xd;
+            &quot;entities&quot;: [],&#xd;
+            &quot;tokens&quot;: [&#xd;
+                &quot;план&quot;,&#xd;
+                &quot;на&quot;,&#xd;
+                &quot;неделю&quot;&#xd;
+            ]&#xd;
+        },&#xd;
+        &quot;type&quot;: &quot;SimpleUtterance&quot;,&#xd;
+        &quot;command&quot;: &quot;план на неделю&quot;&#xd;
+    },&#xd;
+    &quot;meta&quot;: {&#xd;
+        &quot;interfaces&quot;: {&#xd;
+            &quot;screen&quot;: {}&#xd;
+        },&#xd;
+        &quot;timezone&quot;: &quot;Europe\/Moscow&quot;,&#xd;
+        &quot;_city_ru&quot;: &quot;Краснодар&quot;,&#xd;
+        &quot;locale&quot;: &quot;ru_RU&quot;,&#xd;
+        &quot;client_id&quot;: &quot;MailRu-VC\/1.0&quot;&#xd;
+    },&#xd;
+    &quot;session&quot;: {&#xd;
+        &quot;new&quot;: false,&#xd;
+        &quot;application&quot;: {&#xd;
+            &quot;application_type&quot;: &quot;web&quot;,&#xd;
+            &quot;application_id&quot;: &quot;87837&quot;&#xd;
+        },&#xd;
+        &quot;user_id&quot;: &quot;87837&quot;,&#xd;
+        &quot;session_id&quot;: &quot;b6dc6eee&quot;,&#xd;
+        &quot;skill_id&quot;: &quot;52401ef1&quot;,&#xd;
+        &quot;message_id&quot;: 1,&#xd;
+        &quot;auth_token&quot;: &quot;636&quot;,&#xd;
+        &quot;user&quot;: {&#xd;
+            &quot;user_id&quot;: &quot;9fc847e3&quot;&#xd;
+        }&#xd;
+    },&#xd;
+    &quot;state&quot;: {&#xd;
+        &quot;session&quot;: {},&#xd;
+        &quot;user&quot;: {&#xd;
+            &quot;week&quot;: {&#xd;
+                &quot;days&quot;: {&#xd;
+                    &quot;07-07-2025&quot;: [&#xd;
+                        {&#xd;
+                            &quot;time&quot;: &quot;12:00&quot;,&#xd;
+                            &quot;name&quot;: &quot;Прогулка на берегу моря&quot;&#xd;
+                        },&#xd;
+                        {&#xd;
+                            &quot;time&quot;: &quot;14:00&quot;,&#xd;
+                            &quot;name&quot;: &quot;Поздний обед&quot;&#xd;
+                        }&#xd;
+                    ],&#xd;
+                    &quot;08-04-2024&quot;: [&#xd;
+                        {&#xd;
+                            &quot;time&quot;: &quot;17:00&quot;,&#xd;
+                            &quot;name&quot;: &quot;Ужин&quot;&#xd;
+                        },&#xd;
+                        {&#xd;
+                            &quot;time&quot;: &quot;20:00&quot;,&#xd;
+                            &quot;name&quot;: &quot;Велосипедная прогулка&quot;&#xd;
+                        }&#xd;
+                    ],&#xd;
+                    &quot;07-07-2024&quot;: [&#xd;
+                        {&#xd;
+                            &quot;time&quot;: &quot;17:00&quot;,&#xd;
+                            &quot;name&quot;: &quot;Ужин&quot;&#xd;
+                        },&#xd;
+                        {&#xd;
+                            &quot;time&quot;: &quot;20:00&quot;,&#xd;
+                            &quot;name&quot;: &quot;Велосипедная прогулка&quot;&#xd;
+                        }&#xd;
+                    ]&#xd;
+                   &#xd;
+                }&#xd;
+            }&#xd;
+        }&#xd;
+    },&#xd;
+    &quot;version&quot;: &quot;1.0&quot;&#xd;
+}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="49586">200</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.custom_message"></stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">8</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="7. WEEKLY_PLAN_empty">
+          <stringProp name="HTTPSampler.domain">searchyourbestjob.com</stringProp>
+          <stringProp name="HTTPSampler.port">443</stringProp>
+          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.path">webhook</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&#xd;
+    &quot;request&quot;: {&#xd;
+        &quot;original_utterance&quot;: &quot;план на неделю&quot;,&#xd;
+        &quot;nlu&quot;: {&#xd;
+            &quot;entities&quot;: [],&#xd;
+            &quot;tokens&quot;: [&#xd;
+                &quot;план&quot;,&#xd;
+                &quot;на&quot;,&#xd;
+                &quot;неделю&quot;&#xd;
+            ]&#xd;
+        },&#xd;
+        &quot;type&quot;: &quot;SimpleUtterance&quot;,&#xd;
+        &quot;command&quot;: &quot;план на неделю&quot;&#xd;
+    },&#xd;
+    &quot;meta&quot;: {&#xd;
+        &quot;interfaces&quot;: {&#xd;
+            &quot;screen&quot;: {}&#xd;
+        },&#xd;
+        &quot;timezone&quot;: &quot;Europe\/Moscow&quot;,&#xd;
+        &quot;_city_ru&quot;: &quot;Краснодар&quot;,&#xd;
+        &quot;locale&quot;: &quot;ru_RU&quot;,&#xd;
+        &quot;client_id&quot;: &quot;MailRu-VC\/1.0&quot;&#xd;
+    },&#xd;
+    &quot;session&quot;: {&#xd;
+        &quot;new&quot;: false,&#xd;
+        &quot;application&quot;: {&#xd;
+            &quot;application_type&quot;: &quot;web&quot;,&#xd;
+            &quot;application_id&quot;: &quot;87837&quot;&#xd;
+        },&#xd;
+        &quot;user_id&quot;: &quot;87837&quot;,&#xd;
+        &quot;session_id&quot;: &quot;b6dc6eee&quot;,&#xd;
+        &quot;skill_id&quot;: &quot;52401ef1&quot;,&#xd;
+        &quot;message_id&quot;: 1,&#xd;
+        &quot;auth_token&quot;: &quot;636&quot;,&#xd;
+        &quot;user&quot;: {&#xd;
+            &quot;user_id&quot;: &quot;9fc847e3&quot;&#xd;
+        }&#xd;
+    },&#xd;
+    &quot;state&quot;: {&#xd;
+        &quot;session&quot;: {},&#xd;
+        &quot;user&quot;: {}&#xd;
+    },&#xd;
+    &quot;version&quot;: &quot;1.0&quot;&#xd;
+}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="49586">200</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.custom_message"></stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">8</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+        </hashTree>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree">
+          <boolProp name="ResultCollector.error_logging">true</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename">D:\_i\jmeter\apache-jmeter-5.6.3\bin\report-template\Response Time Graph</stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="StatVisualizer" testclass="ResultCollector" testname="Aggregate Report">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="GraphVisualizer" testclass="ResultCollector" testname="Graph Results">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="RespTimeGraphVisualizer" testclass="ResultCollector" testname="Response Time Graph">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="RespTimeGraph.graphtitle">Response Time Graph for Voice Assistant stress tests</stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="TableVisualizer" testclass="ResultCollector" testname="View Results in Table">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <IfController guiclass="IfControllerPanel" testclass="IfController" testname="Stop Test Condition" enabled="true">
+          <stringProp name="IfController.condition">${__jexl3(&quot;${PERCENT_ERRORS}&quot; &gt; 1 || &quot;${AVG_RESP_TIME}&quot; &gt; 2000)}</stringProp>
+          <boolProp name="IfController.evaluateAll">false</boolProp>
+          <boolProp name="IfController.useExpression">true</boolProp>
+        </IfController>
+        <hashTree>
+          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Stop Test" enabled="true">
+            <intProp name="ActionProcessor.action">0</intProp>
+            <intProp name="ActionProcessor.target">0</intProp>
+            <stringProp name="ActionProcessor.duration">0</stringProp>
+          </TestAction>
+          <hashTree/>
+        </hashTree>
+      </hashTree>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>
