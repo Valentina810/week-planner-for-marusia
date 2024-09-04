@@ -7,7 +7,7 @@ ARG GITHUB_TOKEN
 RUN echo "machine github.com login $GITHUB_USERNAME password $GITHUB_TOKEN" > ~/.netrc
 RUN mvn -f /app/pom.xml clean package
 
-FROM eclipse-temurin:17-jre-alpine
+FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 COPY --from=builder /app/target/*.jar /app/*.jar
 COPY tokens.json /app
