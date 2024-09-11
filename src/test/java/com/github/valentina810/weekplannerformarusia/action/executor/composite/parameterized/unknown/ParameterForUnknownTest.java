@@ -16,5 +16,5 @@ public class ParameterForUnknownTest {
     private final String testDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
     private final String testEvents = "";
     private String phrase;
-    private final String expectedResult = "Получена неизвестная команда! Используйте команду справка для того чтобы узнать мои команды";
+    private final String expectedResult = "Получена неизвестная команда! Используйте команду справка для того чтобы узнать мои команды или скажите выход для выхода из навыка";
 }
