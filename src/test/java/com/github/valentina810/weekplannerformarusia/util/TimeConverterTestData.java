@@ -54,7 +54,8 @@ public class TimeConverterTestData {
                 Arguments.of("один", "01:00"),
                 Arguments.of("девять утра", "09:00"),
                 Arguments.of("девять вечера", "09:00"),
-                Arguments.of("полдень", "00:00"),
+                Arguments.of("полдень", "12:00"),
+                Arguments.of("полночь", "00:00"),
                 Arguments.of("час", "00:00"),
                 Arguments.of("минута", "00:00")
         );
