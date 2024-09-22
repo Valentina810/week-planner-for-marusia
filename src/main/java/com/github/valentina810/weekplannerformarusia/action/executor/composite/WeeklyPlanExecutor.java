@@ -5,6 +5,7 @@ import com.github.valentina810.weekplannerformarusia.dto.Command;
 import com.github.valentina810.weekplannerformarusia.dto.ExecutorParameter;
 import com.github.valentina810.weekplannerformarusia.dto.ResponseParameters;
 import com.github.valentina810.weekplannerformarusia.storage.persistent.Event;
+import com.github.valentina810.weekplannerformarusia.util.DateConverter;
 import com.github.valentina810.weekplannerformarusia.util.Formatter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -61,7 +62,7 @@ public class WeeklyPlanExecutor implements BaseExecutor {
         );
 
         String eventsString = sortedDays.entrySet().stream()
-                .map(dayDate -> Formatter.convertDateToString.apply(dayDate.getKey()) + dayDate.getValue())
+                .map(dayDate -> DateConverter.convertDate.apply(dayDate.getKey()) + dayDate.getValue())
                 .collect(Collectors.joining(", "));
 
         return command.getMessagePositive() + eventsString;

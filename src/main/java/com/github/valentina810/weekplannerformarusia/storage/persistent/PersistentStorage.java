@@ -1,5 +1,6 @@
 package com.github.valentina810.weekplannerformarusia.storage.persistent;
 
+import com.github.valentina810.weekplannerformarusia.util.DateConverter;
 import com.github.valentina810.weekplannerformarusia.util.Formatter;
 import com.github.valentina810.weekplannerformarusia.util.TimeConverter;
 import com.google.gson.Gson;
@@ -98,7 +99,7 @@ public class PersistentStorage {
         String eventDate = getDateEvent(day);
         String eventTime = TimeConverter.getTime(time);
         weekStorage.addEvent(eventDate, Event.builder().time(eventTime).name(eventName).build());
-        return eventDate + " " + eventTime + " " + eventName;
+        return DateConverter.convertDate.apply(Formatter.convertStringToDate.apply(eventDate)) + " " + eventTime + " " + eventName;
     }
 
     /**
