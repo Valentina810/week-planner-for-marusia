@@ -69,10 +69,20 @@ public class DateConverter {
     private final DateTimeFormatter MONTH = DateTimeFormatter.ofPattern("MM");
 
     public Function<LocalDate, String> convertDate = date ->
-        new StringBuilder()
-                .append(date.getDayOfWeek().getDisplayName(TextStyle.FULL, new Locale("ru")))
-                .append(" ")
-                .append(days.get(date.format(DAY)))
-                .append(" ")
-                .append(mounts.get(date.format(MONTH))).toString();
+            new StringBuilder()
+                    .append(getRusDayOfWeek(date))
+                    .append(" ")
+                    .append(days.get(date.format(DAY)))
+                    .append(" ")
+                    .append(mounts.get(date.format(MONTH))).toString();
+
+    private String getRusDayOfWeek(LocalDate date) {
+        String result = date.getDayOfWeek().getDisplayName(TextStyle.FULL, new Locale("ru"));
+        return switch (result) {
+            case "среда" -> "среду";
+            case "пятница" -> "пятницу";
+            case "суббота" -> "субботу";
+            default -> result;
+        };
+    }
 }

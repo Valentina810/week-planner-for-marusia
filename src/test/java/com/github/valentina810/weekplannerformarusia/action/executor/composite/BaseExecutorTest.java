@@ -6,6 +6,8 @@ import com.github.valentina810.weekplannerformarusia.dto.ExecutorParameter;
 import com.github.valentina810.weekplannerformarusia.dto.ResponseParameters;
 import com.github.valentina810.weekplannerformarusia.storage.persistent.Event;
 import com.github.valentina810.weekplannerformarusia.storage.persistent.PersistentStorage;
+import com.github.valentina810.weekplannerformarusia.util.DateConverter;
+import com.github.valentina810.weekplannerformarusia.util.Formatter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -67,7 +69,7 @@ public class BaseExecutorTest {
 
         String result = baseExecutor.getEventsForDate(mockCommand, date, mockPersistentStorage);
 
-        assertEquals("Ваши события на " + DATE_FORMATTED + ": 10:00 Прогулка", result);
+        assertEquals("Ваши события на " + DateConverter.convertDate.apply(Formatter.convertStringToDate.apply(DATE_FORMATTED)) + ": 10:00 Прогулка", result);
         checkSuccessfulCallMethods();
     }
 
@@ -86,7 +88,7 @@ public class BaseExecutorTest {
 
         String result = baseExecutor.getEventsForDate(mockCommand, date, mockPersistentStorage);
 
-        assertEquals("У вас пока нет событий на " + DATE_FORMATTED, result);
+        assertEquals("У вас пока нет событий на " + DateConverter.convertDate.apply(Formatter.convertStringToDate.apply(DATE_FORMATTED)), result);
         checkSuccessfulCallMethods();
     }
 

@@ -1,5 +1,6 @@
 package com.github.valentina810.weekplannerformarusia.storage.persistent;
 
+import com.github.valentina810.weekplannerformarusia.util.DateConverter;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import org.junit.jupiter.api.BeforeAll;
@@ -33,7 +34,7 @@ public class PersistentStorageTest {
 
     private Map<String, List<Event>> days;
     private Week week;
-    private static final String EVENT_DATE = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+    private static final String EVENT_DATE = DateConverter.convertDate.apply(LocalDate.now());
     private static final String EVENT_TIME_FOR_STRING = "одиннадцать часов тридцать восемь минут";
     private static final String EVENT_TIME_FOR_TIME = "11:38";
     private static final String EVENT_NAME = "Ужин";
@@ -130,7 +131,7 @@ public class PersistentStorageTest {
     @Test
     void addEventWithIncorrectTime_shouldBeaAddedEvent_thenReturnListOfEvents() {
         Event event = Event.builder()
-                .time("00:00")
+                .time("0:00")
                 .name(EVENT_NAME)
                 .build();
         String day = getNextDayOfWeek("пятница");
