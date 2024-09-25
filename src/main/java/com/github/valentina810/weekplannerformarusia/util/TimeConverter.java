@@ -69,6 +69,6 @@ public class TimeConverter {
         int hours = times.length >= 1 ? convert(times[0]) : 0;
         int minutes = times.length >= 2 ? convert(times[1]) : 0;
         hours = hours > 23 ? 0 : hours;
-        return String.format("%02d", hours) + ":" + String.format("%02d", minutes);
+        return String.format("%d", hours) + ":" + String.format("%02d", minutes);
     }
 }

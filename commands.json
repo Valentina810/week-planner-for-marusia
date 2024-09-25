@@ -9,7 +9,7 @@
   {
     "operation": "WEEKLY_PLAN",
     "isSimple": false,
-    "messagePositive": "Ваши события ",
+    "messagePositive": "Ваши события на ",
     "messageNegative": "У вас пока нет событий на этой неделе",
     "isEndSession": false,
     "actions": []

@@ -3,8 +3,7 @@ package com.github.valentina810.weekplannerformarusia.action.executor.composite.
 import com.github.valentina810.weekplannerformarusia.action.executor.composite.BaseTest;
 import com.github.valentina810.weekplannerformarusia.action.executor.composite.parameterized.help.ParameterWithPrevActionsTest;
 import com.github.valentina810.weekplannerformarusia.storage.persistent.PersistentStorage;
-import com.github.valentina810.weekplannerformarusia.util.FileReader;
-import com.github.valentina810.weekplannerformarusia.util.Formatter;
+import com.github.valentina810.weekplannerformarusia.util.DateConverter;
 import lombok.SneakyThrows;
 import org.json.JSONObject;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -46,7 +45,7 @@ class AddEventExecutorTest extends BaseTest {
         JSONObject objectResponse = getObjectResponse.apply(response);
 
         PersistentStorage persistentStorage = getPersistentStorage(request);
-        String date = Formatter.convertDateToString.apply(LocalDate.now().with(nextOrSame(WEDNESDAY)));
+        String date = DateConverter.convertDate.apply(LocalDate.now().with(nextOrSame(WEDNESDAY)));
         persistentStorage.addEvent("среда", "двадцать три часа тридцать две минуты", "Оповестить всех о ярмарке");
 
         assertAll(
