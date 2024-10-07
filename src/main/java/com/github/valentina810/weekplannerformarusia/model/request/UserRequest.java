@@ -18,6 +18,7 @@ import org.json.JSONObject;
 @Getter
 @RequiredArgsConstructor
 public class UserRequest {
+    private Meta meta;
     private Request request;
     private Session session;
     private State state;
@@ -40,6 +41,7 @@ public class UserRequest {
     public void fillUserRequest(Object object) {
         try {
             JSONObject jsonObject = new JSONObject(new Gson().toJson(object));
+            meta = Meta.builder().timezone(jsonObject.getJSONObject("meta").getString("timezone")).build();
             request = Request.builder().command(jsonObject.getJSONObject("request").getString("command")).build();
             session = Session.builder()
                     .user_id(jsonObject.getJSONObject("session").getString("user_id"))

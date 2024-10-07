@@ -4,10 +4,9 @@ import com.github.valentina810.weekplannerformarusia.action.TypeAction;
 import com.github.valentina810.weekplannerformarusia.dto.Command;
 import com.github.valentina810.weekplannerformarusia.dto.ExecutorParameter;
 import com.github.valentina810.weekplannerformarusia.dto.ResponseParameters;
+import com.github.valentina810.weekplannerformarusia.util.Formatter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDate;
 
 import static com.github.valentina810.weekplannerformarusia.action.TypeAction.TODAY_PLAN;
 
@@ -24,7 +23,7 @@ public class TodayPlanExecutor implements BaseExecutor {
         Command command = getCommand(exParam.getTypeAction());
         return ResponseParameters.builder()
                 .isEndSession(command.getIsEndSession())
-                .respPhrase(getEventsForDate(command, LocalDate.now(), exParam.getPersistentStorage()))
+                .respPhrase(getEventsForDate(command, Formatter.getCurrentDateForTimeZone.apply(exParam.getZoneId()), exParam.getPersistentStorage()))
                 .sessionStorage(exParam.getSessionStorage())
                 .persistentStorage(exParam.getPersistentStorage())
                 .build();
