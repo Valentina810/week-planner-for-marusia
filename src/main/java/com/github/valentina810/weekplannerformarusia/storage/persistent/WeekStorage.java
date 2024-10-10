@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Builder
@@ -20,9 +21,9 @@ public class WeekStorage {
         week.addEvent(date, event);
     }
 
-    public void removeObsoleteEvents() {
+    public void removeObsoleteEvents(LocalDate currentDate) {
         if (week != null) {
-            week.removeObsoleteEvents();
+            week.removeObsoleteEvents(currentDate);
         }
     }
 }

@@ -17,9 +17,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.stream.Stream;
 
-import static java.time.format.TextStyle.*;
+import static java.time.format.TextStyle.FULL;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -32,7 +33,6 @@ public class PersistentStorageTest {
 
     private PersistentStorage persistentStorage;
 
-    private Map<String, List<Event>> days;
     private Week week;
     private static final String EVENT_DATE = DateConverter.convertDate.apply(LocalDate.now());
     private static final String EVENT_TIME_FOR_STRING = "одиннадцать часов тридцать восемь минут";
@@ -44,9 +44,11 @@ public class PersistentStorageTest {
             .name(EVENT_NAME)
             .build();
 
+    private final String timeZone = TimeZone.getDefault().getID();
+
     @BeforeAll
     void allSetup() {
-        days = new HashMap<>();
+        Map<String, List<Event>> days = new HashMap<>();
         days.put(EVENT_DATE, List.of(event));
         week = new Week(days);
     }
@@ -103,7 +105,7 @@ public class PersistentStorageTest {
 
         assertAll(
                 () -> assertTrue(eventsByWeek.containsKey(EVENT_DATE)),
-                () -> assertEquals(event, eventsByWeek.get(EVENT_DATE).get(0))
+                () -> assertEquals(event, eventsByWeek.get(EVENT_DATE).getFirst())
         );
 
     }
@@ -120,7 +122,7 @@ public class PersistentStorageTest {
 
     @Test
     void addEvent_whenWeekStorageNotInitialization_thenInitializeWeekStorageAndAddEvent() {
-        String event = persistentStorage.addEvent(EVENT_DATE, EVENT_TIME_FOR_STRING, EVENT_NAME);
+        String event = persistentStorage.addEvent(EVENT_DATE, EVENT_TIME_FOR_STRING, EVENT_NAME, timeZone);
 
         assertAll(
                 () -> assertEquals(EVENT_DATE + " " + EVENT_TIME_FOR_TIME + " " + EVENT_NAME, event),
@@ -135,13 +137,13 @@ public class PersistentStorageTest {
                 .name(EVENT_NAME)
                 .build();
         String day = getNextDayOfWeek("пятница");
-        persistentStorage.addEvent("пятница", "incorrect", EVENT_NAME);
+        persistentStorage.addEvent("пятница", "incorrect", EVENT_NAME, timeZone);
 
         Map<String, List<Event>> eventsByWeek = persistentStorage.getEventsByWeek();
 
         assertAll(
                 () -> assertTrue(eventsByWeek.containsKey(day)),
-                () -> assertEquals(event, eventsByWeek.get(day).get(0))
+                () -> assertEquals(event, eventsByWeek.get(day).getFirst())
         );
     }
 
@@ -153,13 +155,13 @@ public class PersistentStorageTest {
                 .time(EVENT_TIME_FOR_TIME)
                 .name(EVENT_NAME)
                 .build();
-        persistentStorage.addEvent(dayName, EVENT_TIME_FOR_STRING, EVENT_NAME);
+        persistentStorage.addEvent(dayName, EVENT_TIME_FOR_STRING, EVENT_NAME, timeZone);
 
         Map<String, List<Event>> eventsByWeek = persistentStorage.getEventsByWeek();
 
         assertAll(
                 () -> assertTrue(eventsByWeek.containsKey(day)),
-                () -> assertEquals(event, eventsByWeek.get(day).get(0))
+                () -> assertEquals(event, eventsByWeek.get(day).getFirst())
         );
     }
 

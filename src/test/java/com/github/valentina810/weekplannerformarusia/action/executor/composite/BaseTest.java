@@ -93,7 +93,7 @@ public class BaseTest {
         return persistentStorage;
     }
 
-    protected static String getRequestFromFile(String jsonFileSource,String phrase) {
+    protected static String getRequestFromFile(String jsonFileSource, String phrase) {
         return FileReader
                 .loadStringFromFile(jsonFileSource)
                 .replace("phrase", phrase);
@@ -117,5 +117,13 @@ public class BaseTest {
                 .replace("testDate", parameterForEventsForDateTest.getDate())
                 .replace("testEvents", parameterForEventsForDateTest.getTodayEvents())
                 .replace("phrase", parameterForEventsForDateTest.getPhrase());
+    }
+
+    /**
+     * Получить из тела запроса таймзону в формате "Europe/Moscow"
+     */
+    @SneakyThrows
+    public String getTimeZoneFromFile(String file) {
+        return getValue.apply(new JSONObject(file), "meta").getString("timezone");
     }
 }
