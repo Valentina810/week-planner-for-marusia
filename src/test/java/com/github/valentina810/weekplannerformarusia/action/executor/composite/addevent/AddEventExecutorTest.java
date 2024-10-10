@@ -46,7 +46,7 @@ class AddEventExecutorTest extends BaseTest {
 
         PersistentStorage persistentStorage = getPersistentStorage(request);
         String date = DateConverter.convertDate.apply(LocalDate.now().with(nextOrSame(WEDNESDAY)));
-        persistentStorage.addEvent("среда", "двадцать три часа тридцать две минуты", "Оповестить всех о ярмарке");
+        persistentStorage.addEvent("среда", "двадцать три часа тридцать две минуты", "Оповестить всех о ярмарке", getTimeZoneFromFile(request));
 
         assertAll(
                 () -> assertEquals(parameterWithPrevActionsTest.getExpectedResponsePhrase().replace("{eventDate}", date),
