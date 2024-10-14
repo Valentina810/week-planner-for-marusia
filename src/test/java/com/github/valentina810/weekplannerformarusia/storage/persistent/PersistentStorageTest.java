@@ -1,5 +1,6 @@
 package com.github.valentina810.weekplannerformarusia.storage.persistent;
 
+import com.github.valentina810.weekplannerformarusia.action.executor.composite.parameterized.storage.persistent.ParameterForPersistentStorageTest;
 import com.github.valentina810.weekplannerformarusia.util.DateConverter;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -12,6 +13,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
@@ -27,8 +30,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestInstance(PER_CLASS)
 public class PersistentStorageTest {
 
     private PersistentStorage persistentStorage;
@@ -38,6 +42,7 @@ public class PersistentStorageTest {
     private static final String EVENT_TIME_FOR_STRING = "одиннадцать часов тридцать восемь минут";
     private static final String EVENT_TIME_FOR_TIME = "11:38";
     private static final String EVENT_NAME = "Ужин";
+    private static final String DEFAULT_TIMEZONE = "Europe/Moscow";
 
     private static final Event event = Event.builder()
             .time(EVENT_TIME_FOR_TIME)
@@ -165,8 +170,17 @@ public class PersistentStorageTest {
         );
     }
 
-    public static String getNextDayOfWeek(String dayOfWeekName) {
-        LocalDate today = LocalDate.now();
+    @ParameterizedTest
+    @MethodSource("com.github.valentina810.weekplannerformarusia.action.executor.composite.parameterized.storage.persistent.PersistentStorageTestData#providerTimeZoneTest")
+    void addEventWithTimeZone_shouldBeAddedEvent_thenEventAddedForSpecifiedTimeZone(ParameterForPersistentStorageTest parameter) {
+        persistentStorage.addEvent(parameter.getEventDay(), "пять часов", "Название",
+                parameter.getTimeZone());
+        String day = getNextDayOfWeek(parameter.getEventDay(),parameter.getTimeZone());
+        assertEquals(day, persistentStorage.getWeekStorage().getWeek().getDays().keySet().stream().findFirst().get());
+    }
+
+    public static String getNextDayOfWeek(String dayOfWeekName, String timezone) {
+        LocalDate today = ZonedDateTime.now(ZoneId.of(timezone)).toLocalDate();
         return Stream.of(DayOfWeek.values())
                 .filter(day -> dayOfWeekName.contains(day.getDisplayName(FULL, new Locale("ru"))))
                 .findFirst()
@@ -176,5 +190,9 @@ public class PersistentStorageTest {
                 })
                 .orElse(today)
                 .format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+    }
+
+    public static String getNextDayOfWeek(String dayOfWeekName) {
+        return getNextDayOfWeek(dayOfWeekName, DEFAULT_TIMEZONE);
     }
 }

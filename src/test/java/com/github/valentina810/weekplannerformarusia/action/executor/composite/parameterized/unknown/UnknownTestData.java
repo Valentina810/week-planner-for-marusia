@@ -4,6 +4,7 @@ import org.junit.jupiter.params.provider.Arguments;
 
 import java.util.stream.Stream;
 
+import static com.github.valentina810.weekplannerformarusia.action.executor.composite.parameterized.unknown.ParameterForUnknownTest.*;
 import static org.junit.jupiter.params.provider.Arguments.of;
 
 public class UnknownTestData {
@@ -11,52 +12,52 @@ public class UnknownTestData {
     static Stream<Arguments> providerUnknownTest() {
 
         return Stream.of(
-                of(ParameterForUnknownTest.builder()
+                of(builder()
                         .phrase("PhraseUnknown")
                         .build()),
-                of(ParameterForUnknownTest.builder()
+                of(builder()
                         .phrase("")
                         .build()),
-                of(ParameterForUnknownTest.builder()
+                of(builder()
                         .phrase("сегодня")
                         .build()),
-                of(ParameterForUnknownTest.builder()
+                of(builder()
                         .phrase("завтра")
                         .build()),
-                of(ParameterForUnknownTest.builder()
+                of(builder()
                         .phrase("план")
                         .build()),
-                of(ParameterForUnknownTest.builder()
+                of(builder()
                         .phrase("понедельник")
                         .build()),
-                of(ParameterForUnknownTest.builder()
+                of(builder()
                         .phrase("вторник")
                         .build()),
-                of(ParameterForUnknownTest.builder()
+                of(builder()
                         .phrase("среда")
                         .build()),
-                of(ParameterForUnknownTest.builder()
+                of(builder()
                         .phrase("четверг")
                         .build()),
-                of(ParameterForUnknownTest.builder()
+                of(builder()
                         .phrase("пятница")
                         .build()),
-                of(ParameterForUnknownTest.builder()
+                of(builder()
                         .phrase("суббота")
                         .build()),
-                of(ParameterForUnknownTest.builder()
+                of(builder()
                         .phrase("воскресенье")
                         .build()),
-                of(ParameterForUnknownTest.builder()
+                of(builder()
                         .phrase("часов")
                         .build()),
-                of(ParameterForUnknownTest.builder()
+                of(builder()
                         .phrase("минут")
                         .build()),
-                of(ParameterForUnknownTest.builder()
+                of(builder()
                         .phrase("часов минут")
                         .build()),
-                of(ParameterForUnknownTest.builder()
+                of(builder()
                         .phrase("понедельник вторник")
                         .build())
         );
