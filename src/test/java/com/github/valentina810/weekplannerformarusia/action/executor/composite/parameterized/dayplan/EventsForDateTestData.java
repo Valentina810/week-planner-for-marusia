@@ -91,4 +91,15 @@ public class EventsForDateTestData {
                         .build())
         );
     }
+
+    static Stream<Arguments> providerTimeZoneTest()
+    {
+        return Stream.of(
+                of("Europe/Moscow"),
+                of("Asia/Yerevan"),
+                of("Australia/Sydney"),
+                of("Pacific/Auckland"),
+                of("Europe/Paris")
+        );
+    }
 }

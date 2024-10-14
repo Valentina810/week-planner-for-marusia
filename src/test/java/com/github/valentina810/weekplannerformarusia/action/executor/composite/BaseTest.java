@@ -13,8 +13,17 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.stream.Stream;
+
+import static java.time.format.TextStyle.FULL;
 
 @SpringBootTest
 public class BaseTest {
@@ -93,7 +102,7 @@ public class BaseTest {
         return persistentStorage;
     }
 
-    protected static String getRequestFromFile(String jsonFileSource,String phrase) {
+    protected static String getRequestFromFile(String jsonFileSource, String phrase) {
         return FileReader
                 .loadStringFromFile(jsonFileSource)
                 .replace("phrase", phrase);
@@ -117,5 +126,26 @@ public class BaseTest {
                 .replace("testDate", parameterForEventsForDateTest.getDate())
                 .replace("testEvents", parameterForEventsForDateTest.getTodayEvents())
                 .replace("phrase", parameterForEventsForDateTest.getPhrase());
+    }
+
+    /**
+     * Получить из тела запроса таймзону в формате "Europe/Moscow"
+     */
+    @SneakyThrows
+    public String getTimeZoneFromFile(String file) {
+        return getValue.apply(new JSONObject(file), "meta").getString("timezone");
+    }
+
+    public static String getNextDayOfWeek(String dayOfWeekName, String timezone) {
+        LocalDate today = ZonedDateTime.now(ZoneId.of(timezone)).toLocalDate();
+        return Stream.of(DayOfWeek.values())
+                .filter(day -> dayOfWeekName.contains(day.getDisplayName(FULL, new Locale("ru"))))
+                .findFirst()
+                .map(targetDay -> {
+                    int daysUntilNextTarget = (targetDay.getValue() - today.getDayOfWeek().getValue() + 7) % 7;
+                    return daysUntilNextTarget == 0 ? today : today.plusDays(daysUntilNextTarget);
+                })
+                .orElse(today)
+                .format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
     }
 }

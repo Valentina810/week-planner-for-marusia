@@ -22,10 +22,10 @@ public class AddEventNameExecutor implements BaseExecutor, TerminalExecutor {
      * Меняет persistentStorage на основе контекста из sessionStorage
      * и возвращает информацию для ответа на основе проведенных операций
      */
-    BiFunction<SessionStorage, PersistentStorage, String> getMessageInfo = (sessionStorage, persistentStorage) ->
+    Function<ExecutorParameter, String> getMessageInfo = (parameter) ->
     {
         Function<TypeAction, String> getValueAction = a ->
-                sessionStorage
+                parameter.getSessionStorage()
                         .getActions()
                         .getPrevActions()
                         .stream()
@@ -33,9 +33,9 @@ public class AddEventNameExecutor implements BaseExecutor, TerminalExecutor {
                         .findFirst()
                         .get()
                         .getValueAction();
-        return persistentStorage.addEvent(getValueAction.apply(ADD_DAY),
+        return parameter.getPersistentStorage().addEvent(getValueAction.apply(ADD_DAY),
                 getValueAction.apply(ADD_TIME),
-                getValueAction.apply(ADD_NAME));
+                getValueAction.apply(ADD_NAME), parameter.getZoneId());
     };
 
     @Override
@@ -48,15 +48,18 @@ public class AddEventNameExecutor implements BaseExecutor, TerminalExecutor {
         return getResponseParameters(exParam, getMessageInfo);
     }
 
-    @Override
     public ResponseParameters getResponseParameters(ExecutorParameter exParam,
-                                                    BiFunction<SessionStorage, PersistentStorage, String> getMessageInfo) {
+                                                    Function<ExecutorParameter, String> getMessageInfo) {
         ResponseParameters responseParameters = getResponseParametersForIntermediateCommand(exParam);
         responseParameters.setRespPhrase(responseParameters.getRespPhrase()
                 .replace("{messageInfo}",
-                        getMessageInfo.apply(exParam.getSessionStorage(),
-                                exParam.getPersistentStorage())));
+                        getMessageInfo.apply(exParam)));
         responseParameters.setSessionStorage(null);
         return responseParameters;
+    }
+
+    @Override
+    public ResponseParameters getResponseParameters(ExecutorParameter exParam, BiFunction<SessionStorage, PersistentStorage, String> getMessageInfo) {
+        return getResponseParameters(exParam, this.getMessageInfo);
     }
 }
