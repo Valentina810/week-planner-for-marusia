@@ -1,5 +1,6 @@
 package com.github.valentina810.weekplannerformarusia.storage.persistent;
 
+import com.github.valentina810.weekplannerformarusia.action.executor.composite.BaseTest;
 import com.github.valentina810.weekplannerformarusia.action.executor.composite.parameterized.storage.persistent.ParameterForPersistentStorageTest;
 import com.github.valentina810.weekplannerformarusia.util.DateConverter;
 import com.google.gson.Gson;
@@ -11,19 +12,12 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
-import java.util.stream.Stream;
 
-import static java.time.format.TextStyle.FULL;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -33,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 
 @TestInstance(PER_CLASS)
-public class PersistentStorageTest {
+public class PersistentStorageTest extends BaseTest {
 
     private PersistentStorage persistentStorage;
 
@@ -177,19 +171,6 @@ public class PersistentStorageTest {
                 parameter.getTimeZone());
         String day = getNextDayOfWeek(parameter.getEventDay(),parameter.getTimeZone());
         assertEquals(day, persistentStorage.getWeekStorage().getWeek().getDays().keySet().stream().findFirst().get());
-    }
-
-    public static String getNextDayOfWeek(String dayOfWeekName, String timezone) {
-        LocalDate today = ZonedDateTime.now(ZoneId.of(timezone)).toLocalDate();
-        return Stream.of(DayOfWeek.values())
-                .filter(day -> dayOfWeekName.contains(day.getDisplayName(FULL, new Locale("ru"))))
-                .findFirst()
-                .map(targetDay -> {
-                    int daysUntilNextTarget = (targetDay.getValue() - today.getDayOfWeek().getValue() + 7) % 7;
-                    return daysUntilNextTarget == 0 ? today : today.plusDays(daysUntilNextTarget);
-                })
-                .orElse(today)
-                .format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
     }
 
     public static String getNextDayOfWeek(String dayOfWeekName) {
