@@ -1,5 +1,6 @@
 package com.github.valentina810.weekplannerformarusia.action.executor.composite.parameterized.dayplan;
 
+import com.github.valentina810.weekplannerformarusia.util.DateConverter;
 import org.junit.jupiter.params.provider.Arguments;
 
 import java.time.LocalDate;
@@ -10,8 +11,12 @@ import static org.junit.jupiter.params.provider.Arguments.of;
 
 public class EventsForDateTestData {
     private static final String TODAY = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-    private static final String TOMORROW = LocalDate.now().plusDays(1).format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+    private static final String TOMORROW  = LocalDate.now().plusDays(1).format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
     private static final String TEMPLATE_JSON = "action/plantodate/PlanTemplate.json";
+
+    private static final String TODAY_DATE = DateConverter.convertDate.apply(LocalDate.now());
+    private static final String TOMORROW_DATE = DateConverter.convertDate.apply(LocalDate.now().plusDays(1));
+
 
     static Stream<Arguments> providerTodayPlanExecutorTest() {
         return Stream.of(
@@ -29,7 +34,7 @@ public class EventsForDateTestData {
                         .phrase("план на сегодня")
                         .date(TODAY)
                         .todayEvents("{\"time\": \"12:00\", \"name\": \"Лекция\"}")
-                        .expectedResult("Ваши события на сегодня " + TODAY + " 12:00 Лекция")
+                        .expectedResult("Ваши события на сегодня " + TODAY_DATE + " 12:00 Лекция")
                         .build()),
                 of(ParameterForEventsForDateTest.builder()
                         .testName("getPlanToday_whenPlanTodayContainsTwoEvents_thenReturnAllEvent")
@@ -37,7 +42,7 @@ public class EventsForDateTestData {
                         .phrase("план на сегодня")
                         .date(TODAY)
                         .todayEvents("{\"time\": \"12:00\", \"name\": \"Лекция\"}, {\"time\": \"16:00\", \"name\": \"Прогулка на берегу моря\"}")
-                        .expectedResult("Ваши события на сегодня " + TODAY + " 12:00 Лекция, 16:00 Прогулка на берегу моря")
+                        .expectedResult("Ваши события на сегодня " + TODAY_DATE + " 12:00 Лекция, 16:00 Прогулка на берегу моря")
                         .build()),
                 of(ParameterForEventsForDateTest.builder()
                         .testName("getPlanToday_whenPlanTodayContainsManyEventsNoSortEventTime_thenReturnAllEvent")
@@ -45,7 +50,7 @@ public class EventsForDateTestData {
                         .phrase("план на сегодня")
                         .date(TODAY)
                         .todayEvents("{\"time\": \"18:00\", \"name\": \"Лекция\"}, {\"time\": \"06:00\", \"name\": \"Зарядка\"}, {\"time\": \"16:00\", \"name\": \"Прогулка на берегу моря\"}")
-                        .expectedResult("Ваши события на сегодня " + TODAY + " 06:00 Зарядка, 16:00 Прогулка на берегу моря, 18:00 Лекция")
+                        .expectedResult("Ваши события на сегодня " + TODAY_DATE + " 06:00 Зарядка, 16:00 Прогулка на берегу моря, 18:00 Лекция")
                         .build())
         );
     }
@@ -66,7 +71,7 @@ public class EventsForDateTestData {
                         .phrase("план на завтра")
                         .date(TOMORROW)
                         .todayEvents("{\"time\": \"12:00\", \"name\": \"Лекция\"}")
-                        .expectedResult("Ваши события на завтра " + TOMORROW + " 12:00 Лекция")
+                        .expectedResult("Ваши события на завтра " + TOMORROW_DATE + " 12:00 Лекция")
                         .build()),
                 of(ParameterForEventsForDateTest.builder()
                         .testName("getPlanTomorrow_whenPlanTomorrowContainsTwoEvents_thenReturnAllEvent")
@@ -74,7 +79,7 @@ public class EventsForDateTestData {
                         .phrase("план на завтра")
                         .date(TOMORROW)
                         .todayEvents("{\"time\": \"12:00\", \"name\": \"Лекция\"}, {\"time\": \"16:00\", \"name\": \"Прогулка на берегу моря\"}")
-                        .expectedResult("Ваши события на завтра " + TOMORROW + " 12:00 Лекция, 16:00 Прогулка на берегу моря")
+                        .expectedResult("Ваши события на завтра " + TOMORROW_DATE + " 12:00 Лекция, 16:00 Прогулка на берегу моря")
                         .build()),
                 of(ParameterForEventsForDateTest.builder()
                         .testName("getPlanTomorrow_whenPlanTomorrowContainsManyEventsNoSortEventTime_thenReturnAllEvent")
@@ -82,8 +87,19 @@ public class EventsForDateTestData {
                         .phrase("план на завтра")
                         .date(TOMORROW)
                         .todayEvents("{\"time\": \"18:00\", \"name\": \"Лекция\"}, {\"time\": \"16:00\", \"name\": \"Прогулка на берегу моря\"}, {\"time\": \"06:00\", \"name\": \"Зарядка\"}")
-                        .expectedResult("Ваши события на завтра " + TOMORROW + " 06:00 Зарядка, 16:00 Прогулка на берегу моря, 18:00 Лекция")
+                        .expectedResult("Ваши события на завтра " + TOMORROW_DATE + " 06:00 Зарядка, 16:00 Прогулка на берегу моря, 18:00 Лекция")
                         .build())
+        );
+    }
+
+    static Stream<Arguments> providerTimeZoneTest()
+    {
+        return Stream.of(
+                of("Europe/Moscow"),
+                of("Asia/Yerevan"),
+                of("Australia/Sydney"),
+                of("Pacific/Auckland"),
+                of("Europe/Paris")
         );
     }
 }

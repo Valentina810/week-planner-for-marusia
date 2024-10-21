@@ -57,16 +57,18 @@ public class TimeConverter {
     }
 
     /**
-     * Возвращает из время из строки
+     * Возвращает время из строки
      *
      * @param time - время в формате "двадцать три часа тридцать восемь минут"
      * @return - время в формате 23:38
      */
     public String getTime(String time) {
+        final String NOON = "12:00";
+        if (time.contains("полдень")) return NOON;
         String[] times = time.toLowerCase().split("час");
         int hours = times.length >= 1 ? convert(times[0]) : 0;
         int minutes = times.length >= 2 ? convert(times[1]) : 0;
         hours = hours > 23 ? 0 : hours;
-        return String.format("%02d", hours) + ":" + String.format("%02d", minutes);
+        return String.format("%d", hours) + ":" + String.format("%02d", minutes);
     }
 }

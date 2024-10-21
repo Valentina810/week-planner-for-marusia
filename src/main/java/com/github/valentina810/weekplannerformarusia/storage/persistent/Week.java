@@ -39,11 +39,11 @@ public class Week {
         });
     }
 
-    public void removeObsoleteEvents() {
+    public void removeObsoleteEvents(LocalDate currentDate) {
         if (days != null) {
             days = days.entrySet().stream()
                     .filter(entry -> Formatter.convertStringToDate
-                            .apply(entry.getKey()).isAfter(LocalDate.now().minusDays(1)))
+                            .apply(entry.getKey()).isAfter(currentDate.minusDays(1)))
                     .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         }
     }

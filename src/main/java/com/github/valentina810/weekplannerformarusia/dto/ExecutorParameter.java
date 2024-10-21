@@ -13,6 +13,7 @@ import lombok.Setter;
 public class ExecutorParameter {
     private TypeAction typeAction;
     private String phrase;
+    private String zoneId;
     private SessionStorage sessionStorage;
     private PersistentStorage persistentStorage;
 }

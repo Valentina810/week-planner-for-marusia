@@ -9,6 +9,7 @@ import com.github.valentina810.weekplannerformarusia.storage.persistent.Event;
 import com.github.valentina810.weekplannerformarusia.storage.persistent.PersistentStorage;
 import com.github.valentina810.weekplannerformarusia.storage.session.PrevAction;
 import com.github.valentina810.weekplannerformarusia.storage.session.SessionStorage;
+import com.github.valentina810.weekplannerformarusia.util.DateConverter;
 import com.github.valentina810.weekplannerformarusia.util.Formatter;
 
 import java.time.LocalDate;
@@ -33,9 +34,10 @@ public interface BaseExecutor {
         String defaultMessage = command.getMessageNegative();
         if (defaultMessage != null) {
             String soughtDate = Formatter.convertDateToString.apply(date);
+            String convertDate = DateConverter.convertDate.apply(date);
             return getMessage(command.getMessagePositive(),
                     persistentStorage.getEventsByDay(soughtDate),
-                    defaultMessage).replace("{date}", soughtDate);
+                    defaultMessage).replace("{date}", convertDate);
         } else {
             return "";
         }

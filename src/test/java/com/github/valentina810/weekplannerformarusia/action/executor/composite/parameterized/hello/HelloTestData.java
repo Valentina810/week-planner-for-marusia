@@ -8,6 +8,8 @@ import static org.junit.jupiter.params.provider.Arguments.of;
 
 public class HelloTestData {
     private static final String TEMPLATE_JSON = "action/plantodate/PlanEmpty.json";
+    private static final String EXPECTED_PHRASE = "Вас приветствует навык \"Планировщик недели\"! Навык предоставляет возможность составить план событий на неделю, начиная с сегодняшнего дня. Для добавления событий в расписание скажите \"Добавь событие\", далее следуйте инструкциям. Если вы хотите узнать план событий на сегодня скажите \"План на сегодня\". Для того чтобы узнать план на завтра, воспользуйтесь командой \"План на завтра\". Можно узнать план на всю неделю с помощью команды \"План на неделю\". Для выхода из навыка скажите \"Выход\". Если у вас остались вопросы, скажите \"Справка\" для подробного объяснения работы навыка";
+
 
     static Stream<Arguments> providerHelloTest() {
 
@@ -17,7 +19,7 @@ public class HelloTestData {
                                 .testName("getHelloMessage_whenCallActivationPhrase1_thenReturnHelloMessage")
                                 .phrase("планировщик")
                                 .jsonRequest(TEMPLATE_JSON)
-                                .expectedPhrase("Вас приветствует навык Планировщик недели! У меня есть команды: план на неделю, план на сегодня, план на завтра, добавь событие, справка и выход")
+                                .expectedPhrase(EXPECTED_PHRASE)
                                 .isEndSession(false)
                                 .build()
                 ),
@@ -26,7 +28,7 @@ public class HelloTestData {
                                 .testName("getHelloMessage_whenCallActivationPhrase2_thenReturnHelloMessage")
                                 .phrase("планировщик недели")
                                 .jsonRequest(TEMPLATE_JSON)
-                                .expectedPhrase("Вас приветствует навык Планировщик недели! У меня есть команды: план на неделю, план на сегодня, план на завтра, добавь событие, справка и выход")
+                                .expectedPhrase(EXPECTED_PHRASE)
                                 .isEndSession(false)
                                 .build()
                 ));
