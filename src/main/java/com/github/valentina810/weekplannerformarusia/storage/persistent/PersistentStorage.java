@@ -92,11 +92,11 @@ public class PersistentStorage {
     /**
      * Добавление события в коллекцию
      */
-    public String addEvent(String day, String time, String eventName) {
+    public String addEvent(String day, String time, String eventName, String zoneId) {
         if (weekStorage == null) {
             weekStorage = WeekStorage.builder().build();
         }
-        String eventDate = getDateEvent(day);
+        String eventDate = getDateEvent(day, zoneId);
         String eventTime = TimeConverter.getTime(time);
         weekStorage.addEvent(eventDate, Event.builder().time(eventTime).name(eventName).build());
         return DateConverter.convertDate.apply(Formatter.convertStringToDate.apply(eventDate)) + " " + eventTime + " " + eventName;
@@ -108,12 +108,13 @@ public class PersistentStorage {
      * @param day - день недели
      * @return - дата в формате dd-MM-yyyy
      */
-    private String getDateEvent(String day) {
+    private String getDateEvent(String day, String zoneId) {
         LocalDate nextDate;
+        LocalDate currentUserDate = Formatter.getCurrentDateForTimeZone.apply(zoneId);
         try {
-            nextDate = LocalDate.now().with(nextOrSame(parseDayOfWeek(day)));
+            nextDate = currentUserDate.with(nextOrSame(parseDayOfWeek(day)));
         } catch (IllegalArgumentException | NullPointerException e) {
-            nextDate = LocalDate.now();
+            nextDate = currentUserDate;
         }
         return Formatter.convertDateToString.apply(nextDate);
     }
@@ -132,9 +133,9 @@ public class PersistentStorage {
     /**
      * Удалить из храниища все события, с датой, менее текущей
      */
-    public void removeObsoleteEvents() {
+    public void removeObsoleteEvents(LocalDate currentDate) {
         if (weekStorage != null) {
-            weekStorage.removeObsoleteEvents();
+            weekStorage.removeObsoleteEvents(currentDate);
         }
     }
 }

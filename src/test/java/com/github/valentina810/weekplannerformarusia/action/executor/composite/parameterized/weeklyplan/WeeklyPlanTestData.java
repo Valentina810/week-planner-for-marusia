@@ -5,11 +5,19 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.params.provider.Arguments;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
+import java.util.List;
+import java.util.Locale;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.github.valentina810.weekplannerformarusia.util.FileReader.loadStringFromFile;
 import static java.lang.String.valueOf;
+import static java.time.format.DateTimeFormatter.ofPattern;
 import static org.junit.jupiter.params.provider.Arguments.of;
 
 @Slf4j
@@ -18,9 +26,18 @@ public class WeeklyPlanTestData {
     private static final String TOMORROW = DateConverter.convertDate.apply(LocalDate.now().plusDays(1));
     private static final String YESTERDAY = DateConverter.convertDate.apply(LocalDate.now().minusDays(1));
 
-    private static final String TODAY_DATE = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-    private static final String TOMORROW_DATE= LocalDate.now().plusDays(1).format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-    private static final String YESTERDAY_DATE = LocalDate.now().minusDays(1).format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+    private static final DateTimeFormatter pattern = ofPattern("dd-MM-yyyy");
+    private static final String TODAY_DATE = LocalDate.now().format(pattern);
+    private static final String TOMORROW_DATE = LocalDate.now().plusDays(1).format(pattern);
+    private static final String YESTERDAY_DATE = LocalDate.now().minusDays(1).format(pattern);
+
+    private static final Function<String, String> EVENTS_WITH_OBSOLETE_EVENTS_WITH_TIME_ZONE = timezone -> {
+        LocalDate today = ZonedDateTime.now(ZoneId.of(timezone)).toLocalDate();
+        return loadStringFromFile("action/weeklyplan/remove/eventsWithObsoleteEvents.json")
+                .replace("today", today.format(pattern))
+                .replace("yesterday", today.minusDays(1).format(pattern))
+                .replace("tomorrow", today.plusDays(1).format(pattern));
+    };
 
     private static final String EVENTS_WITH_OBSOLETE_EVENTS = loadStringFromFile("action/weeklyplan/remove/eventsWithObsoleteEvents.json")
             .replace("today", TODAY_DATE)
@@ -141,7 +158,42 @@ public class WeeklyPlanTestData {
                 .replace("messageId", valueOf(messageId));
     }
 
-    private static String getJsonBody(String week) {
+    public static String getJsonBody(String week) {
         return getJsonBody(week, 0);
+    }
+
+    public static String getJsonBodyWithTimeZone(String timeZone) {
+        return getJsonBody(EVENTS_WITH_OBSOLETE_EVENTS_WITH_TIME_ZONE.apply(timeZone), 0)
+                .replace("Europe/Moscow", timeZone);
+    }
+
+    public static Stream<Arguments> providerTimeZoneTest() {
+        return Stream.of(
+                of(getExpectedDay("Europe/Moscow"), getJsonBodyWithTimeZone("Europe/Moscow")),
+                of(getExpectedDay("Asia/Yerevan"), getJsonBodyWithTimeZone("Asia/Yerevan")),
+                of(getExpectedDay("Australia/Sydney"), getJsonBodyWithTimeZone("Australia/Sydney")),
+                of(getExpectedDay("Pacific/Auckland"), getJsonBodyWithTimeZone("Pacific/Auckland")),
+                of(getExpectedDay("Europe/Paris"), getJsonBodyWithTimeZone("Europe/Paris"))
+        );
+    }
+
+    /**
+     * Получаем названия дней, на которые должны быть добавлены события
+     */
+    private static List<String> getExpectedDay(String timeZone) {
+        LocalDate today = ZonedDateTime.now(ZoneId.of(timeZone)).toLocalDate();
+        LocalDate tomorrow = today.plusDays(1);
+
+        return Stream.of(today, tomorrow)
+                .map(e -> {
+                    String dayName = e.getDayOfWeek().getDisplayName(TextStyle.FULL, new Locale("ru"));
+                    return switch (dayName) {
+                        case "среда" -> "среду";
+                        case "пятница" -> "пятницу";
+                        case "суббота" -> "субботу";
+                        default -> dayName;
+                    };
+                })
+                .collect(Collectors.toList());
     }
 }

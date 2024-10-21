@@ -14,6 +14,7 @@ import com.github.valentina810.weekplannerformarusia.storage.persistent.WeekStor
 import com.github.valentina810.weekplannerformarusia.storage.session.Actions;
 import com.github.valentina810.weekplannerformarusia.storage.session.PrevAction;
 import com.github.valentina810.weekplannerformarusia.storage.session.SessionStorage;
+import com.github.valentina810.weekplannerformarusia.util.Formatter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -83,7 +84,7 @@ public class ActionExecutor {
         PersistentStorage persistentStorage = new PersistentStorage();
         persistentStorage.setWeekStorage(userRequest.getState().getUser());
         if (userRequest.getSession().getMessage_id() == 0) {
-            persistentStorage.removeObsoleteEvents();
+            persistentStorage.removeObsoleteEvents(Formatter.getCurrentDateForTimeZone.apply(userRequest.getMeta().getTimezone()));
         }
 
         Actions actions = sessionStorage.getActions();
@@ -96,6 +97,7 @@ public class ActionExecutor {
                 .getResponseParameters(ExecutorParameter.builder()
                         .typeAction(typeAction)
                         .phrase(phrase)
+                        .zoneId(userRequest.getMeta().getTimezone())
                         .sessionStorage(sessionStorage)
                         .persistentStorage(persistentStorage).build());
     }
@@ -139,7 +141,7 @@ public class ActionExecutor {
         List<Command> commandsByPrevOperation =
                 CommandLoader.findCommandsByPrevOperation(operation);
         if (commandsByPrevOperation.size() == 1) {
-            return commandsByPrevOperation.get(0).getOperation();
+            return commandsByPrevOperation.getFirst().getOperation();
         } else {
             return determineCommandBasedOnPhrase(phrase, tokens.stream()
                     .filter(e -> commandsByPrevOperation.stream()

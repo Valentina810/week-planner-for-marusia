@@ -9,56 +9,23 @@ import static org.junit.jupiter.params.provider.Arguments.of;
 public class UnknownTestData {
 
     static Stream<Arguments> providerUnknownTest() {
-
         return Stream.of(
-                of(ParameterForUnknownTest.builder()
-                        .phrase("PhraseUnknown")
-                        .build()),
-                of(ParameterForUnknownTest.builder()
-                        .phrase("")
-                        .build()),
-                of(ParameterForUnknownTest.builder()
-                        .phrase("сегодня")
-                        .build()),
-                of(ParameterForUnknownTest.builder()
-                        .phrase("завтра")
-                        .build()),
-                of(ParameterForUnknownTest.builder()
-                        .phrase("план")
-                        .build()),
-                of(ParameterForUnknownTest.builder()
-                        .phrase("понедельник")
-                        .build()),
-                of(ParameterForUnknownTest.builder()
-                        .phrase("вторник")
-                        .build()),
-                of(ParameterForUnknownTest.builder()
-                        .phrase("среда")
-                        .build()),
-                of(ParameterForUnknownTest.builder()
-                        .phrase("четверг")
-                        .build()),
-                of(ParameterForUnknownTest.builder()
-                        .phrase("пятница")
-                        .build()),
-                of(ParameterForUnknownTest.builder()
-                        .phrase("суббота")
-                        .build()),
-                of(ParameterForUnknownTest.builder()
-                        .phrase("воскресенье")
-                        .build()),
-                of(ParameterForUnknownTest.builder()
-                        .phrase("часов")
-                        .build()),
-                of(ParameterForUnknownTest.builder()
-                        .phrase("минут")
-                        .build()),
-                of(ParameterForUnknownTest.builder()
-                        .phrase("часов минут")
-                        .build()),
-                of(ParameterForUnknownTest.builder()
-                        .phrase("понедельник вторник")
-                        .build())
+                of("PhraseUnknown"),
+                of(""),
+                of("сегодня"),
+                of("завтра"),
+                of("план"),
+                of("понедельник"),
+                of("вторник"),
+                of("среда"),
+                of("четверг"),
+                of("пятница"),
+                of("суббота"),
+                of("воскресенье"),
+                of("часов"),
+                of("минут"),
+                of("часов минут"),
+                of("понедельник вторник")
         );
     }
 }

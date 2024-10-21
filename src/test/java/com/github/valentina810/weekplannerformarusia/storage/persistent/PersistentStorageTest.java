@@ -1,5 +1,7 @@
 package com.github.valentina810.weekplannerformarusia.storage.persistent;
 
+import com.github.valentina810.weekplannerformarusia.action.executor.composite.BaseTest;
+import com.github.valentina810.weekplannerformarusia.action.executor.composite.parameterized.storage.persistent.ParameterForPersistentStorageTest;
 import com.github.valentina810.weekplannerformarusia.util.DateConverter;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -10,43 +12,42 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.stream.Stream;
+import java.util.TimeZone;
 
-import static java.time.format.TextStyle.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class PersistentStorageTest {
+@TestInstance(PER_CLASS)
+public class PersistentStorageTest extends BaseTest {
 
     private PersistentStorage persistentStorage;
 
-    private Map<String, List<Event>> days;
     private Week week;
     private static final String EVENT_DATE = DateConverter.convertDate.apply(LocalDate.now());
     private static final String EVENT_TIME_FOR_STRING = "одиннадцать часов тридцать восемь минут";
     private static final String EVENT_TIME_FOR_TIME = "11:38";
     private static final String EVENT_NAME = "Ужин";
+    private static final String DEFAULT_TIMEZONE = "Europe/Moscow";
 
     private static final Event event = Event.builder()
             .time(EVENT_TIME_FOR_TIME)
             .name(EVENT_NAME)
             .build();
 
+    private final String timeZone = TimeZone.getDefault().getID();
+
     @BeforeAll
     void allSetup() {
-        days = new HashMap<>();
+        Map<String, List<Event>> days = new HashMap<>();
         days.put(EVENT_DATE, List.of(event));
         week = new Week(days);
     }
@@ -103,7 +104,7 @@ public class PersistentStorageTest {
 
         assertAll(
                 () -> assertTrue(eventsByWeek.containsKey(EVENT_DATE)),
-                () -> assertEquals(event, eventsByWeek.get(EVENT_DATE).get(0))
+                () -> assertEquals(event, eventsByWeek.get(EVENT_DATE).getFirst())
         );
 
     }
@@ -120,7 +121,7 @@ public class PersistentStorageTest {
 
     @Test
     void addEvent_whenWeekStorageNotInitialization_thenInitializeWeekStorageAndAddEvent() {
-        String event = persistentStorage.addEvent(EVENT_DATE, EVENT_TIME_FOR_STRING, EVENT_NAME);
+        String event = persistentStorage.addEvent(EVENT_DATE, EVENT_TIME_FOR_STRING, EVENT_NAME, timeZone);
 
         assertAll(
                 () -> assertEquals(EVENT_DATE + " " + EVENT_TIME_FOR_TIME + " " + EVENT_NAME, event),
@@ -135,13 +136,13 @@ public class PersistentStorageTest {
                 .name(EVENT_NAME)
                 .build();
         String day = getNextDayOfWeek("пятница");
-        persistentStorage.addEvent("пятница", "incorrect", EVENT_NAME);
+        persistentStorage.addEvent("пятница", "incorrect", EVENT_NAME, timeZone);
 
         Map<String, List<Event>> eventsByWeek = persistentStorage.getEventsByWeek();
 
         assertAll(
                 () -> assertTrue(eventsByWeek.containsKey(day)),
-                () -> assertEquals(event, eventsByWeek.get(day).get(0))
+                () -> assertEquals(event, eventsByWeek.get(day).getFirst())
         );
     }
 
@@ -153,26 +154,26 @@ public class PersistentStorageTest {
                 .time(EVENT_TIME_FOR_TIME)
                 .name(EVENT_NAME)
                 .build();
-        persistentStorage.addEvent(dayName, EVENT_TIME_FOR_STRING, EVENT_NAME);
+        persistentStorage.addEvent(dayName, EVENT_TIME_FOR_STRING, EVENT_NAME, timeZone);
 
         Map<String, List<Event>> eventsByWeek = persistentStorage.getEventsByWeek();
 
         assertAll(
                 () -> assertTrue(eventsByWeek.containsKey(day)),
-                () -> assertEquals(event, eventsByWeek.get(day).get(0))
+                () -> assertEquals(event, eventsByWeek.get(day).getFirst())
         );
     }
 
+    @ParameterizedTest
+    @MethodSource("com.github.valentina810.weekplannerformarusia.action.executor.composite.parameterized.storage.persistent.PersistentStorageTestData#providerTimeZoneTest")
+    void addEventWithTimeZone_shouldBeAddedEvent_thenEventAddedForSpecifiedTimeZone(ParameterForPersistentStorageTest parameter) {
+        persistentStorage.addEvent(parameter.getEventDay(), "пять часов", "Название",
+                parameter.getTimeZone());
+        String day = getNextDayOfWeek(parameter.getEventDay(),parameter.getTimeZone());
+        assertEquals(day, persistentStorage.getWeekStorage().getWeek().getDays().keySet().stream().findFirst().get());
+    }
+
     public static String getNextDayOfWeek(String dayOfWeekName) {
-        LocalDate today = LocalDate.now();
-        return Stream.of(DayOfWeek.values())
-                .filter(day -> dayOfWeekName.contains(day.getDisplayName(FULL, new Locale("ru"))))
-                .findFirst()
-                .map(targetDay -> {
-                    int daysUntilNextTarget = (targetDay.getValue() - today.getDayOfWeek().getValue() + 7) % 7;
-                    return daysUntilNextTarget == 0 ? today : today.plusDays(daysUntilNextTarget);
-                })
-                .orElse(today)
-                .format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        return getNextDayOfWeek(dayOfWeekName, DEFAULT_TIMEZONE);
     }
 }
