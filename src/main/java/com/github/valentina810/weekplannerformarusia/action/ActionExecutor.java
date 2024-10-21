@@ -64,7 +64,6 @@ public class ActionExecutor {
         userResponse.setVersion(userRequest.getVersion());
 
         log.info("Сформирован ответ {}", userResponse);
-        log.info("------------------------------------------------------------------------------------------------------");
         return userResponse;
     }
 
