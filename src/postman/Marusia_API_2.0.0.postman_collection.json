@@ -373,9 +373,7 @@
 								"exec": [
 									"var jsonData = pm.response.json();\r",
 									"message_id_not_0 (jsonData);\r",
-									"\r",
-									"//-------------------------------------------------------------------------------\r",
-									"    not_user_state_update (jsonData);\r",
+									"not_user_state_update (jsonData);\r",
 									" \r",
 									"//-------------------------------------------------------------------------------\r",
 									"pm.test(\"req1. Проверка text\", function () {\r",
@@ -395,7 +393,7 @@
 									"    pm.expect(jsonData.response.end_session).to.eql(false);\r",
 									"});\r",
 									"\r",
-									"//-------------------------------------------------------------------------------\r",
+									"\r",
 									"\r",
 									""
 								],
@@ -8454,7 +8452,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"meta\": {\n        \"timezone\": \"Europe/Moscow\"\n    },\n    \"request\": {\n        \"original_utterance\": null,\n        \"command\": \"завтра\"\n    },\n    \"session\": {\n        \"user_id\": \"{{user_id}}\",\n        \"session_id\": \"{{session_id}}\",\t\n        \"message_id\": 1\n    },\n    \"state\": {\n        \"session\": {\n            \"actions\": {\n                \"prevActions\": [\n                    {\n                        \"number\": 0,\n                        \"valueAction\": \"добавь событие\",\n                        \"operation\": \"ADD_EVENT\"\n                    }\n                ]\n            }\n        },\n        \"user\": {}\n    },\n    \"version\": \"2.0.0\"\n}{\n    \"request\": {\n        \"original_utterance\": null,\n        \"command\": \"завтра\"\n    },\n    \"session\": {\n        \"user_id\": \"06325314\",\n        \"session_id\": \"4ef31ea8-6ec0-4a20-ae83-d43d8560aea0\",\n        \"message_id\": 1\n    },\n    \"state\": {\n        \"session\": {\n            \"actions\": {\n                \"prevActions\": [\n                    {\n                        \"number\": 0,\n                        \"valueAction\": \"добавь событие\",\n                        \"operation\": \"ADD_EVENT\"\n                    }\n                ]\n            }\n        },\n        \"user\": {}\n    },\n    \"version\": \"2.0.0\"\n}",
+									"raw": "{\n    \"meta\": {\n        \"timezone\": \"Europe/Moscow\"\n    },\n    \"request\": {\n        \"original_utterance\": null,\n        \"command\": \"завтра\"\n    },\n    \"session\": {\n        \"user_id\": \"{{user_id}}\",\n        \"session_id\": \"{{session_id}}\",\t\n        \"message_id\": 1\n    },\n    \"state\": {\n        \"session\": {\n            \"actions\": {\n                \"prevActions\": [\n                    {\n                        \"number\": 0,\n                        \"valueAction\": \"добавь событие\",\n                        \"operation\": \"ADD_EVENT\"\n                    }\n                ]\n            }\n        },\n        \"user\": {}\n    },\n    \"version\": \"2.0.0\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -8947,46 +8945,40 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"1. Проверка text\", function () {\r",
-											"    var jsonData = pm.response.json();\r",
-											"    \r",
+											"var jsonData = pm.response.json();\r",
+											"message_id_not_0 (jsonData);\r",
+											"not_user_state_update (jsonData);\r",
+											" \r",
+											"//-------------------------------------------------------------------------------\r",
+											"pm.test(\"req1. Проверка text\", function () {\r",
+											"  \r",
 											"    // Проверка наличия объекта\r",
 											"    pm.expect(jsonData).to.have.property('response');\r",
-											"    \r",
+											"\r",
 											"    // Проверка, что объект_тест является объектом\r",
 											"    pm.expect(jsonData.response).to.be.an('object');\r",
-											"    \r",
+											"\r",
 											"    // Проверка наличия ключа внутри объекта\r",
 											"    pm.expect(jsonData.response).to.have.property('text');\r",
 											"    pm.expect(jsonData.response).to.have.property('end_session');\r",
-											"    \r",
+											"     \r",
 											"    // Проверка значения ключа внутри объекта\r",
-											"    pm.expect(jsonData.response.text).to.eql('Получена неизвестная команда! Используйте команду справка для того чтобы узнать мои команды');\r",
+											"    pm.expect(jsonData.response.text).to.eql('Получена неизвестная команда! Используйте команду справка для того чтобы узнать мои команды или скажите выход для выхода из навыка');\r",
 											"    pm.expect(jsonData.response.end_session).to.eql(false);\r",
-											"    });\r",
-											"//-------------------------------------------------------------------------------\r",
-											"pm.test(\"2. Значение ключей 'message_id' внутри 'session'\", function () {\r",
-											"    var jsonData = pm.response.json();\r",
-											"    \r",
-											"    // Проверяем наличие объекта 'session' в ответе\r",
-											"    pm.expect(jsonData).to.have.property('session'); \r",
-											"   \r",
-											"    // Проверяем наличие ключей внутри 'session'\r",
-											"\tpm.expect(jsonData.session).to.have.property('message_id');\r",
-											"\t\r",
-											"    // Проверяем, что значение ключей\r",
-											"\t pm.expect(jsonData.session.message_id).to.equal(2147483647);\r",
-											"    \r",
 											"});\r",
+											"\r",
+											"\r",
+											"\r",
+											"\r",
 											"//-------------------------------------------------------------------------------\r",
-											"pm.test(\"3. Значение version\", function () {\r",
+											"pm.test(\"req2. Значение version\", function () {\r",
 											"    var jsonData = pm.response.json();\r",
 											"    \r",
 											"    // Проверяем наличие объекта 'version' в ответе\r",
 											"    pm.expect(jsonData).to.have.property('version');\r",
 											"\t\r",
 											"    // Проверяем, что значение ключей\r",
-											"\tpm.expect(jsonData.version).to.equal('1.01111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111');\r",
+											"\tpm.expect(jsonData.version).to.equal('2.0.01111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111');\r",
 											"    \r",
 											"});\r",
 											"//-------------------------------------------------------------------------------\r",
@@ -9021,485 +9013,6 @@
 									"options": {
 										"raw": {
 											"language": "json"
-										}
-									}
-								},
-								"url": "{{stand}}webhook"
-							},
-							"response": []
-						},
-						{
-							"name": "2.4.5 GET",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"//Проверка'days' {}\r",
-											"var jsonData = pm.response.json();\r",
-											"message_id_0(jsonData);\r",
-											"\r",
-											"//Проверка'days' {}\"\r",
-											"days_empty(jsonData);\r",
-											"\r",
-											"//----------------------------------------------------------------------------\r",
-											"pm.test(\"req1. Проверка главного сообщения text, end_session\", function () {\r",
-											"   \r",
-											"    // Проверка наличия объекта\r",
-											"    pm.expect(jsonData).to.have.property('response');\r",
-											"    \r",
-											"    // Проверка, что объект_тест является объектом\r",
-											"    pm.expect(jsonData.response).to.be.an('object');\r",
-											"    \r",
-											"    // Проверка наличия ключа внутри объекта\r",
-											"    pm.expect(jsonData.response).to.have.property('text');\r",
-											"    pm.expect(jsonData.response).to.have.property('end_session');\r",
-											"    \r",
-											"    // Проверка значения ключа внутри объекта\r",
-											"    pm.expect(jsonData.response.text).to.eql('Вас приветствует навык \\\"Планировщик недели\\\"! Навык предоставляет возможность составить план событий на неделю, начиная с сегодняшнего дня. Для добавления событий в расписание скажите \\\"Добавь событие\\\", далее следуйте инструкциям. Если вы хотите узнать план событий на сегодня скажите \\\"План на сегодня\\\". Для того чтобы узнать план на завтра, воспользуйтесь командой \\\"План на завтра\\\". Можно узнать план на всю неделю с помощью команды \\\"План на неделю\\\". Для выхода из навыка скажите \\\"Выход\\\". Если у вас остались вопросы, скажите \\\"Справка\\\" для подробного объяснения работы навыка');\r",
-											"     pm.expect(jsonData.response.end_session).to.eql(false);\r",
-											"});\r",
-											"\r",
-											""
-										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								},
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								}
-							],
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"auth": {
-									"type": "noauth"
-								},
-								"method": "GET",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"meta\": {\n        \"client_id\": \"MailRu-VC/1.0\",\n        \"locale\": \"ru_RU\",\n        \"timezone\":\"Europe/Moscow\",\n        \"interfaces\": {\n            \"screen\": {}\n        },\n        \"_city_ru\": \"Москва\"\n    },\n    \"request\": {\n        \"original_utterance\": null,\n        \"command\": \"GET\"\n    },\n    \"session\": {\n        \"user_id\": \"{{user_id}}\",\n        \"session_id\": \"{{session_id}}\",\n        \"message_id\": 0\n    },\n    \"state\": {\n        \"session\": {},\n        \"user\": {\n            \"week\": {\n                \"days\": {\n                    \"08-07-2024\": [\n                        {\n                            \"name\": \"тестовое событие для тестиргггггггггггггггггггггггоания навыка Маруси\",\n                            \"time\": \"20:00\"\n                        }\n                    ]\n                }\n            }\n        }\n    },\n    \"version\": \"2.0.0\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": "{{stand}}webhook"
-							},
-							"response": []
-						},
-						{
-							"name": "2.4.6 user_agent_uncor",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"//Проверка'days' {}\r",
-											"var jsonData = pm.response.json();\r",
-											"message_id_0(jsonData);\r",
-											"\r",
-											"//Проверка'days' {}\"\r",
-											"days_empty(jsonData);\r",
-											"\r",
-											"//----------------------------------------------------------------------------\r",
-											"pm.test(\"req1. Проверка главного сообщения text, end_session\", function () {\r",
-											"   \r",
-											"    // Проверка наличия объекта\r",
-											"    pm.expect(jsonData).to.have.property('response');\r",
-											"    \r",
-											"    // Проверка, что объект_тест является объектом\r",
-											"    pm.expect(jsonData.response).to.be.an('object');\r",
-											"    \r",
-											"    // Проверка наличия ключа внутри объекта\r",
-											"    pm.expect(jsonData.response).to.have.property('text');\r",
-											"    pm.expect(jsonData.response).to.have.property('end_session');\r",
-											"    \r",
-											"    // Проверка значения ключа внутри объекта\r",
-											"    pm.expect(jsonData.response.text).to.eql('Вас приветствует навык \\\"Планировщик недели\\\"! Навык предоставляет возможность составить план событий на неделю, начиная с сегодняшнего дня. Для добавления событий в расписание скажите \\\"Добавь событие\\\", далее следуйте инструкциям. Если вы хотите узнать план событий на сегодня скажите \\\"План на сегодня\\\". Для того чтобы узнать план на завтра, воспользуйтесь командой \\\"План на завтра\\\". Можно узнать план на всю неделю с помощью команды \\\"План на неделю\\\". Для выхода из навыка скажите \\\"Выход\\\". Если у вас остались вопросы, скажите \\\"Справка\\\" для подробного объяснения работы навыка');\r",
-											"     pm.expect(jsonData.response.end_session).to.eql(false);\r",
-											"});\r",
-											"\r",
-											""
-										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								},
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								}
-							],
-							"request": {
-								"auth": {
-									"type": "noauth"
-								},
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"meta\": {\n        \"client_id\": \"MailRu-VC/1.0\",\n        \"locale\": \"ru_RU\",\n        \"timezone\":\"Europe/Moscow\",\n        \"interfaces\": {\n            \"screen\": {}\n        },\n        \"_city_ru\": \"Москва\"\n    },\n    \"request\": {\n        \"original_utterance\": null,\n        \"command\": \"user_agent_uncor\"\n    },\n    \"session\": {\n        \"user_id\": \"{{user_id}}\",\n        \"session_id\": \"{{session_id}}\",\n        \"message_id\": 0\n    },\n    \"state\": {\n        \"session\": {},\n        \"user\": {\n            \"week\": {\n                \"days\": {\n                    \"08-07-2024\": [\n                        {\n                            \"name\": \"тестовое событие для тестиргггггггггггггггггггггггоания навыка Маруси\",\n                            \"time\": \"20:00\"\n                        }\n                    ]\n                }\n            }\n        }\n    },\n    \"version\": \"2.0.0\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": "{{stand}}webhook"
-							},
-							"response": []
-						},
-						{
-							"name": "2.4.7 user_agent_absence",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"//Проверка'days' {}\r",
-											"var jsonData = pm.response.json();\r",
-											"message_id_0(jsonData);\r",
-											"\r",
-											"//Проверка'days' {}\"\r",
-											"days_empty(jsonData);\r",
-											"\r",
-											"//----------------------------------------------------------------------------\r",
-											"pm.test(\"req1. Проверка главного сообщения text, end_session\", function () {\r",
-											"   \r",
-											"    // Проверка наличия объекта\r",
-											"    pm.expect(jsonData).to.have.property('response');\r",
-											"    \r",
-											"    // Проверка, что объект_тест является объектом\r",
-											"    pm.expect(jsonData.response).to.be.an('object');\r",
-											"    \r",
-											"    // Проверка наличия ключа внутри объекта\r",
-											"    pm.expect(jsonData.response).to.have.property('text');\r",
-											"    pm.expect(jsonData.response).to.have.property('end_session');\r",
-											"    \r",
-											"    // Проверка значения ключа внутри объекта\r",
-											"    pm.expect(jsonData.response.text).to.eql('Вас приветствует навык \\\"Планировщик недели\\\"! Навык предоставляет возможность составить план событий на неделю, начиная с сегодняшнего дня. Для добавления событий в расписание скажите \\\"Добавь событие\\\", далее следуйте инструкциям. Если вы хотите узнать план событий на сегодня скажите \\\"План на сегодня\\\". Для того чтобы узнать план на завтра, воспользуйтесь командой \\\"План на завтра\\\". Можно узнать план на всю неделю с помощью команды \\\"План на неделю\\\". Для выхода из навыка скажите \\\"Выход\\\". Если у вас остались вопросы, скажите \\\"Справка\\\" для подробного объяснения работы навыка');\r",
-											"     pm.expect(jsonData.response.end_session).to.eql(false);\r",
-											"});\r",
-											"\r",
-											""
-										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								},
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								}
-							],
-							"request": {
-								"auth": {
-									"type": "noauth"
-								},
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"meta\": {\n        \"client_id\": \"MailRu-VC/1.0\",\n        \"locale\": \"ru_RU\",\n        \"timezone\":\"Europe/Moscow\",\n        \"interfaces\": {\n            \"screen\": {}\n        },\n        \"_city_ru\": \"Москва\"\n    },\n    \"request\": {\n        \"original_utterance\": null,\n        \"command\": \"user_agent_absence\"\n    },\n    \"session\": {\n        \"user_id\": \"{{user_id}}\",\n        \"session_id\": \"{{session_id}}\",\n        \"message_id\": 0\n    },\n    \"state\": {\n        \"session\": {},\n        \"user\": {\n            \"week\": {\n                \"days\": {\n                    \"08-07-2024\": [\n                        {\n                            \"name\": \"тестовое событие для тестиргггггггггггггггггггггггоания навыка Маруси\",\n                            \"time\": \"20:00\"\n                        }\n                    ]\n                }\n            }\n        }\n    },\n    \"version\": \"2.0.0\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": "{{stand}}webhook"
-							},
-							"response": []
-						},
-						{
-							"name": "2.4.8 session",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"//Проверка'days' {}\r",
-											"var jsonData = pm.response.json();\r",
-											"message_id_0(jsonData);\r",
-											"\r",
-											"//Проверка'days' {}\"\r",
-											"days_empty(jsonData);\r",
-											"\r",
-											"//----------------------------------------------------------------------------\r",
-											"pm.test(\"req1. Проверка главного сообщения text, end_session\", function () {\r",
-											"   \r",
-											"    // Проверка наличия объекта\r",
-											"    pm.expect(jsonData).to.have.property('response');\r",
-											"    \r",
-											"    // Проверка, что объект_тест является объектом\r",
-											"    pm.expect(jsonData.response).to.be.an('object');\r",
-											"    \r",
-											"    // Проверка наличия ключа внутри объекта\r",
-											"    pm.expect(jsonData.response).to.have.property('text');\r",
-											"    pm.expect(jsonData.response).to.have.property('end_session');\r",
-											"    \r",
-											"    // Проверка значения ключа внутри объекта\r",
-											"    pm.expect(jsonData.response.text).to.eql('Вас приветствует навык \\\"Планировщик недели\\\"! Навык предоставляет возможность составить план событий на неделю, начиная с сегодняшнего дня. Для добавления событий в расписание скажите \\\"Добавь событие\\\", далее следуйте инструкциям. Если вы хотите узнать план событий на сегодня скажите \\\"План на сегодня\\\". Для того чтобы узнать план на завтра, воспользуйтесь командой \\\"План на завтра\\\". Можно узнать план на всю неделю с помощью команды \\\"План на неделю\\\". Для выхода из навыка скажите \\\"Выход\\\". Если у вас остались вопросы, скажите \\\"Справка\\\" для подробного объяснения работы навыка');\r",
-											"     pm.expect(jsonData.response.end_session).to.eql(false);\r",
-											"});\r",
-											"\r",
-											""
-										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								},
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								}
-							],
-							"request": {
-								"auth": {
-									"type": "noauth"
-								},
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"meta\": {\n        \"timezone\": \"Europe/Moscow\"\n    },\n    \"request\": {\n        \"command\": \"запусти skill планировщик недели\"\n    },\n    \"session\": {\n        \"user_id\": \"{{user_id}}\",\n        \"session_id\": \"{{session_id}}\",\n        \"message_id\": 0\n    },\n    \"state\": {\n        \"session\": {\n            \"id\": 1,\n            \"name\": \"Alice\",\n            \"age\": 30,\n            \"city\": \"Moscow\",\n            \"is_student\": false\n        },\n        \"user\": {\n            \"id\": 2,\n            \"name\": \"Bob\",\n            \"age\": 25,\n            \"city\": \"Saint Petersburg\",\n            \"is_student\": true\n        }\n    },\n    \"version\": \"2.0.0\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": "{{stand}}webhook"
-							},
-							"response": []
-						},
-						{
-							"name": "2.4.9 state_v1",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"//Проверка'days' {}\r",
-											"var jsonData = pm.response.json();\r",
-											"message_id_0(jsonData);\r",
-											"\r",
-											"//Проверка'days' {}\"\r",
-											"days_empty(jsonData);\r",
-											"\r",
-											"//----------------------------------------------------------------------------\r",
-											"pm.test(\"req1. Проверка главного сообщения text, end_session\", function () {\r",
-											"   \r",
-											"    // Проверка наличия объекта\r",
-											"    pm.expect(jsonData).to.have.property('response');\r",
-											"    \r",
-											"    // Проверка, что объект_тест является объектом\r",
-											"    pm.expect(jsonData.response).to.be.an('object');\r",
-											"    \r",
-											"    // Проверка наличия ключа внутри объекта\r",
-											"    pm.expect(jsonData.response).to.have.property('text');\r",
-											"    pm.expect(jsonData.response).to.have.property('end_session');\r",
-											"    \r",
-											"    // Проверка значения ключа внутри объекта\r",
-											"    pm.expect(jsonData.response.text).to.eql('Вас приветствует навык \\\"Планировщик недели\\\"! Навык предоставляет возможность составить план событий на неделю, начиная с сегодняшнего дня. Для добавления событий в расписание скажите \\\"Добавь событие\\\", далее следуйте инструкциям. Если вы хотите узнать план событий на сегодня скажите \\\"План на сегодня\\\". Для того чтобы узнать план на завтра, воспользуйтесь командой \\\"План на завтра\\\". Можно узнать план на всю неделю с помощью команды \\\"План на неделю\\\". Для выхода из навыка скажите \\\"Выход\\\". Если у вас остались вопросы, скажите \\\"Справка\\\" для подробного объяснения работы навыка');\r",
-											"     pm.expect(jsonData.response.end_session).to.eql(false);\r",
-											"});\r",
-											"\r",
-											""
-										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								},
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								}
-							],
-							"request": {
-								"auth": {
-									"type": "noauth"
-								},
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"meta\": {\n        \"timezone\": \"Europe/Moscow\"\n    },\n    \"request\": {\n        \"command\": \"запусти skill планировщик недели\"\n    },\n    \"session\": {\n        \"user_id\": \"{{user_id}}\",\n        \"session_id\": \"{{session_id}}\",\n        \"message_id\": 0\n    },\n    \"state\": {\n        \"session\": {\n            \"privet\": \"Как дела?\"\n        },\n        \"user\": {}\n    },\n    \"version\": \"2.0.0\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": "{{stand}}webhook"
-							},
-							"response": []
-						},
-						{
-							"name": "2.4.10 state_v2",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"//Проверка'days' {}\r",
-											"var jsonData = pm.response.json();\r",
-											"message_id_0(jsonData);\r",
-											"\r",
-											"//Проверка'days' {}\"\r",
-											"days_empty(jsonData);\r",
-											"\r",
-											"//----------------------------------------------------------------------------\r",
-											"pm.test(\"req1. Проверка главного сообщения text, end_session\", function () {\r",
-											"   \r",
-											"    // Проверка наличия объекта\r",
-											"    pm.expect(jsonData).to.have.property('response');\r",
-											"    \r",
-											"    // Проверка, что объект_тест является объектом\r",
-											"    pm.expect(jsonData.response).to.be.an('object');\r",
-											"    \r",
-											"    // Проверка наличия ключа внутри объекта\r",
-											"    pm.expect(jsonData.response).to.have.property('text');\r",
-											"    pm.expect(jsonData.response).to.have.property('end_session');\r",
-											"    \r",
-											"    // Проверка значения ключа внутри объекта\r",
-											"    pm.expect(jsonData.response.text).to.eql('Вас приветствует навык \\\"Планировщик недели\\\"! Навык предоставляет возможность составить план событий на неделю, начиная с сегодняшнего дня. Для добавления событий в расписание скажите \\\"Добавь событие\\\", далее следуйте инструкциям. Если вы хотите узнать план событий на сегодня скажите \\\"План на сегодня\\\". Для того чтобы узнать план на завтра, воспользуйтесь командой \\\"План на завтра\\\". Можно узнать план на всю неделю с помощью команды \\\"План на неделю\\\". Для выхода из навыка скажите \\\"Выход\\\". Если у вас остались вопросы, скажите \\\"Справка\\\" для подробного объяснения работы навыка');\r",
-											"     pm.expect(jsonData.response.end_session).to.eql(false);\r",
-											"});\r",
-											"\r",
-											""
-										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								},
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								}
-							],
-							"request": {
-								"auth": {
-									"type": "noauth"
-								},
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"meta\": {\n        \"timezone\": \"Europe/Moscow\"\n    },\n    \"request\": {\n        \"original_utterance\": null,\n        \"command\": \"тест событие 1\"\n    },\n    \"session\": {\n        \"user_id\": \"{{user_id}}\",\n        \"session_id\": \"{{session_id}}\",\n        \"message_id\": 3\n    },\n    \"state\": {\n        \"session\": {},\n        \"user\": {\n            \"privet\": \"Как дела?\"\n        }\n    },\n    \"version\": \"2.0.0\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": "{{stand}}webhook"
-							},
-							"response": []
-						},
-						{
-							"name": "2.4.10 SOAP",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"//Проверка'days' {}\r",
-											"var jsonData = pm.response.json();\r",
-											"message_id_0(jsonData);\r",
-											"\r",
-											"//Проверка'days' {}\"\r",
-											"days_empty(jsonData);\r",
-											"\r",
-											"//----------------------------------------------------------------------------\r",
-											"pm.test(\"req1. Проверка главного сообщения text, end_session\", function () {\r",
-											"   \r",
-											"    // Проверка наличия объекта\r",
-											"    pm.expect(jsonData).to.have.property('response');\r",
-											"    \r",
-											"    // Проверка, что объект_тест является объектом\r",
-											"    pm.expect(jsonData.response).to.be.an('object');\r",
-											"    \r",
-											"    // Проверка наличия ключа внутри объекта\r",
-											"    pm.expect(jsonData.response).to.have.property('text');\r",
-											"    pm.expect(jsonData.response).to.have.property('end_session');\r",
-											"    \r",
-											"    // Проверка значения ключа внутри объекта\r",
-											"    pm.expect(jsonData.response.text).to.eql('Вас приветствует навык \\\"Планировщик недели\\\"! Навык предоставляет возможность составить план событий на неделю, начиная с сегодняшнего дня. Для добавления событий в расписание скажите \\\"Добавь событие\\\", далее следуйте инструкциям. Если вы хотите узнать план событий на сегодня скажите \\\"План на сегодня\\\". Для того чтобы узнать план на завтра, воспользуйтесь командой \\\"План на завтра\\\". Можно узнать план на всю неделю с помощью команды \\\"План на неделю\\\". Для выхода из навыка скажите \\\"Выход\\\". Если у вас остались вопросы, скажите \\\"Справка\\\" для подробного объяснения работы навыка');\r",
-											"     pm.expect(jsonData.response.end_session).to.eql(false);\r",
-											"});\r",
-											"\r",
-											""
-										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								},
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								}
-							],
-							"request": {
-								"auth": {
-									"type": "noauth"
-								},
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n    <soap:Body>\n        <NumberToWords xmlns=\"http://www.dataaccess.com/webservicesserver/\">\n            <ubiNum>500</ubiNum>\n        </NumberToWords>\n    </soap:Body>\n</soap:Envelope>",
-									"options": {
-										"raw": {
-											"language": "xml"
 										}
 									}
 								},
@@ -11891,7 +11404,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"request\": {\n        \"original_utterance\": null,\n        \"command\": \"выйти\"\n    },\n    \"session\": {\n        \"user_id\": \"{{user_id}}\",\n        \"session_id\": \"{{session_id}}\",\n        \"message_id\": 0\n    },\n    \"state\": {\n        \"session\": {},\n        \"user\": {\n            \"week\": {\n                \"days\": {\n                    \"08-07-2024\": [\n                        {\n                            \"name\": \"тестовое событие для тестирования голосового навыка\",\n                            \"time\": \"18:00\"\n                        }\n                    ]\n                }\n            }\n        }\n    },\n    \"version\": \"2.0.0\"\n}",
+							"raw": "{\n    \"meta\": {\n        \"timezone\": \"Europe/Moscow\"\n    },\n    \"request\": {\n        \"original_utterance\": null,\n        \"command\": \"выйти\"\n    },\n    \"session\": {\n        \"user_id\": \"{{user_id}}\",\n        \"session_id\": \"{{session_id}}\",\n        \"message_id\": 0\n    },\n    \"state\": {\n        \"session\": {},\n        \"user\": {\n            \"week\": {\n                \"days\": {\n                    \"08-07-2024\": [\n                        {\n                            \"name\": \"тестовое событие для тестирования голосового навыка\",\n                            \"time\": \"18:00\"\n                        }\n                    ]\n                }\n            }\n        }\n    },\n    \"version\": \"2.0.0\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -12089,7 +11602,7 @@
 			]
 		},
 		{
-			"name": "Time-zone",
+			"name": "7. Time-zone",
 			"item": [
 				{
 					"name": "2.1.1  ADD_EVENT_today_Mos",
@@ -13631,6 +13144,740 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "8. Negative",
+			"item": [
+				{
+					"name": "8.1 GET",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"meta\": {\n        \"client_id\": \"MailRu-VC/1.0\",\n        \"locale\": \"ru_RU\",\n        \"timezone\":\"Europe/Moscow\",\n        \"interfaces\": {\n            \"screen\": {}\n        },\n        \"_city_ru\": \"Москва\"\n    },\n    \"request\": {\n        \"original_utterance\": null,\n        \"command\": \"GET\"\n    },\n    \"session\": {\n        \"user_id\": \"{{user_id}}\",\n        \"session_id\": \"{{session_id}}\",\n        \"message_id\": 0\n    },\n    \"state\": {\n        \"session\": {},\n        \"user\": {\n            \"week\": {\n                \"days\": {\n                    \"08-07-2024\": [\n                        {\n                            \"name\": \"тестовое событие для тестиргггггггггггггггггггггггоания навыка Маруси\",\n                            \"time\": \"20:00\"\n                        }\n                    ]\n                }\n            }\n        }\n    },\n    \"version\": \"2.0.0\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{stand}}webhook"
+					},
+					"response": []
+				},
+				{
+					"name": "8.2 user_agent_uncor (подготовка)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Проверка'days' {}\r",
+									"var jsonData = pm.response.json();\r",
+									"message_id_0(jsonData);\r",
+									"\r",
+									"//Проверка'days' {}\"\r",
+									"days_empty(jsonData);\r",
+									"\r",
+									"//----------------------------------------------------------------------------\r",
+									"pm.test(\"req1. Проверка главного сообщения text, end_session\", function () {\r",
+									"   \r",
+									"    // Проверка наличия объекта\r",
+									"    pm.expect(jsonData).to.have.property('response');\r",
+									"    \r",
+									"    // Проверка, что объект_тест является объектом\r",
+									"    pm.expect(jsonData.response).to.be.an('object');\r",
+									"    \r",
+									"    // Проверка наличия ключа внутри объекта\r",
+									"    pm.expect(jsonData.response).to.have.property('text');\r",
+									"    pm.expect(jsonData.response).to.have.property('end_session');\r",
+									"    \r",
+									"    // Проверка значения ключа внутри объекта\r",
+									"    pm.expect(jsonData.response.text).to.eql('Получена неизвестная команда! Используйте команду справка для того чтобы узнать мои команды или скажите выход для выхода из навыка');\r",
+									"     pm.expect(jsonData.response.end_session).to.eql(false);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Преобразуем тело запроса в JSON\r",
+									"let requestJson = JSON.parse(pm.request.body.raw);\r",
+									"\r",
+									"// Проверяем значение ключа \"command\"\r",
+									"if (requestJson.request.command === \"user_agent_uncor_1\") {\r",
+									"    // Генерация случайного значения из 10 символов\r",
+									"    let randomUserAgent = Math.random().toString(36).substring(2, 12);\r",
+									"\r",
+									"    pm.collectionVariables.set(\"user_agent\", randomUserAgent);\r",
+									"\r",
+									"    // Логируем изменение переменной\r",
+									"    console.log(`Глобальная переменная 'user_agent' изменена на: ${randomUserAgent}`);\r",
+									"} else {\r",
+									"    console.log(\"Ключ 'command' не равен 'user_agent_uncor', изменения не выполнены.\");\r",
+									"};\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"meta\": {\n        \"client_id\": \"MailRu-VC/1.0\",\n        \"locale\": \"ru_RU\",\n        \"timezone\":\"Europe/Moscow\",\n        \"interfaces\": {\n            \"screen\": {}\n        },\n        \"_city_ru\": \"Москва\"\n    },\n    \"request\": {\n        \"original_utterance\": null,\n        \"command\": \"user_agent_uncor_1\"\n    },\n    \"session\": {\n        \"user_id\": \"{{user_id}}\",\n        \"session_id\": \"{{session_id}}\",\n        \"message_id\": 0\n    },\n    \"state\": {\n        \"session\": {},\n        \"user\": {\n            \"week\": {\n                \"days\": {\n                    \"08-07-2024\": [\n                        {\n                            \"name\": \"тестовое событие для тестиргггггггггггггггггггггггоания навыка Маруси\",\n                            \"time\": \"20:00\"\n                        }\n                    ]\n                }\n            }\n        }\n    },\n    \"version\": \"2.0.0\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{stand}}webhook"
+					},
+					"response": []
+				},
+				{
+					"name": "8.3 user_agent_uncor (проверка)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"user_agent\", \"MailRu-VC/1.0\");\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Преобразуем тело запроса в JSON\r",
+									"let requestJson = JSON.parse(pm.request.body.raw);\r",
+									"\r",
+									"// Проверяем значение ключа \"command\"\r",
+									"if (requestJson.request.command === \"user_agent_uncor\") {\r",
+									"    // Генерация случайного значения из 10 символов\r",
+									"    let randomUserAgent = Math.random().toString(36).substring(2, 12);\r",
+									"\r",
+									"    // Установка нового значения для глобальной переменной \"user_agent\"\r",
+									"    pm.collectionVariables.set(\"user_agent\", randomUserAgent);\r",
+									"\r",
+									"    // Логируем изменение переменной\r",
+									"    console.log(`Глобальная переменная 'user_agent' изменена на: ${randomUserAgent}`);\r",
+									"} else {\r",
+									"    console.log(\"Ключ 'command' не равен 'user_agent_uncor', изменения не выполнены.\");\r",
+									"};\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"meta\": {\n        \"client_id\": \"MailRu-VC/1.0\",\n        \"locale\": \"ru_RU\",\n        \"timezone\":\"Europe/Moscow\",\n        \"interfaces\": {\n            \"screen\": {}\n        },\n        \"_city_ru\": \"Москва\"\n    },\n    \"request\": {\n        \"original_utterance\": null,\n        \"command\": \"user_agent_uncor\"\n    },\n    \"session\": {\n        \"user_id\": \"{{user_id}}\",\n        \"session_id\": \"{{session_id}}\",\n        \"message_id\": 0\n    },\n    \"state\": {\n        \"session\": {},\n        \"user\": {\n            \"week\": {\n                \"days\": {\n                    \"08-07-2024\": [\n                        {\n                            \"name\": \"тестовое событие для тестиргггггггггггггггггггггггоания навыка Маруси\",\n                            \"time\": \"20:00\"\n                        }\n                    ]\n                }\n            }\n        }\n    },\n    \"version\": \"2.0.0\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{stand}}webhook"
+					},
+					"response": []
+				},
+				{
+					"name": "8.4 user_agent_absence (подготовка)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Проверка'days' {}\r",
+									"var jsonData = pm.response.json();\r",
+									"message_id_0(jsonData);\r",
+									"\r",
+									"//Проверка'days' {}\"\r",
+									"days_empty(jsonData);\r",
+									"\r",
+									"//----------------------------------------------------------------------------\r",
+									"pm.test(\"req1. Проверка главного сообщения text, end_session\", function () {\r",
+									"   \r",
+									"    // Проверка наличия объекта\r",
+									"    pm.expect(jsonData).to.have.property('response');\r",
+									"    \r",
+									"    // Проверка, что объект_тест является объектом\r",
+									"    pm.expect(jsonData.response).to.be.an('object');\r",
+									"    \r",
+									"    // Проверка наличия ключа внутри объекта\r",
+									"    pm.expect(jsonData.response).to.have.property('text');\r",
+									"    pm.expect(jsonData.response).to.have.property('end_session');\r",
+									"    \r",
+									"    // Проверка значения ключа внутри объекта\r",
+									"    pm.expect(jsonData.response.text).to.eql('Получена неизвестная команда! Используйте команду справка для того чтобы узнать мои команды или скажите выход для выхода из навыка');\r",
+									"     pm.expect(jsonData.response.end_session).to.eql(false);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Преобразуем тело запроса в JSON\r",
+									"let requestJson = JSON.parse(pm.request.body.raw);\r",
+									"\r",
+									"// Проверяем значение ключа \"command\"\r",
+									"if (requestJson.request.command === \"user_agent_absence_1\") {\r",
+									"    //pm.globals.unset(\"user_agent\");\r",
+									"    pm.collectionVariables.unset(\"user_agent\");\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"meta\": {\n        \"client_id\": \"MailRu-VC/1.0\",\n        \"locale\": \"ru_RU\",\n        \"timezone\":\"Europe/Moscow\",\n        \"interfaces\": {\n            \"screen\": {}\n        },\n        \"_city_ru\": \"Москва\"\n    },\n    \"request\": {\n        \"original_utterance\": null,\n        \"command\": \"user_agent_absence_1\"\n    },\n    \"session\": {\n        \"user_id\": \"{{user_id}}\",\n        \"session_id\": \"{{session_id}}\",\n        \"message_id\": 0\n    },\n    \"state\": {\n        \"session\": {},\n        \"user\": {\n            \"week\": {\n                \"days\": {\n                    \"08-07-2024\": [\n                        {\n                            \"name\": \"тестовое событие для тестиргггггггггггггггггггггггоания навыка Маруси\",\n                            \"time\": \"20:00\"\n                        }\n                    ]\n                }\n            }\n        }\n    },\n    \"version\": \"2.0.0\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{stand}}webhook"
+					},
+					"response": []
+				},
+				{
+					"name": "8.5 user_agent_absence (проверка)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"user_agent\", \"MailRu-VC/1.0\");\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Преобразуем тело запроса в JSON\r",
+									"let requestJson = JSON.parse(pm.request.body.raw);\r",
+									"\r",
+									"// Проверяем значение ключа \"command\"\r",
+									"if (requestJson.request.command === \"user_agent_absence\") {\r",
+									"    //pm.globals.unset(\"user_agent\");\r",
+									"    pm.collectionVariables.unset(\"user_agent\");\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"meta\": {\n        \"client_id\": \"MailRu-VC/1.0\",\n        \"locale\": \"ru_RU\",\n        \"timezone\":\"Europe/Moscow\",\n        \"interfaces\": {\n            \"screen\": {}\n        },\n        \"_city_ru\": \"Москва\"\n    },\n    \"request\": {\n        \"original_utterance\": null,\n        \"command\": \"user_agent_absence\"\n    },\n    \"session\": {\n        \"user_id\": \"{{user_id}}\",\n        \"session_id\": \"{{session_id}}\",\n        \"message_id\": 0\n    },\n    \"state\": {\n        \"session\": {},\n        \"user\": {\n            \"week\": {\n                \"days\": {\n                    \"08-07-2024\": [\n                        {\n                            \"name\": \"тестовое событие для тестиргггггггггггггггггггггггоания навыка Маруси\",\n                            \"time\": \"20:00\"\n                        }\n                    ]\n                }\n            }\n        }\n    },\n    \"version\": \"2.0.0\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{stand}}webhook"
+					},
+					"response": []
+				},
+				{
+					"name": "8.6 user_agent_uncor + GET (подготовка)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Проверка'days' {}\r",
+									"var jsonData = pm.response.json();\r",
+									"message_id_0(jsonData);\r",
+									"\r",
+									"//Проверка'days' {}\"\r",
+									"days_empty(jsonData);\r",
+									"\r",
+									"//----------------------------------------------------------------------------\r",
+									"pm.test(\"req1. Проверка главного сообщения text, end_session\", function () {\r",
+									"   \r",
+									"    // Проверка наличия объекта\r",
+									"    pm.expect(jsonData).to.have.property('response');\r",
+									"    \r",
+									"    // Проверка, что объект_тест является объектом\r",
+									"    pm.expect(jsonData.response).to.be.an('object');\r",
+									"    \r",
+									"    // Проверка наличия ключа внутри объекта\r",
+									"    pm.expect(jsonData.response).to.have.property('text');\r",
+									"    pm.expect(jsonData.response).to.have.property('end_session');\r",
+									"    \r",
+									"    // Проверка значения ключа внутри объекта\r",
+									"    pm.expect(jsonData.response.text).to.eql('Получена неизвестная команда! Используйте команду справка для того чтобы узнать мои команды или скажите выход для выхода из навыка');\r",
+									"     pm.expect(jsonData.response.end_session).to.eql(false);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Преобразуем тело запроса в JSON\r",
+									"let requestJson = JSON.parse(pm.request.body.raw);\r",
+									"\r",
+									"// Проверяем значение ключа \"command\"\r",
+									"if (requestJson.request.command === \"user_agent_uncor_1\") {\r",
+									"    // Генерация случайного значения из 10 символов\r",
+									"    let randomUserAgent = Math.random().toString(36).substring(2, 12);\r",
+									"\r",
+									"    pm.collectionVariables.set(\"user_agent\", randomUserAgent);\r",
+									"\r",
+									"    // Логируем изменение переменной\r",
+									"    console.log(`Глобальная переменная 'user_agent' изменена на: ${randomUserAgent}`);\r",
+									"} else {\r",
+									"    console.log(\"Ключ 'command' не равен 'user_agent_uncor', изменения не выполнены.\");\r",
+									"};\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"meta\": {\n        \"client_id\": \"MailRu-VC/1.0\",\n        \"locale\": \"ru_RU\",\n        \"timezone\":\"Europe/Moscow\",\n        \"interfaces\": {\n            \"screen\": {}\n        },\n        \"_city_ru\": \"Москва\"\n    },\n    \"request\": {\n        \"original_utterance\": null,\n        \"command\": \"user_agent_uncor_1\"\n    },\n    \"session\": {\n        \"user_id\": \"{{user_id}}\",\n        \"session_id\": \"{{session_id}}\",\n        \"message_id\": 0\n    },\n    \"state\": {\n        \"session\": {},\n        \"user\": {\n            \"week\": {\n                \"days\": {\n                    \"08-07-2024\": [\n                        {\n                            \"name\": \"тестовое событие для тестиргггггггггггггггггггггггоания навыка Маруси\",\n                            \"time\": \"20:00\"\n                        }\n                    ]\n                }\n            }\n        }\n    },\n    \"version\": \"2.0.0\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{stand}}webhook"
+					},
+					"response": []
+				},
+				{
+					"name": "8.7 user_agent_uncor + GET (проверка)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"user_agent\", \"MailRu-VC/1.0\");\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Преобразуем тело запроса в JSON\r",
+									"let requestJson = JSON.parse(pm.request.body.raw);\r",
+									"\r",
+									"// Проверяем значение ключа \"command\"\r",
+									"if (requestJson.request.command === \"user_agent_uncor\") {\r",
+									"    // Генерация случайного значения из 10 символов\r",
+									"    let randomUserAgent = Math.random().toString(36).substring(2, 12);\r",
+									"\r",
+									"    // Установка нового значения для глобальной переменной \"user_agent\"\r",
+									"    pm.collectionVariables.set(\"user_agent\", randomUserAgent);\r",
+									"\r",
+									"    // Логируем изменение переменной\r",
+									"    console.log(`Глобальная переменная 'user_agent' изменена на: ${randomUserAgent}`);\r",
+									"} else {\r",
+									"    console.log(\"Ключ 'command' не равен 'user_agent_uncor', изменения не выполнены.\");\r",
+									"};\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"meta\": {\n        \"client_id\": \"MailRu-VC/1.0\",\n        \"locale\": \"ru_RU\",\n        \"timezone\":\"Europe/Moscow\",\n        \"interfaces\": {\n            \"screen\": {}\n        },\n        \"_city_ru\": \"Москва\"\n    },\n    \"request\": {\n        \"original_utterance\": null,\n        \"command\": \"user_agent_uncor\"\n    },\n    \"session\": {\n        \"user_id\": \"{{user_id}}\",\n        \"session_id\": \"{{session_id}}\",\n        \"message_id\": 0\n    },\n    \"state\": {\n        \"session\": {},\n        \"user\": {\n            \"week\": {\n                \"days\": {\n                    \"08-07-2024\": [\n                        {\n                            \"name\": \"тестовое событие для тестиргггггггггггггггггггггггоания навыка Маруси\",\n                            \"time\": \"20:00\"\n                        }\n                    ]\n                }\n            }\n        }\n    },\n    \"version\": \"2.0.0\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{stand}}webhook"
+					},
+					"response": []
+				},
+				{
+					"name": "8.8 SOAP",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"if (pm.environment.get(\"RUN_TESTS\") === \"false\") {\r",
+									"    postman.setNextRequest(null); // Пропускает выполнение этого запроса\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n    <soap:Body>\n        <NumberToWords xmlns=\"http://www.dataaccess.com/webservicesserver/\">\n            <ubiNum>500</ubiNum>\n        </NumberToWords>\n    </soap:Body>\n</soap:Envelope>",
+							"options": {
+								"raw": {
+									"language": "xml"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{stand}}webhook?=",
+							"host": [
+								"{{stand}}webhook"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "9. STATE",
+			"item": [
+				{
+					"name": "9.1 state_random",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Проверка'days' {}\r",
+									"var jsonData = pm.response.json();\r",
+									"message_id_0(jsonData);\r",
+									"\r",
+									"//----------------------------------------------------------------------------\r",
+									"pm.test(\"req1. Проверка главного сообщения text, end_session\", function () {\r",
+									"   \r",
+									"    // Проверка наличия объекта\r",
+									"    pm.expect(jsonData).to.have.property('response');\r",
+									"    \r",
+									"    // Проверка, что объект_тест является объектом\r",
+									"    pm.expect(jsonData.response).to.be.an('object');\r",
+									"    \r",
+									"    // Проверка наличия ключа внутри объекта\r",
+									"    pm.expect(jsonData.response).to.have.property('text');\r",
+									"    pm.expect(jsonData.response).to.have.property('end_session');\r",
+									"    \r",
+									"    // Проверка значения ключа внутри объекта\r",
+									"    pm.expect(jsonData.response.text).to.eql('Вас приветствует навык \\\"Планировщик недели\\\"! Навык предоставляет возможность составить план событий на неделю, начиная с сегодняшнего дня. Для добавления событий в расписание скажите \\\"Добавь событие\\\", далее следуйте инструкциям. Если вы хотите узнать план событий на сегодня скажите \\\"План на сегодня\\\". Для того чтобы узнать план на завтра, воспользуйтесь командой \\\"План на завтра\\\". Можно узнать план на всю неделю с помощью команды \\\"План на неделю\\\". Для выхода из навыка скажите \\\"Выход\\\". Если у вас остались вопросы, скажите \\\"Справка\\\" для подробного объяснения работы навыка');\r",
+									"     pm.expect(jsonData.response.end_session).to.eql(false);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"meta\": {\n        \"timezone\": \"Europe/Moscow\"\n    },\n    \"request\": {\n        \"command\": \"запусти skill планировщик недели\"\n    },\n    \"session\": {\n        \"user_id\": \"{{user_id}}\",\n        \"session_id\": \"{{session_id}}\",\n        \"message_id\": 0\n    },\n    \"state\": {\n        \"session\": {\n            \"id\": 1,\n            \"name\": \"Alice\",\n            \"age\": 30,\n            \"city\": \"Moscow\",\n            \"is_student\": false\n        },\n        \"user\": {\n            \"id\": 2,\n            \"name\": \"Bob\",\n            \"age\": 25,\n            \"city\": \"Saint Petersburg\",\n            \"is_student\": true\n        }\n    },\n    \"version\": \"2.0.0\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{stand}}webhook"
+					},
+					"response": []
+				},
+				{
+					"name": "9.2 state -> session random",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Проверка'days' {}\r",
+									"var jsonData = pm.response.json();\r",
+									"message_id_0(jsonData);\r",
+									"\r",
+									"//----------------------------------------------------------------------------\r",
+									"pm.test(\"req1. Проверка главного сообщения text, end_session\", function () {\r",
+									"   \r",
+									"    // Проверка наличия объекта\r",
+									"    pm.expect(jsonData).to.have.property('response');\r",
+									"    \r",
+									"    // Проверка, что объект_тест является объектом\r",
+									"    pm.expect(jsonData.response).to.be.an('object');\r",
+									"    \r",
+									"    // Проверка наличия ключа внутри объекта\r",
+									"    pm.expect(jsonData.response).to.have.property('text');\r",
+									"    pm.expect(jsonData.response).to.have.property('end_session');\r",
+									"    \r",
+									"    // Проверка значения ключа внутри объекта\r",
+									"    pm.expect(jsonData.response.text).to.eql('Вас приветствует навык \\\"Планировщик недели\\\"! Навык предоставляет возможность составить план событий на неделю, начиная с сегодняшнего дня. Для добавления событий в расписание скажите \\\"Добавь событие\\\", далее следуйте инструкциям. Если вы хотите узнать план событий на сегодня скажите \\\"План на сегодня\\\". Для того чтобы узнать план на завтра, воспользуйтесь командой \\\"План на завтра\\\". Можно узнать план на всю неделю с помощью команды \\\"План на неделю\\\". Для выхода из навыка скажите \\\"Выход\\\". Если у вас остались вопросы, скажите \\\"Справка\\\" для подробного объяснения работы навыка');\r",
+									"     pm.expect(jsonData.response.end_session).to.eql(false);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"meta\": {\n        \"timezone\": \"Europe/Moscow\"\n    },\n    \"request\": {\n        \"command\": \"запусти skill планировщик недели\"\n    },\n    \"session\": {\n        \"user_id\": \"{{user_id}}\",\n        \"session_id\": \"{{session_id}}\",\n        \"message_id\": 0\n    },\n    \"state\": {\n        \"session\": {\n            \"privet\": \"Как дела?\"\n        },\n        \"user\": {}\n    },\n    \"version\": \"2.0.0\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{stand}}webhook"
+					},
+					"response": []
+				},
+				{
+					"name": "9.3 state -> user random",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"message_id_not_0 (jsonData);\r",
+									"not_user_state_update (jsonData);\r",
+									" \r",
+									"//-------------------------------------------------------------------------------\r",
+									"pm.test(\"req1. Проверка text\", function () {\r",
+									"  \r",
+									"    // Проверка наличия объекта\r",
+									"    pm.expect(jsonData).to.have.property('response');\r",
+									"\r",
+									"    // Проверка, что объект_тест является объектом\r",
+									"    pm.expect(jsonData.response).to.be.an('object');\r",
+									"\r",
+									"    // Проверка наличия ключа внутри объекта\r",
+									"    pm.expect(jsonData.response).to.have.property('text');\r",
+									"    pm.expect(jsonData.response).to.have.property('end_session');\r",
+									"     \r",
+									"    // Проверка значения ключа внутри объекта\r",
+									"    pm.expect(jsonData.response.text).to.eql('Получена неизвестная команда! Используйте команду справка для того чтобы узнать мои команды или скажите выход для выхода из навыка');\r",
+									"    pm.expect(jsonData.response.end_session).to.eql(false);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"meta\": {\n        \"timezone\": \"Europe/Moscow\"\n    },\n    \"request\": {\n        \"original_utterance\": null,\n        \"command\": \"тест событие 1\"\n    },\n    \"session\": {\n        \"user_id\": \"{{user_id}}\",\n        \"session_id\": \"{{session_id}}\",\n        \"message_id\": 3\n    },\n    \"state\": {\n        \"session\": {},\n        \"user\": {\n            \"privet\": \"Как дела?\"\n        }\n    },\n    \"version\": \"2.0.0\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{stand}}webhook"
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"event": [
@@ -13661,38 +13908,62 @@
 				"type": "text/javascript",
 				"packages": {},
 				"exec": [
-					"pm.test(\"col1. Ответ должен содержать код статуса успеха и тело в формате json\", function() {\r",
-					"    pm.expect(pm.response.code).to.be.oneOf([200]); // код ответа должен быть успешным\r",
+					"//Преобразуем тело запроса в JSON\r",
+					"let requestJson = JSON.parse(pm.request.body.raw);\r",
+					"\r",
+					"// Проверяем, является ли команда \"user_agent_uncor\" или \"user_agent_absence\"\r",
+					"if (requestJson.request.command === \"user_agent_uncor\" || requestJson.request.command === \"user_agent_absence\") {  \r",
+					"} else {\r",
+					"    // Если метод POST\r",
+					"    if (pm.request.method === 'POST') {\r",
+					"        // Проверка статуса ответа для метода POST\r",
+					"        pm.test(\"col1. Статус ответа 200\", function () {\r",
+					"            pm.response.to.have.status(200);\r",
+					"        });\r",
+					"    } else {\r",
+					"        // Проверка статуса ответа для методов, отличных от POST\r",
+					"        pm.test(\"col1. Статус ответа 405 для метода \" + pm.request.method, function () {\r",
+					"            pm.response.to.have.status(405);\r",
+					"        });\r",
+					"    }\r",
+					"}\r",
+					"\r",
+					"//-------------------------------------------------------------------------------\r",
+					"pm.test(\"col2. Ответ должен содержать тело в формате json\", function() {\r",
 					"    pm.response.to.be.withBody; // ответ должен содержать тело\r",
 					"    pm.response.to.be.json; // и тело ответа должно быть в формате JSON    \r",
 					"});\r",
 					"\r",
 					"//-------------------------------------------------------------------------------\r",
-					"pm.test(\"col2. Значение ключей user_id, session_id внутри 'session'\", function () {\r",
-					"    var jsonData = pm.response.json();\r",
+					"if (pm.request.method === 'POST' && \r",
+					"    (requestJson.request.command !== \"user_agent_uncor\" && requestJson.request.command !== \"user_agent_absence\")) {\r",
+					"    pm.test(\"col3. Значение ключей user_id, session_id внутри 'session'\", function () {\r",
+					"        var jsonData = pm.response.json();\r",
 					"\r",
-					"    // Получаем значение user_id\r",
-					"    var user_id_per  = jsonData.session.user_id;\r",
+					"        // Получаем значение user_id\r",
+					"        var user_id_per  = jsonData.session.user_id;\r",
 					"\r",
-					"    if (user_id_per === \"b4fde534\") {\r",
-					"        // Проверяем, что user_id имеет b4fde534, а session_id - ffb392fd\r",
-					"\t\tpm.expect(jsonData.session.user_id).to.equal('b4fde534');\r",
-					"\t\tpm.expect(jsonData.session.session_id).to.equal('ffb392fd');\r",
+					"        if (user_id_per === \"b4fde534\") {\r",
+					"            // Проверяем, что user_id имеет b4fde534, а session_id - ffb392fd\r",
+					"            pm.expect(jsonData.session.user_id).to.equal('b4fde534');\r",
+					"            pm.expect(jsonData.session.session_id).to.equal('ffb392fd');\r",
+					"            \r",
+					"        } else if (user_id_per === \"8783711111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111\") {\r",
+					"            // Проверяем, что user_id имеет , а session_id - значение_max\r",
+					"            pm.expect(jsonData.session.user_id).to.equal('8783711111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111');\r",
+					"            pm.expect(jsonData.session.session_id).to.equal('b6dc6eee1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111');\r",
 					"        \r",
-					"    } else if (user_id_per === \"8783711111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111\") {\r",
-					"        // Проверяем, что user_id имеет , а session_id - значение_max\r",
-					"\t\tpm.expect(jsonData.session.user_id).to.equal('8783711111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111');\r",
-					"\t\tpm.expect(jsonData.session.session_id).to.equal('b6dc6eee1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111');\r",
-					"       \r",
-					"    } else {\r",
-					"        // Если user_id не соответствует ни одному из ожидаемых значений\r",
-					"        pm.expect.fail(\"user_id имеет неожиданное значение: \" + user_id_per);\r",
-					"    }\r",
-					"});\r",
+					"        } else {\r",
+					"            // Если user_id не соответствует ни одному из ожидаемых значений\r",
+					"            pm.expect.fail(\"user_id имеет неожиданное значение: \" + user_id_per);\r",
+					"        }\r",
+					"    });\r",
+					"};\r",
+					"\r",
 					"\r",
 					"//-------------------------------------------------------------------------------\r",
 					"message_id_0 = function(jsonData) {\r",
-					"    pm.test(\"col3(0). Значение message_id = 0 внутри 'session'\", function () {\r",
+					"    pm.test(\"col4(1). Значение message_id = 0 внутри 'session'\", function () {\r",
 					"        var jsonData = pm.response.json();\r",
 					"        \r",
 					"        // Проверяем наличие объекта 'session' в ответе\r",
@@ -13708,7 +13979,7 @@
 					"\r",
 					"//-------------------------------------------------------------------------------\r",
 					"message_id_not_0 = function(jsonData) {\r",
-					"    pm.test(\"col3(1). Значение ключа 'message_id' внутри 'session' не равно 0\", function () {\r",
+					"    pm.test(\"col4(2). Значение ключа 'message_id' внутри 'session' не равно 0\", function () {\r",
 					"        var jsonData = pm.response.json();\r",
 					"        \r",
 					"        // Проверяем наличие объекта 'session' в ответе\r",
@@ -13725,7 +13996,7 @@
 					"\r",
 					"//-------------------------------------------------------------------------------\r",
 					"days_empty = function(jsonData) {\r",
-					"    pm.test(\"col4. Проверка'days' {}\", function () {\r",
+					"    pm.test(\"col5. Проверка'days' {}\", function () {\r",
 					"        \r",
 					"        // Проверяем наличие user_state_update в ответе\r",
 					"        pm.expect(jsonData).to.have.property('user_state_update');\r",
@@ -13742,6 +14013,32 @@
 					"        pm.expect(jsonData.user_state_update.week.days).to.be.an('object').that.is.empty;   \r",
 					"    });\r",
 					"};\r",
+					"\r",
+					"//-------------------------------------------------------------------------------\r",
+					"if (pm.request.method !== 'POST' && \r",
+					"    requestJson.request.command !== \"user_agent_uncor\") {\r",
+					"    // Проверяем, что в ответе есть ключи и значения\r",
+					"    pm.test(\"col6. Проверка JSON ответа для метода \" + pm.request.method, function () {\r",
+					"        let responseJson = pm.response.json(); // Преобразуем ответ в JSON\r",
+					"\r",
+					"        // Проверяем наличие и значения ключей\r",
+					"        pm.expect(responseJson).to.have.property('timestamp'); // Ключ 'timestamp' присутствует\r",
+					"        pm.expect(responseJson).to.have.property('status', 405); // Ключ 'status' равен 405\r",
+					"        pm.expect(responseJson).to.have.property('error', 'Method Not Allowed'); // Ключ 'error' равен 'Method Not Allowed'\r",
+					"        pm.expect(responseJson).to.have.property('path', '/webhook'); // Ключ 'path' равен '/webhook'\r",
+					"    });\r",
+					"}; \r",
+					"\r",
+					"//-------------------------------------------------------------------------------\r",
+					"if (requestJson.request.command === \"user_agent_uncor\" || requestJson.request.command === \"user_agent_absence\") {\r",
+					"    pm.test(\"col7. Проверка JSON ответа при некорректном user_agent\", function () {\r",
+					"        let responseJson = pm.response.json();     \r",
+					"        pm.expect(responseJson).to.have.property('timestamp');\r",
+					"        pm.expect(responseJson).to.have.property('status', 415);\r",
+					"        pm.expect(responseJson).to.have.property('error', 'Unsupported Media Type');\r",
+					"        pm.expect(responseJson).to.have.property('path', '/webhook'); \r",
+					"    });\r",
+					"}; \r",
 					"\r",
 					"//-------------------------------------------------------------------------------\r",
 					"// Генерация текущей даты в формате DD-MM-YYYY + день\r",
@@ -13998,11 +14295,6 @@
 			"type": "string"
 		},
 		{
-			"key": "user_agent",
-			"value": "MailRu-VC/1.0",
-			"type": "string"
-		},
-		{
 			"key": "user_id",
 			"value": "b4fde534",
 			"type": "string"
@@ -14023,8 +14315,18 @@
 			"type": "string"
 		},
 		{
+			"key": "user-agent",
 			"value": "",
 			"disabled": true
+		},
+		{
+			"key": "user_agent",
+			"value": ""
+		},
+		{
+			"key": "RUN_TESTS",
+			"value": "false",
+			"type": "string"
 		}
 	]
 }
