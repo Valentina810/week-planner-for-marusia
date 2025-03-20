@@ -68,36 +68,36 @@ public class WeeklyPlanTestData {
                 of(ParameterForWeeklyPlanTest.builder()
                         .testName("getWeeklyPlan_whenWeeklyPlanContainsOneEvent_thenReturnOneEvent")
                         .jsonBody(getJsonBody(loadStringFromFile("action/weeklyplan/weekContainsOneEvent.json"), 2))
-                        .expectedResult("Ваши события на вторник тридцать первое октября 12:00 Лекция").build()),
+                        .expectedResult("Ваши события на вторник, тридцать первое октября 12:00 Лекция").build()),
                 of(ParameterForWeeklyPlanTest.builder()
                         .testName("getWeeklyPlan_whenWeeklyPlanContainsTwoEventsOnOneDay_thenReturnAllEvent")
                         .jsonBody(getJsonBody(loadStringFromFile("action/weeklyplan/weekContainsTwoEventsOnOneDay.json"), 3))
-                        .expectedResult("Ваши события на вторник тридцать первое октября 12:00 Лекция, 16:00 Свидание")
+                        .expectedResult("Ваши события на вторник, тридцать первое октября 12:00 Лекция, 16:00 Свидание")
                         .build()),
                 of(ParameterForWeeklyPlanTest.builder()
                         .testName("getWeeklyPlan_whenWeeklyPlanContainsTwoEventsOnDifferentDay_thenReturnAllEvent")
                         .jsonBody(getJsonBody(loadStringFromFile("action/weeklyplan/weekContainsTwoEventsOnDifferentDay.json"), 4))
-                        .expectedResult("Ваши события на вторник тридцать первое октября 12:00 Лекция, пятницу третье ноября 18:00 Ужин в ресторане")
+                        .expectedResult("Ваши события на вторник, тридцать первое октября 12:00 Лекция, пятницу, третье ноября 18:00 Ужин в ресторане")
                         .build()),
                 of(ParameterForWeeklyPlanTest.builder()
                         .testName("getWeeklyPlan_whenWeeklyPlanContainsTwoEventsOnOneDayAndDuplicateDate_thenReturnLastDateEvents")
                         .jsonBody(getJsonBody(loadStringFromFile("action/weeklyplan/weekContainsTwoEventsOnOneDayAndDuplicateDate.json"), 5))
-                        .expectedResult("Ваши события на вторник тридцать первое октября 18:00 Ужин в ресторане")
+                        .expectedResult("Ваши события на вторник, тридцать первое октября 18:00 Ужин в ресторане")
                         .build()),
                 of(ParameterForWeeklyPlanTest.builder()
                         .testName("getWeeklyPlan_whenWeeklyPlanContainsTwoEventsTwoDays_thenReturnAllEvent")
                         .jsonBody(getJsonBody(loadStringFromFile("action/weeklyplan/weekContainsTwoEventsTwoDays.json"), 6))
-                        .expectedResult("Ваши события на вторник тридцать первое октября 12:00 Лекция, 16:00 Свидание, субботу четвертое ноября 10:00 Велотренировка, 20:00 Поход за покупками")
+                        .expectedResult("Ваши события на вторник, тридцать первое октября 12:00 Лекция, 16:00 Свидание, субботу, четвертое ноября 10:00 Велотренировка, 20:00 Поход за покупками")
                         .build()),
                 of(ParameterForWeeklyPlanTest.builder()
                         .testName("getWeeklyPlan_whenWeeklyPlanContainsManyEventsManyDaysEventWithNoSortDate_thenReturnAllEvent")
                         .jsonBody(getJsonBody(loadStringFromFile("action/weeklyplan/weekContainsManyEventsManyDaysEventWithNoSortDate.json"), 7))
-                        .expectedResult("Ваши события на воскресенье двадцать девятое октября 10:00 Велотренировка, 20:00 Поход за покупками, вторник тридцать первое октября 10:00 Учеба, 23:00 Уборка, среду первое ноября 12:00 Лекция, 16:00 Свидание, субботу четвертое ноября 19:00 Купание кота, 20:00 Свидание")
+                        .expectedResult("Ваши события на воскресенье, двадцать девятое октября 10:00 Велотренировка, 20:00 Поход за покупками, вторник, тридцать первое октября 10:00 Учеба, 23:00 Уборка, среду, первое ноября 12:00 Лекция, 16:00 Свидание, субботу, четвертое ноября 19:00 Купание кота, 20:00 Свидание")
                         .build()),
                 of(ParameterForWeeklyPlanTest.builder()
                         .testName("getWeeklyPlan_whenWeeklyPlanContainsManyEventsManyDaysEventWithNoSortDateAndNoSortEventTime_thenReturnAllEvent")
                         .jsonBody(getJsonBody(loadStringFromFile("action/weeklyplan/weekContainsManyEventsManyDaysEventWithNoSortDateAndNoSortEventTime.json"), 8))
-                        .expectedResult("Ваши события на воскресенье двадцать девятое октября 10:00 Завтрак, 12:00 Обед, 23:00 Ужин, среду первое ноября 09:00 Завтрак, 16:00 Свидание, 18:00 Лекция")
+                        .expectedResult("Ваши события на воскресенье, двадцать девятое октября 10:00 Завтрак, 12:00 Обед, 23:00 Ужин, среду, первое ноября 09:00 Завтрак, 16:00 Свидание, 18:00 Лекция")
                         .build())
         );
     }
