@@ -28,7 +28,7 @@ public class UnknownExecutorTest extends BaseTest {
         JSONObject objectResponse = getObjectResponse.apply(response);
 
         assertAll(
-                () -> assertEquals("Получена неизвестная команда! Используйте команду справка для того чтобы узнать мои команды или скажите выход для выхода из навыка", objectResponse.getString("text")),
+                () -> assertEquals("Получена неизвестная команда! Используйте команду \"Справка\" для того чтобы узнать мои команды или скажите \"Выход\" для выхода из навыка", objectResponse.getString("text")),
                 () -> assertFalse(objectResponse.getBoolean("end_session")),
                 () -> assertEquals(getPersistentStorage(request), getPersistentStorage(response)),
                 () -> assertNull(getValue.apply(response, "session_state"))

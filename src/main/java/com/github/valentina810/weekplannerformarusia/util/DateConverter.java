@@ -71,7 +71,7 @@ public class DateConverter {
     public Function<LocalDate, String> convertDate = date ->
             new StringBuilder()
                     .append(getRusDayOfWeek(date))
-                    .append(" ")
+                    .append(", ")
                     .append(days.get(date.format(DAY)))
                     .append(" ")
                     .append(mounts.get(date.format(MONTH))).toString();
